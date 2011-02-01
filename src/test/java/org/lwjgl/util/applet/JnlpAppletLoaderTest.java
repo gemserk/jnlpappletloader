@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.applet.AppletStub;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,14 +78,14 @@ public class JnlpAppletLoaderTest {
 	}
 
 	@Test(expected = RuntimeException.class)
-	public void shouldFailWhenMissingRequiredParameters() {
+	public void shouldFailWhenMissingRequiredParameters() throws MalformedURLException {
 
 		final AppletStub appletStub = mockery.mock(AppletStub.class);
 
 		mockery.checking(new Expectations() {
 			{
-				oneOf(appletStub).getParameter("al_codebase");
-				will(returnValue("file:"));
+				oneOf(appletStub).getCodeBase();
+				will(returnValue(new URL("file:")));
 				oneOf(appletStub).getParameter("al_jnlp");
 				will(returnValue(null));
 			}

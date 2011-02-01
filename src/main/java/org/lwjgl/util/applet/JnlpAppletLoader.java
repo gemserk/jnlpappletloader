@@ -22,20 +22,17 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	private JnlpInfo jnlpInfo;
 
-	private URL codeBase;
+	URL codeBase;
 
 	Map<String, String> appletParameters = new HashMap<String, String>();
-
-	UrlBuilder urlBuilder;
 
 	static String jnlpParameterName = "al_jnlp";
 
 	@Override
 	public void init() {
 
-		initCodeBase();
-
-		urlBuilder = new UrlBuilder(getCodeBase());
+		// starts using the default codebase
+		codeBase = super.getCodeBase();
 
 		String jnlpHref = getParameter(jnlpParameterName);
 
@@ -43,7 +40,7 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 			throw new RuntimeException("Missing required parameter " + jnlpParameterName);
 
 		try {
-			URL jnlpUrl = urlBuilder.build(jnlpHref);
+			URL jnlpUrl = new URL(codeBase, jnlpHref);
 
 			InputStream jnlpInputStream = jnlpUrl.openStream();
 
@@ -53,10 +50,11 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 			Document document = documentBuilder.parse(jnlpInputStream);
 
 			jnlpInfo = new JnlpParser(document).parse();
-			
+
 			jnlpInputStream.close();
 
-			setCodeBase(urlBuilder.build(jnlpInfo.codeBase));
+			// replaces codebase with jnlp codebase
+			codeBase = new URL(jnlpInfo.codeBase);
 
 			appletParameters.putAll(getAppletParametersFromJnlpInfo(jnlpInfo));
 
@@ -76,20 +74,6 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 			throw new RuntimeException(e);
 		}
 
-	}
-
-	private void initCodeBase() {
-		String codeBaseParameter = getParameter("al_codebase");
-
-		if (codeBaseParameter == null) {
-			setCodeBase(super.getCodeBase());
-		} else {
-			try {
-				setCodeBase(new URL(codeBaseParameter));
-			} catch (MalformedURLException e) {
-				throw new RuntimeException(e);
-			}
-		}
 	}
 
 	protected Map<String, String> getAppletParametersFromJnlpInfo(JnlpParser.JnlpInfo jnlpInfo) {
@@ -155,17 +139,25 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		return codeBase;
 	}
 
-	public void setCodeBase(URL codeBase) {
-		this.codeBase = codeBase;
-	}
-
 	@Override
 	public String getParameter(String name) {
-
 		if (appletParameters.containsKey(name))
 			return appletParameters.get(name);
-
 		return super.getParameter(name);
 	}
 
+	/**
+	 * Returns an URL using the context set.
+	 * 
+	 * @param url
+	 *            a String with the path of the URL to build, could be relative or absolute, if absolute then context is not used.
+	 * @return an URL which could be relative to context or absolute.
+	 */
+	public URL build(String url) {
+		try {
+			return new URL(codeBase, url);
+		} catch (MalformedURLException e) {
+			throw new RuntimeException("Failed to create url for " + url, e);
+		}
+	}
 }
