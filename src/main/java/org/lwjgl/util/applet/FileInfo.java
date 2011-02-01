@@ -16,7 +16,7 @@ public class FileInfo {
 	}
 	
 	public String getNameWithoutExtension() {
-		return getFileName().substring(0, getFileName().indexOf('.'));
+		return getFileName().substring(0, getFileName().indexOf(".jar"));
 	}
 
 	void setFileName(String fileName) {
