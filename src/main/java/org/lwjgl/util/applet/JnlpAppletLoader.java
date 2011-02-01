@@ -7,6 +7,7 @@ import java.awt.EventQueue;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,17 +20,17 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	JarUtil jarUtil = new JarUtil();
 
-	JarDownloader jarDownloader; 
+	JarDownloader jarDownloader;
 
 	@Override
 	public void init() {
-		
+
 		URL codeBase = internalGetCodeBase();
-		
+
 		fileInfoProvider = new FileInfoProviderRemoteImpl(codeBase);
 
 		JarUtil jarUtils = new JarUtil();
-		
+
 		String tempFolder = System.getProperty("java.io.tmpdir") + File.separator + "lwjgltmp" + File.separator;
 
 		jarDownloader = new JarDownloader(codeBase, tempFolder);
@@ -84,13 +85,30 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 		// switch applet
 
-		switchApplet(appletParameters);
+		URL[] urls = getLocalJarUrls(tempFolder, files);
+
+		ClassLoader classLoader = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
+
+		switchApplet(classLoader, appletParameters);
+	}
+
+	private URL[] getLocalJarUrls(String tempFolder, List<FileInfo> files) {
+		try {
+			URL[] urls = new URL[files.size()];
+			for (int i = 0; i < files.size(); i++)
+				urls[i] = new URL("file:" + tempFolder + files.get(i).getFileName());
+			return urls;
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private URL internalGetCodeBase() {
-		// return this.getCodeBase();
+		String codeBase = getParameter("al_codebase");
+		if (codeBase == null)
+			return this.getCodeBase();
 		try {
-			return new URL("http://acoppes-laptop.local/prototipos/discoverthename-test/");
+			return new URL(codeBase);
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
@@ -103,11 +121,11 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		return files;
 	}
 
-	private void switchApplet(final AppletParameters appletParameters) {
+	private void switchApplet(final ClassLoader classLoader, final AppletParameters appletParameters) {
 		try {
 			EventQueue.invokeAndWait(new Runnable() {
 				public void run() {
-					switchApplet(appletParameters.getMain());
+					switchApplet(classLoader, appletParameters.getMain());
 					repaint();
 				}
 			});
@@ -116,8 +134,6 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		}
 	}
 
-	ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
 	/**
 	 * replace the current applet with the lwjgl applet using AppletStub and initialise and start it
 	 * 
@@ -125,11 +141,10 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 	 *            the applet class name to be loaded.
 	 */
 	@SuppressWarnings("unchecked")
-	protected void switchApplet(String appletClassName) {
-		Applet applet;
+	protected void switchApplet(ClassLoader classLoader, String appletClassName) {
 		try {
 			Class appletClass = classLoader.loadClass(appletClassName);
-			applet = (Applet) appletClass.newInstance();
+			Applet applet = (Applet) appletClass.newInstance();
 
 			applet.setStub(this);
 			applet.setSize(getWidth(), getHeight());
