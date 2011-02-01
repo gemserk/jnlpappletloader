@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.google.inject.internal.Lists;
-
 public class JnlpAppletLoader extends Applet implements AppletStub {
+
+	private static final long serialVersionUID = -2459790398016588477L;
 
 	@Override
 	public void init() {
@@ -23,8 +23,8 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		
 		final AppletParameters appletParameters = new AppletParametersProxy(new AppletParametersUtil(this)).getAppletParameters();
 		
-		List<FileInfo> jarFiles = Lists.newArrayList();
-		List<FileInfo> nativeFiles = Lists.newArrayList();
+		List<FileInfo> jarFiles = new ArrayList<FileInfo>();
+		List<FileInfo> nativeFiles = new ArrayList<FileInfo>();
 		
 		List<FileInfo> files = new ArrayList<FileInfo>();
 		
