@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp spec="1.0+"
-	codebase="http://acoppes-laptop.local/prototipos/discoverthename-test/"
-	href="launch-applet.jnlp">
+	codebase="http://localhost/prototipos/discoverthename-test/"
+	href="applet.jnlp">
 	<information>
 		<title>Discover The Name - Ludum Dare 19</title>
 		<vendor>Gemserk</vendor>
@@ -15,7 +15,7 @@
 	<resources>
 		<j2se version="1.6+" />
 		<jar href="main-0.0.1-SNAPSHOT.jar" />
-		<jar href="http://acoppes-laptop.local/prototipos/java2dtest-latest/cglib-2.2.jar" />
+		<jar href="http://localhost/prototipos/java2dtest-latest/cglib-2.2.jar" />
 		<jar href="resources-0.0.1-SNAPSHOT.jar" />
 		<jar href="game-0.0.1-SNAPSHOT.jar" />
 		<jar href="logback-classic-0.9.17.jar" />

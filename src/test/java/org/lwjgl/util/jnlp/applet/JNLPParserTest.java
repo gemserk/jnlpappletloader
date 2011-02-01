@@ -41,7 +41,7 @@ public class JNLPParserTest {
 
 		Document document = documentBuilder.parse(jnlpInputStream);
 
-		JNLPInfo jnlpInfo = new JNLPParser().parse(document);
+		JNLPInfo jnlpInfo = new JNLPParser(new URLBuilder()).parse(document);
 
 		printJnlpInfo(jnlpInfo);
 
@@ -70,7 +70,7 @@ public class JNLPParserTest {
 
 		final URLBuilder urlBuilder = mockery.mock(URLBuilder.class);
 
-		JNLPParser jnlpParser = new JNLPParser();
+		JNLPParser jnlpParser = new JNLPParser(urlBuilder);
 		jnlpParser.setUrlBuilder(urlBuilder);
 
 		mockery.checking(new Expectations() {

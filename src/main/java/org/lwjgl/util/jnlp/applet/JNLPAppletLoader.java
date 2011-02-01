@@ -24,9 +24,9 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 
 	static String jnlpParameterName = "al_jnlp";
 
-	private JNLPParser jnlpParser = new JNLPParser();
+	private JNLPParser jnlpParser;
 
-	private URLBuilder urlBuilder = new URLBuilder();
+	private URLBuilder urlBuilder;
 
 	public void setJnlpParser(JNLPParser jnlpParser) {
 		this.jnlpParser = jnlpParser;
@@ -36,10 +36,13 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 		this.urlBuilder = urlBuilder;
 	}
 
+	public JNLPAppletLoader() {
+		urlBuilder = new URLBuilder();
+		jnlpParser = new JNLPParser(urlBuilder);
+	}
+
 	@Override
 	public void init() {
-
-		jnlpParser.setUrlBuilder(urlBuilder);
 
 		try {
 			// starts using the default codebase

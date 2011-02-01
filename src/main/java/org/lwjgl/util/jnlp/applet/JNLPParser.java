@@ -22,6 +22,10 @@ public class JNLPParser {
 	public void setUrlBuilder(URLBuilder urlBuilder) {
 		this.urlBuilder = urlBuilder;
 	}
+	
+	public JNLPParser(URLBuilder urlBuilder) {
+		this.urlBuilder = urlBuilder;
+	}
 
 	public JNLPInfo parseJnlp(URL url) {
 		return parseJnlp(urlBuilder.open(url));
@@ -151,7 +155,7 @@ public class JNLPParser {
 		NamedNodeMap attributes = childNode.getAttributes();
 		Node hrefAttribute = attributes.getNamedItem("href");
 		
-		JNLPParser jnlpParser = new JNLPParser();
+		JNLPParser jnlpParser = new JNLPParser(urlBuilder);
 		jnlpParser.setUrlBuilder(urlBuilder);
 		
 		URL codeBase = urlBuilder.build(jnlpInfo.codeBase);
