@@ -54,6 +54,7 @@
 		<nativelib href="jinput-2.6.0-GEMSERK-natives-mac.jar" />
 	</resources>
 
+	<!-- Some comment inside the tag -->
 	<applet-desc name="arielsan's game entry for Ludum Dare 19"
 		main-class="org.newdawn.slick.AppletGameContainer" width="800" height="600"> 
 		<param name="game" value="com.gemserk.games.discoverthename.Game" />

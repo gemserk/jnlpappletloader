@@ -13,6 +13,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.lwjgl.util.applet.AppletLoader;
+import org.lwjgl.util.jnlpappletloader.exceptions.MissingRequiredParameterException;
 import org.w3c.dom.Document;
 
 public class JnlpAppletLoader extends Applet implements AppletStub {
@@ -28,11 +29,14 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 	@Override
 	public void init() {
 
+		String jnlpHref = getParameter("al_jnlp");
+		
+		if (jnlpHref == null)
+			throw new MissingRequiredParameterException("al_jnlp");
+
 		try {
-			String jnlpHref = getParameter("al_jnlp");
-
 			URL jnlpUrl = new URL(jnlpHref);
-
+			
 			InputStream jnlpInputStream = jnlpUrl.openStream();
 
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
