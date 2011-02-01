@@ -10,6 +10,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPAppletDescInfo;
 import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo;
+import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo.ResourceType;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -167,13 +168,13 @@ public class JNLPParser {
 	private void getNativeLibInfo(JNLPInfo jnlpInfo, Node childNode, String os) {
 		NamedNodeMap attributes = childNode.getAttributes();
 		Node hrefAttribute = attributes.getNamedItem("href");
-		jnlpInfo.resources.add(new JNLPResourceInfo(hrefAttribute.getNodeValue(), os, true));
+		jnlpInfo.resources.add(new JNLPResourceInfo(hrefAttribute.getNodeValue(), os, ResourceType.NativeLib));
 	}
 
 	private void getJarInfo(JNLPInfo jNLPInfo, Node childNode, String os) {
 		NamedNodeMap attributes = childNode.getAttributes();
 		Node hrefAttribute = attributes.getNamedItem("href");
-		jNLPInfo.resources.add(new JNLPResourceInfo(hrefAttribute.getNodeValue(), os, false));
+		jNLPInfo.resources.add(new JNLPResourceInfo(hrefAttribute.getNodeValue(), os, ResourceType.Jar));
 	}
 
 }

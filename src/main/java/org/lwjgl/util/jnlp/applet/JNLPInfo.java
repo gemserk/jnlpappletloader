@@ -15,17 +15,19 @@ public class JNLPInfo {
 	 * Info of a single resource, could be a jar or a nativelib.
 	 */
 	public static class JNLPResourceInfo {
+		
+		public static enum ResourceType { Jar, NativeLib, Extension }
 	
 		public String href;
 	
 		public String os;
 	
-		public boolean nativeLib;
+		public ResourceType type;
 	
-		public JNLPResourceInfo(String href, String os, boolean nativeLib) {
+		public JNLPResourceInfo(String href, String os, ResourceType type) {
 			this.href = href;
 			this.os = os;
-			this.nativeLib = nativeLib;
+			this.type = type;
 		}
 	
 	}

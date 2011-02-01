@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPAppletDescInfo;
 import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo;
+import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo.ResourceType;
 
 @SuppressWarnings("serial")
 @RunWith(JMock.class)
@@ -32,14 +33,14 @@ public class AppletLoaderParametersBuilderTest {
 		JNLPInfo jnlpInfo = new JNLPInfo();
 		jnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
 			{
-				add(new JNLPResourceInfo("lwjgl.jar", "Windows", false));
-				add(new JNLPResourceInfo("lwjgl-win.jar", "Windows", true));
-				add(new JNLPResourceInfo("lwjgl-linux.jar", "Linux", true));
-				add(new JNLPResourceInfo("lwjgl-mac.jar", "Mac OS", true));
+				add(new JNLPResourceInfo("lwjgl.jar", "Windows", ResourceType.Jar));
+				add(new JNLPResourceInfo("lwjgl-win.jar", "Windows", ResourceType.NativeLib));
+				add(new JNLPResourceInfo("lwjgl-linux.jar", "Linux", ResourceType.NativeLib));
+				add(new JNLPResourceInfo("lwjgl-mac.jar", "Mac OS", ResourceType.NativeLib));
 			}
 		};
 		AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
-		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith(jnlpInfo, "Windows", true), IsEqual.equalTo("lwjgl-win.jar"));
+		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith(jnlpInfo, "Windows", ResourceType.NativeLib), IsEqual.equalTo("lwjgl-win.jar"));
 	}
 
 	@Test
@@ -47,15 +48,15 @@ public class AppletLoaderParametersBuilderTest {
 		JNLPInfo jnlpInfo = new JNLPInfo();
 		jnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
 			{
-				add(new JNLPResourceInfo("lwjgl.jar", "", false));
-				add(new JNLPResourceInfo("jinput.jar", "", false));
-				add(new JNLPResourceInfo("lwjgl-win.jar", "Windows", true));
-				add(new JNLPResourceInfo("lwjgl-linux.jar", "Linux", true));
-				add(new JNLPResourceInfo("lwjgl-mac.jar", "Mac OS", true));
+				add(new JNLPResourceInfo("lwjgl.jar", "", ResourceType.Jar));
+				add(new JNLPResourceInfo("jinput.jar", "", ResourceType.Jar));
+				add(new JNLPResourceInfo("lwjgl-win.jar", "Windows", ResourceType.NativeLib));
+				add(new JNLPResourceInfo("lwjgl-linux.jar", "Linux", ResourceType.NativeLib));
+				add(new JNLPResourceInfo("lwjgl-mac.jar", "Mac OS", ResourceType.NativeLib));
 			}
 		};
 		AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
-		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith(jnlpInfo, "", false), IsEqual.equalTo("lwjgl.jar, jinput.jar"));
+		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith(jnlpInfo, "", ResourceType.Jar), IsEqual.equalTo("lwjgl.jar, jinput.jar"));
 	}
 
 	@Test
@@ -63,13 +64,13 @@ public class AppletLoaderParametersBuilderTest {
 		JNLPInfo jnlpInfo = new JNLPInfo();
 		jnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
 			{
-				add(new JNLPResourceInfo("lwjgl-win95.jar", "Windows 95", false));
-				add(new JNLPResourceInfo("lwjgl-win98.jar", "Windows 98", false));
-				add(new JNLPResourceInfo("lwjgl-win2000.jar", "Windows 2000", false));
+				add(new JNLPResourceInfo("lwjgl-win95.jar", "Windows 95", ResourceType.Jar));
+				add(new JNLPResourceInfo("lwjgl-win98.jar", "Windows 98", ResourceType.Jar));
+				add(new JNLPResourceInfo("lwjgl-win2000.jar", "Windows 2000", ResourceType.Jar));
 			}
 		};
 		AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
-		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith(jnlpInfo, "Windows", false), IsEqual.equalTo("lwjgl-win95.jar, lwjgl-win98.jar, lwjgl-win2000.jar"));
+		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith(jnlpInfo, "Windows", ResourceType.Jar), IsEqual.equalTo("lwjgl-win95.jar, lwjgl-win98.jar, lwjgl-win2000.jar"));
 	}
 
 	@Test
@@ -85,7 +86,7 @@ public class AppletLoaderParametersBuilderTest {
 		JNLPInfo jnlpInfo = new JNLPInfo();
 		jnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
 			{
-				add(new JNLPResourceInfo("lwjgl.jar", "Windows", true));
+				add(new JNLPResourceInfo("lwjgl.jar", "Windows", ResourceType.NativeLib));
 			}
 		};
 		HashMap<String, String> appletParameters = new HashMap<String, String>();
@@ -99,8 +100,8 @@ public class AppletLoaderParametersBuilderTest {
 		extensionJnlpInfo.codeBase = "http://someplace.net/releases/";
 		extensionJnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
 			{
-				add(new JNLPResourceInfo("jinput.jar", "", false));
-				add(new JNLPResourceInfo("jutils.jar", "", false));
+				add(new JNLPResourceInfo("jinput.jar", "", ResourceType.Jar));
+				add(new JNLPResourceInfo("jutils.jar", "", ResourceType.Jar));
 			}
 		};
 
@@ -114,7 +115,7 @@ public class AppletLoaderParametersBuilderTest {
 		};
 		jnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
 			{
-				add(new JNLPResourceInfo("lwjgl.jar", "", false));
+				add(new JNLPResourceInfo("lwjgl.jar", "", ResourceType.Jar));
 			}
 		};
 		jnlpInfo.extensions.add(extensionJnlpInfo);

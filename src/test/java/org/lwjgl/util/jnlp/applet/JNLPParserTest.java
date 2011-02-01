@@ -58,7 +58,7 @@ public class JNLPParserTest {
 		}
 
 		for (JNLPResourceInfo jnlpResourceInfo : jnlpInfo.resources)
-			System.out.println(MessageFormat.format("resource: href={0}, os={1}, native={2}", jnlpResourceInfo.href, jnlpResourceInfo.os, jnlpResourceInfo.nativeLib));
+			System.out.println(MessageFormat.format("resource: href={0}, os={1}, native={2}", jnlpResourceInfo.href, jnlpResourceInfo.os, jnlpResourceInfo.type));
 
 		for (JNLPInfo jnlpInfo2 : jnlpInfo.extensions)
 			printJnlpInfo(jnlpInfo2);

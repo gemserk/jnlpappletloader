@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo;
+import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo.ResourceType;
 
 /**
  * Helper class to build LWJGL AppletLoader needed parameters from a JNLPInfo.
@@ -28,7 +29,7 @@ public class AppletLoaderParametersBuilder {
 			appletParameters.put("al_title", jnlpInfo.jnlpAppletDescInfo.name);
 		}
 
-		String al_jars = getJarsForOsStartingWith(jnlpInfo, "", false);
+		String al_jars = getJarsForOsStartingWith(jnlpInfo, "", ResourceType.Jar);
 		System.out.println("jars: " + al_jars);
 		appletParameters.put("al_jars", al_jars);
 
@@ -42,7 +43,7 @@ public class AppletLoaderParametersBuilder {
 	}
 
 	protected void addNativesFor(Map<String, String> appletParameters, String os, String appletParameter) {
-		String parameter = getJarsForOsStartingWith(jnlpInfo, os, true);
+		String parameter = getJarsForOsStartingWith(jnlpInfo, os, ResourceType.NativeLib);
 		if ("".equals(parameter.trim())) {
 			System.out.println(os + " has no natives");
 			return;
@@ -51,14 +52,14 @@ public class AppletLoaderParametersBuilder {
 		appletParameters.put(appletParameter, parameter);
 	}
 
-	protected String getJarsForOsStartingWith(JNLPInfo jnlpInfo, String os, boolean nativeLib) {
+	protected String getJarsForOsStartingWith(JNLPInfo jnlpInfo, String os, ResourceType type) {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
 		for (int i = 0; i < jnlpInfo.resources.size(); i++) {
 			JNLPResourceInfo jnlpResourceInfo = jnlpInfo.resources.get(i);
 
-			if (jnlpResourceInfo.nativeLib != nativeLib)
+			if (jnlpResourceInfo.type != type)
 				continue;
 
 			if (!jnlpResourceInfo.os.toLowerCase().startsWith(os.toLowerCase()))
@@ -76,7 +77,7 @@ public class AppletLoaderParametersBuilder {
 
 		for (int i = 0; i < jnlpInfo.extensions.size(); i++) {
 			JNLPInfo extensionJnlpInfo = jnlpInfo.extensions.get(i);
-			stringBuilder.append(getJarsForOsStartingWith(extensionJnlpInfo, os, nativeLib));
+			stringBuilder.append(getJarsForOsStartingWith(extensionJnlpInfo, os, type));
 		}
 
 		return stringBuilder.toString();
