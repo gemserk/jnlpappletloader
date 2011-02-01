@@ -1,6 +1,10 @@
 package org.lwjgl.util.applet;
 
-public class FileInfo {
+import java.io.Serializable;
+
+public class FileInfo implements Serializable {
+
+	private static final long serialVersionUID = -4166790968933256993L;
 
 	private int contentLength;
 

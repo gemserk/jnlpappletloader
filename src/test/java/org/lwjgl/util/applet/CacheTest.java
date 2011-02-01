@@ -2,8 +2,6 @@ package org.lwjgl.util.applet;
 
 import static org.junit.Assert.assertThat;
 
-import java.util.HashMap;
-
 import org.hamcrest.core.IsEqual;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
@@ -22,26 +20,22 @@ public class CacheTest {
 
 	@Test
 	public void shouldFailCacheWhenEntryNotFound() {
-		Cache cache = new Cache(new HashMap<String, FileInfo>());
+		Cache cache = new Cache();
 		assertThat(cache.isAlreadyDownloaded(new FileInfo("lwjgl.jar", 100, 1000L)), IsEqual.equalTo(false));
 	}
 	
 	@Test
 	public void shouldFailCacheWhenFoundButDifferentModifiedDate() {
-		HashMap<String, FileInfo> cachedFiles = new HashMap<String, FileInfo>() {{
-			put("lwjgl.jar", new FileInfo("lwjgl.jar", 100, 500L));
-		}};
-		Cache cache = new Cache(new HashMap<String, FileInfo>());
+		Cache cache = new Cache();
+		cache.add(new FileInfo("lwjgl.jar", 100, 500L));
 		assertThat(cache.isAlreadyDownloaded(new FileInfo("lwjgl.jar", 100, 1000L)), IsEqual.equalTo(false));
 		assertThat(cache.isAlreadyDownloaded(new FileInfo("lwjgl.jar", 100, 100L)), IsEqual.equalTo(false));
 	}
 
 	@Test
 	public void shouldPassCacheWhenFoundWithSameDate() {
-		HashMap<String, FileInfo> cachedFiles = new HashMap<String, FileInfo>() {{
-			put("lwjgl.jar", new FileInfo("lwjgl.jar", 100, 1000L));
-		}};
-		Cache cache = new Cache(cachedFiles);
+		Cache cache = new Cache();
+		cache.add(new FileInfo("lwjgl.jar", 100, 1000L));
 		assertThat(cache.isAlreadyDownloaded(new FileInfo("lwjgl.jar", 100, 1000L)), IsEqual.equalTo(true));
 	}
 	

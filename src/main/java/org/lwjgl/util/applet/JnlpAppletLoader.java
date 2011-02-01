@@ -12,7 +12,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class JnlpAppletLoader extends Applet implements AppletStub {
@@ -32,6 +31,8 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 	private Thread loaderThread;
 
 	private ProgressPanel progressPanel;
+
+	private Cache cache;
 
 	// @Override
 	// public void paint(Graphics g) {
@@ -61,7 +62,7 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		setLayout(new GridLayout(1, 1));
 
 		progressPanel = new ProgressPanel();
-		
+
 		progressPanel.setIgnoreRepaint(true);
 
 		progressPanel.setSize(getWidth(), getHeight());
@@ -69,7 +70,7 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 		progressPanel.setLogo(getImage(appletParameters.getLogo()));
 		progressPanel.setProgressBar(getImage(appletParameters.getProgessbar()));
-		
+
 		add(progressPanel);
 
 		renderThread = new Thread(new Runnable() {
@@ -82,7 +83,7 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 						Thread.sleep(100);
 					}
 				} catch (InterruptedException e) {
-					System.out.println("animation thread interrupted");
+					// System.out.println("animation thread interrupted");
 				}
 			}
 		});
@@ -96,11 +97,6 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 			}
 		});
 		loaderThread.start();
-
-		// while ! done { }
-		// thread.join()
-
-		// remove(progressPanel);
 	}
 
 	private void cleanup() {
@@ -127,6 +123,8 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 		String tempFolder = System.getProperty("java.io.tmpdir") + File.separator + "lwjgltmp" + File.separator;
 
+		File cacheFile = new File(tempFolder + "cache");
+
 		jarDownloader = new JarDownloader(codeBase, tempFolder);
 		jarDownloader.setJarUtils(jarUtils);
 
@@ -149,9 +147,9 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 		List<FileInfo> jarFiles = new ArrayList<FileInfo>();
 
-		progress.update("getting files information", 10);
+		progress.update("Getting jars information...", 5);
 
-		jarFiles.addAll(getFilesInfo(appletParameters.getJars()));
+		jarFiles.addAll(getFilesInfo(appletParameters.getJars(), 10, 5));
 
 		List<FileInfo> nativeFiles = new ArrayList<FileInfo>();
 
@@ -160,26 +158,20 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		files.addAll(jarFiles);
 		files.addAll(nativeFiles);
 
-		progress.update("filter files from cache", 15);
+		progress.update("Checking cached jars...", 15);
 
-		Cache cache = new Cache(new HashMap<String, FileInfo>());
+		cache = Cache.load(cacheFile);
 		CacheFilter cacheFilter = new CacheFilter(cache);
 
 		List<FileInfo> newFiles = cacheFilter.removeCachedFiles(files);
 
-		progress.update("downloading files", 25);
-
-		for (FileInfo fileInfo : newFiles) {
-			// update progress based on file info content length?
-			System.out.println("Downloading " + fileInfo.getFileName() + " [" + fileInfo.getContentLength() + "]" + "...");
-			jarDownloader.download(fileInfo);
-
-			progress.update("downloading " + fileInfo.getFileName(), 25);
-		}
-
-		progress.update("extracting jars", 55);
-
 		// download jars
+
+		progress.update("Downloading jars...", 25);
+
+		downloadFiles(newFiles, 25, 60);
+
+		// progress.update("Extracting jars...", 55);
 
 		// extract jars
 
@@ -187,15 +179,69 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 		// update cache?
 
+		if (newFiles.size() > 0) {
+
+			progress.update("Updating cache...", 85);
+
+			updateCache(newFiles, 10, 85);
+
+			Cache.save(cache, cacheFile);
+		}
+
 		// another stuff
 
-		// switch applet
+		// update class loader and classpath...
+
+		progress.update("Updating classpath...", 95);
 
 		URL[] urls = getLocalJarUrls(tempFolder, files);
 
+		// updating class path : taltal.jar
+		for (int i = 0; i < urls.length; i++) {
+			System.out.println("URL for class loader " + urls[i]);
+			progress.update("Updating classpath - " + files.get(i).getFileName(), 95);
+		}
+
 		ClassLoader classLoader = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
 
+		// set system library, etc
+
+		// switch applet
+
 		switchApplet(classLoader, appletParameters);
+	}
+
+	private void updateCache(List<FileInfo> files, int progressTotal, int progressOffset) {
+		int count = files.size();
+		for (int i = 0; i < files.size(); i++) {
+			FileInfo fileInfo = files.get(i);
+			cache.add(fileInfo);
+			progress.update("Updating cache entry - " + fileInfo.getFileName(), progressOffset + progressTotal / count * i);
+		}
+	}
+
+	private void downloadFiles(List<FileInfo> files, int progressOffset, int progressTotal) {
+		int count = files.size();
+		for (int i = 0; i < files.size(); i++) {
+			FileInfo fileInfo = files.get(i);
+			// update progress based on file info content length?
+			// System.out.println("Downloading " + fileInfo.getFileName() + " [" + fileInfo.getContentLength() + "]" + "...");
+			progress.update("Downloading - " + fileInfo.getFileName(), progressOffset + progressTotal / count * i);
+			jarDownloader.download(fileInfo);
+		}
+
+	}
+	
+	private List<FileInfo> getFilesInfo(List<String> urls, int progressTotal, int progressOffset) {
+		List<FileInfo> files = new ArrayList<FileInfo>();
+
+		int count = urls.size();
+
+		for (int i = 0; i < urls.size(); i++) {
+			progress.update("Getting jar information - " + urls.get(i), progressOffset + progressTotal / count * i);
+			files.add(fileInfoProvider.getFileInfo(urls.get(i)));
+		}
+		return files;
 	}
 
 	private URL[] getLocalJarUrls(String tempFolder, List<FileInfo> files) {
@@ -218,13 +264,6 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	public List<FileInfo> getFilesInfo(List<String> urls) {
-		List<FileInfo> files = new ArrayList<FileInfo>();
-		for (int i = 0; i < urls.size(); i++)
-			files.add(fileInfoProvider.getFileInfo(urls.get(i)));
-		return files;
 	}
 
 	private void switchApplet(final ClassLoader classLoader, final AppletParameters appletParameters) {
@@ -286,7 +325,7 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 			// if image not found in jar, look outside it
 			if (url == null)
 				url = new URL(getCodeBase(), s);
-			
+
 			Image image = super.getImage(url);
 
 			// wait for image to load
@@ -295,9 +334,9 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 			tracker.waitForAll();
 
 			// if no errors return image
-			if (tracker.isErrorAny()) 
+			if (tracker.isErrorAny())
 				throw new RuntimeException("failed to get image " + s);
-			
+
 			return image;
 		} catch (Exception e) {
 			throw new RuntimeException("failed to get image " + s, e);
