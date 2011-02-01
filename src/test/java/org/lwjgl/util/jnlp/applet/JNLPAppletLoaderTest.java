@@ -26,8 +26,6 @@ public class JNLPAppletLoaderTest {
 
 	@Test
 	public void shouldGetOnlyNativesForOnePlatform() throws MalformedURLException {
-		JNLPAppletLoader jnlpAppletLoader = new JNLPAppletLoader();
-
 		List<JNLPInfo.JNLPResourceInfo> resources = new ArrayList<JNLPInfo.JNLPResourceInfo>() {
 			{
 				add(new JNLPInfo.JNLPResourceInfo("lwjgl.jar", "Windows", false));
@@ -36,14 +34,11 @@ public class JNLPAppletLoaderTest {
 				add(new JNLPInfo.JNLPResourceInfo("lwjgl-mac.jar", "Mac OS", true));
 			}
 		};
-
-		assertThat(jnlpAppletLoader.getJarsForOsStartingWith(resources, "Windows", true), IsEqual.equalTo("lwjgl-win.jar"));
+		assertThat(JNLPAppletLoader.getJarsForOsStartingWith(resources, "Windows", true), IsEqual.equalTo("lwjgl-win.jar"));
 	}
 
 	@Test
 	public void shouldGetOnlyAllNotNativeDependencies() throws MalformedURLException {
-		JNLPAppletLoader jnlpAppletLoader = new JNLPAppletLoader();
-
 		List<JNLPInfo.JNLPResourceInfo> resources = new ArrayList<JNLPInfo.JNLPResourceInfo>() {
 			{
 				add(new JNLPInfo.JNLPResourceInfo("lwjgl.jar", "", false));
@@ -53,14 +48,11 @@ public class JNLPAppletLoaderTest {
 				add(new JNLPInfo.JNLPResourceInfo("lwjgl-mac.jar", "Mac OS", true));
 			}
 		};
-
-		assertThat(jnlpAppletLoader.getJarsForOsStartingWith(resources, "", false), IsEqual.equalTo("lwjgl.jar, jinput.jar"));
+		assertThat(JNLPAppletLoader.getJarsForOsStartingWith(resources, "", false), IsEqual.equalTo("lwjgl.jar, jinput.jar"));
 	}
 
 	@Test
 	public void shouldGetAllResourcesForAGivenOS() throws MalformedURLException {
-		JNLPAppletLoader jnlpAppletLoader = new JNLPAppletLoader();
-
 		List<JNLPInfo.JNLPResourceInfo> resources = new ArrayList<JNLPInfo.JNLPResourceInfo>() {
 			{
 				add(new JNLPInfo.JNLPResourceInfo("lwjgl-win95.jar", "Windows 95", false));
@@ -68,8 +60,7 @@ public class JNLPAppletLoaderTest {
 				add(new JNLPInfo.JNLPResourceInfo("lwjgl-win2000.jar", "Windows 2000", false));
 			}
 		};
-
-		assertThat(jnlpAppletLoader.getJarsForOsStartingWith(resources, "Windows", false), IsEqual.equalTo("lwjgl-win95.jar, lwjgl-win98.jar, lwjgl-win2000.jar"));
+		assertThat(JNLPAppletLoader.getJarsForOsStartingWith(resources, "Windows", false), IsEqual.equalTo("lwjgl-win95.jar, lwjgl-win98.jar, lwjgl-win2000.jar"));
 	}
 
 	// @Test(expected = RuntimeException.class)
@@ -97,33 +88,24 @@ public class JNLPAppletLoaderTest {
 
 	@Test
 	public void shouldNotAddParameterIfNoNativesFound() {
-
-		JNLPAppletLoader jnlpAppletLoader = new JNLPAppletLoader();
-
 		JNLPInfo jNLPInfo = new JNLPInfo();
-
 		HashMap<String, String> appletParameters = new HashMap<String, String>();
-		jnlpAppletLoader.addNativesFor(jNLPInfo, appletParameters, "Windows", "al_windows");
+		JNLPAppletLoader.addNativesFor(jNLPInfo, appletParameters, "Windows", "al_windows");
 		assertNull(appletParameters.get("al_windows"));
 
 	}
 
 	@Test
 	public void shouldAddParameterIfNoNativesFound() {
-
-		JNLPAppletLoader jnlpAppletLoader = new JNLPAppletLoader();
-
 		JNLPInfo jNLPInfo = new JNLPInfo();
 		jNLPInfo.resources = new ArrayList<JNLPInfo.JNLPResourceInfo>() {
 			{
 				add(new JNLPInfo.JNLPResourceInfo("lwjgl.jar", "Windows", true));
 			}
 		};
-
 		HashMap<String, String> appletParameters = new HashMap<String, String>();
-		jnlpAppletLoader.addNativesFor(jNLPInfo, appletParameters, "Windows", "al_windows");
+		JNLPAppletLoader.addNativesFor(jNLPInfo, appletParameters, "Windows", "al_windows");
 		assertNotNull(appletParameters.get("al_windows"));
-
 	}
 
 }
