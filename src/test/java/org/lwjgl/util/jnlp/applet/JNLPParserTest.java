@@ -4,7 +4,6 @@ import static org.junit.Assert.assertThat;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.text.MessageFormat;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,7 +16,6 @@ import org.jmock.integration.junit4.JMock;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo;
 import org.w3c.dom.Document;
 
 @RunWith(JMock.class)
@@ -43,27 +41,11 @@ public class JNLPParserTest {
 
 		JNLPInfo jnlpInfo = new JNLPParser(new URLBuilder()).parse(document);
 
-		printJnlpInfo(jnlpInfo);
+		new JnlpPrinter().printJnlpInfo(jnlpInfo);
 
 		jnlpInputStream.close();
 	}
-
-	private void printJnlpInfo(JNLPInfo jnlpInfo) {
-		System.out.println("codeBase: " + jnlpInfo.codeBase);
-
-		if (jnlpInfo.jnlpAppletDescInfo != null) {
-			System.out.println("applet.mainClass: " + jnlpInfo.jnlpAppletDescInfo.mainClassName);
-			System.out.println("applet.name: " + jnlpInfo.jnlpAppletDescInfo.name);
-			System.out.println("applet.parameters: " + jnlpInfo.jnlpAppletDescInfo.parameters);
-		}
-
-		for (JNLPResourceInfo jnlpResourceInfo : jnlpInfo.resources)
-			System.out.println(MessageFormat.format("resource: href={0}, os={1}, type={2}", jnlpResourceInfo.href, jnlpResourceInfo.os, jnlpResourceInfo.type));
-
-		for (JNLPInfo jnlpInfo2 : jnlpInfo.extensions)
-			printJnlpInfo(jnlpInfo2);
-	}
-
+	
 	@Test
 	public void testParseWithExtension() throws Exception {
 		final URL url = new URL("file:");
@@ -107,7 +89,7 @@ public class JNLPParserTest {
 		// JNLPInfo secondExtensionJnlpInfo = jnlpInfo.extensions.get(1);
 		// assertThat(secondExtensionJnlpInfo.codeBase, IsEqual.equalTo("http://anotherplace.net/releases/"));
 
-		printJnlpInfo(jnlpInfo);
+		new JnlpPrinter().printJnlpInfo(jnlpInfo);
 	}
 
 }

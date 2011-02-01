@@ -45,24 +45,4 @@ public class JNLPInfoTest {
 		assertThat(jnlpInfo.getFirstResource(ResourceType.Extension), IsSame.sameInstance(second));
 	}
 
-	// @Test
-	// public void testMergeJnlp() {
-	//		
-	// JNLPInfo jnlpInfo = new JNLPInfo();
-	// jnlpInfo.codeBase = "http://localhost";
-	// jnlpInfo.resources.add(new JNLPResourceInfo("lwjgl.jar", "", ResourceType.Jar));
-	// jnlpInfo.resources.add(new JNLPResourceInfo("lwjgl-util.jar", "", ResourceType.Jar));
-	//		
-	// JNLPInfo extensionJnlpInfo = new JNLPInfo();
-	// extensionJnlpInfo.codeBase = "http://someplace.net";
-	// extensionJnlpInfo.resources.add(new JNLPResourceInfo("jinput.jar", "", ResourceType.Jar));
-	//		
-	// jnlpInfo.merge(extensionJnlpInfo);
-	//
-	// assertThat(jnlpInfo.resources.size(), IsEqual.equalTo(3));
-	// assertThat(jnlpInfo.resources, IsCollectionContaining.hasItem(jnlpInfo.resources.get(0)));
-	// assertThat(jnlpInfo.resources, IsCollectionContaining.hasItem(jnlpInfo.resources.get(1)));
-	// assertThat(jnlpInfo.resources.get(2).href, IsEqual.equalTo("http://someplace.net/jinput.jar"));
-	//		
-	// }
 }
