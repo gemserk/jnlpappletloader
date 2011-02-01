@@ -57,7 +57,7 @@ public class JNLPParser {
 		NodeList jnlpElements = jnlpDocument.getElementsByTagName("jnlp");
 
 		if (jnlpElements.getLength() == 0)
-			throw new RuntimeException("Document must have jnlp tag");
+			throw new RuntimeException("Failed to parse document, jnlp file should have jnlp tag");
 
 		Node jnlpElement = jnlpElements.item(0);
 

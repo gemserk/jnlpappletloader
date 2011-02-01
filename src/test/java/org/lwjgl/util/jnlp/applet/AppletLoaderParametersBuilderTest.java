@@ -119,7 +119,7 @@ public class AppletLoaderParametersBuilderTest {
 		};
 		jnlpInfo.extensions.add(extensionJnlpInfo);
 
-		Map<String, String> appletParameters = new AppletLoaderParametersBuilder(jnlpInfo).getAppletParametersFromJnlpInfo();
+		Map<String, String> appletParameters = new AppletLoaderParametersBuilder(jnlpInfo).getParametersFromJnlpInfo();
 
 		String jarsParameter = appletParameters.get("al_jars");
 		assertThat(jarsParameter, IsNull.notNullValue());

@@ -4,11 +4,11 @@ import java.applet.Applet;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JEditorPane;
 
 import org.lwjgl.util.applet.AppletLoader;
 
@@ -62,7 +62,7 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 			codeBase = urlBuilder.build(codeBase, jnlpInfo.codeBase);
 
 			AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
-			appletParameters.putAll(appletLoaderParametersBuilder.getAppletParametersFromJnlpInfo());
+			appletParameters.putAll(appletLoaderParametersBuilder.getParametersFromJnlpInfo());
 
 			System.out.println(appletParameters);
 
@@ -77,10 +77,15 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 			this.add(appletLoader);
 
 		} catch (Exception e) {
-			JPanel jPanel = new JPanel();
-			jPanel.setLayout(new BorderLayout());
-			jPanel.add(new JLabel(e.getMessage()));
-			add(jPanel);
+
+			setLayout(new BorderLayout());
+
+			String html = MessageFormat.format("<div align=\"center\">{0}</div>", e.getMessage());
+
+			JEditorPane jEditorPane = new JEditorPane("text/html", html);
+			jEditorPane.setEditable(false);
+			add(jEditorPane);
+
 			e.printStackTrace(System.out);
 		}
 

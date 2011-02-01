@@ -19,12 +19,14 @@ public class AppletLoaderParametersBuilder {
 		this.jnlpInfo = jnlpInfo;
 	}
 
-	public Map<String, String> getAppletParametersFromJnlpInfo() {
+	public Map<String, String> getParametersFromJnlpInfo() {
 		Map<String, String> appletParameters = new HashMap<String, String>();
-		appletParameters.putAll(jnlpInfo.jnlpAppletDescInfo.parameters);
 
-		appletParameters.put("al_main", jnlpInfo.jnlpAppletDescInfo.mainClassName);
-		appletParameters.put("al_title", jnlpInfo.jnlpAppletDescInfo.name);
+		if (jnlpInfo.jnlpAppletDescInfo != null) {
+			appletParameters.putAll(jnlpInfo.jnlpAppletDescInfo.parameters);
+			appletParameters.put("al_main", jnlpInfo.jnlpAppletDescInfo.mainClassName);
+			appletParameters.put("al_title", jnlpInfo.jnlpAppletDescInfo.name);
+		}
 
 		String al_jars = getJarsForOsStartingWith(jnlpInfo, "", false);
 		System.out.println("jars: " + al_jars);
