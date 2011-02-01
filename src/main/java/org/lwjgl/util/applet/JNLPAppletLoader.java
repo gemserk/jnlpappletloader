@@ -4,7 +4,6 @@ import java.applet.Applet;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +14,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class JNLPAppletLoader extends Applet implements AppletStub {
 
@@ -94,7 +96,7 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 
 			Document document = documentBuilder.parse(jnlpInputStream);
 
-			jNLPInfo = new JNLPParser(document).parse();
+			jNLPInfo = JNLPAppletLoader.parse(document);
 
 			jnlpInputStream.close();
 
@@ -120,8 +122,27 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 		}
 
 	}
+	
+	@Override
+	public void appletResize(int width, int height) {
+		resize(width, height);
+	}
 
-	protected Map<String, String> getAppletParametersFromJnlpInfo(JNLPAppletLoader.JNLPInfo jNLPInfo) {
+	@Override
+	public URL getCodeBase() {
+		return codeBase;
+	}
+
+	@Override
+	public String getParameter(String name) {
+		if (appletParameters.containsKey(name))
+			return appletParameters.get(name);
+		return super.getParameter(name);
+	}
+	
+	// Helper methods
+
+	protected static Map<String, String> getAppletParametersFromJnlpInfo(JNLPInfo jNLPInfo) {
 		Map<String, String> appletParameters = new HashMap<String, String>();
 		appletParameters.putAll(jNLPInfo.jNLPAppletDescInfo.parameters);
 
@@ -141,7 +162,7 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 		return appletParameters;
 	}
 
-	protected void addNativesFor(JNLPAppletLoader.JNLPInfo jNLPInfo, Map<String, String> appletParameters, String os, String appletParameter) {
+	protected static void addNativesFor(JNLPInfo jNLPInfo, Map<String, String> appletParameters, String os, String appletParameter) {
 		String parameter = getJarsForOsStartingWith(jNLPInfo.resources, os, true);
 		if ("".equals(parameter.trim())) {
 			System.out.println(os + " has no natives");
@@ -151,7 +172,7 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 		appletParameters.put(appletParameter, parameter);
 	}
 
-	protected String getJarsForOsStartingWith(List<JNLPAppletLoader.JNLPResourceInfo> resources, String os, boolean nativeLib) {
+	protected static String getJarsForOsStartingWith(List<JNLPAppletLoader.JNLPResourceInfo> resources, String os, boolean nativeLib) {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
@@ -174,35 +195,113 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 		return stringBuilder.toString();
 	}
 
-	@Override
-	public void appletResize(int width, int height) {
-		resize(width, height);
-	}
-
-	@Override
-	public URL getCodeBase() {
-		return codeBase;
-	}
-
-	@Override
-	public String getParameter(String name) {
-		if (appletParameters.containsKey(name))
-			return appletParameters.get(name);
-		return super.getParameter(name);
-	}
-
+	// JNLP parse logic
+	
 	/**
-	 * Returns an URL using the context set.
+	 * Parses the Document and returns the JnlpInfo with all the JNLP information.
 	 * 
-	 * @param url
-	 *            a String with the path of the URL to build, could be relative or absolute, if absolute then context is not used.
-	 * @return an URL which could be relative to context or absolute.
+	 * @return a JnlpInfo with the JNLP information.
 	 */
-	public URL build(String url) {
-		try {
-			return new URL(codeBase, url);
-		} catch (MalformedURLException e) {
-			throw new RuntimeException("Failed to create url for " + url, e);
+	public static JNLPInfo parse(Document jnlpDocument) {
+		JNLPInfo jnlpInfo = new JNLPAppletLoader.JNLPInfo();
+
+		NodeList jnlpElements = jnlpDocument.getElementsByTagName("jnlp");
+
+		if (jnlpElements.getLength() == 0)
+			throw new RuntimeException("Document must have jnlp tag");
+
+		Node jnlpElement = jnlpElements.item(0);
+
+		jnlpInfo.codeBase = jnlpElement.getAttributes().getNamedItem("codebase").getNodeValue();
+
+		NodeList childNodes = jnlpElement.getChildNodes();
+
+		for (int i = 0; i < childNodes.getLength(); i++) {
+
+			Node childNode = childNodes.item(i);
+
+			if ("resources".equals(childNode.getNodeName())) {
+				getResourcesInfo(jnlpInfo, childNode);
+			}
+
 		}
+
+		NodeList appletDescElements = jnlpDocument.getElementsByTagName("applet-desc");
+
+		if (appletDescElements.getLength() == 0)
+			return jnlpInfo;
+
+		jnlpInfo.jNLPAppletDescInfo = getAppletDescInfo(appletDescElements.item(0));
+
+		return jnlpInfo;
+	}
+
+	private static void getResourcesInfo(JNLPInfo jNLPInfo, Node resourcesNode) {
+
+		NamedNodeMap attributes = resourcesNode.getAttributes();
+
+		String os = "";
+		Node osAttribute = attributes.getNamedItem("os");
+
+		if (osAttribute != null)
+			os = osAttribute.getNodeValue();
+
+		NodeList childNodes = resourcesNode.getChildNodes();
+
+		for (int i = 0; i < childNodes.getLength(); i++) {
+
+			Node childNode = childNodes.item(i);
+
+			if ("jar".equals(childNode.getNodeName()))
+				getJarInfo(jNLPInfo, childNode, os);
+
+			if ("nativelib".equals(childNode.getNodeName()))
+				getNativeLibInfo(jNLPInfo, childNode, os);
+
+		}
+
+	}
+
+	private static void getNativeLibInfo(JNLPInfo jNLPInfo, Node childNode, String os) {
+		NamedNodeMap attributes = childNode.getAttributes();
+		Node hrefAttribute = attributes.getNamedItem("href");
+		jNLPInfo.resources.add(new JNLPResourceInfo(hrefAttribute.getNodeValue(), os, true));
+	}
+
+	private static void getJarInfo(JNLPInfo jNLPInfo, Node childNode, String os) {
+		NamedNodeMap attributes = childNode.getAttributes();
+		Node hrefAttribute = attributes.getNamedItem("href");
+		jNLPInfo.resources.add(new JNLPResourceInfo(hrefAttribute.getNodeValue(), os, false));
+	}
+
+	private static JNLPAppletLoader.JNLPAppletDescInfo getAppletDescInfo(Node appletDescElement) {
+		NamedNodeMap attributes = appletDescElement.getAttributes();
+
+		String name = attributes.getNamedItem("name").getNodeValue();
+		String mainClass = attributes.getNamedItem("main-class").getNodeValue();
+
+		JNLPAppletDescInfo jNLPAppletDescInfo = new JNLPAppletDescInfo();
+		jNLPAppletDescInfo.mainClassName = mainClass;
+		jNLPAppletDescInfo.name = name;
+
+		NodeList childNodes = appletDescElement.getChildNodes();
+
+		for (int i = 0; i < childNodes.getLength(); i++) {
+
+			Node childNode = childNodes.item(i);
+
+			if ("param".equals(childNode.getNodeName()))
+				getParamInfo(jNLPAppletDescInfo, childNode);
+
+		}
+
+		return jNLPAppletDescInfo;
+	}
+
+	private static void getParamInfo(JNLPAppletDescInfo jNLPAppletDescInfo, Node childNode) {
+		NamedNodeMap attributes = childNode.getAttributes();
+		String nameAttribute = attributes.getNamedItem("name").getNodeValue();
+		String valueAttribute = attributes.getNamedItem("value").getNodeValue();
+		jNLPAppletDescInfo.parameters.put(nameAttribute, valueAttribute);
 	}
 }

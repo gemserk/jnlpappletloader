@@ -8,9 +8,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.junit.Test;
-import org.lwjgl.util.applet.JNLPParser;
 import org.lwjgl.util.applet.JNLPAppletLoader.JNLPInfo;
-import org.lwjgl.util.applet.JNLPAppletLoader.JNLPResourceInfo;
 import org.w3c.dom.Document;
 
 public class JNLPParserTest {
@@ -26,19 +24,20 @@ public class JNLPParserTest {
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 
 		Document document = documentBuilder.parse(jnlpInputStream);
-		
+
 		// Document document = documentBuilder.parse(jnlpFile);
 
-		JNLPAppletLoader.JNLPInfo jNLPInfo = new JNLPParser(document).parse();
-		
+		JNLPInfo jNLPInfo = JNLPAppletLoader.parse(document);
+		// JNLPInfo jNLPInfo = new JNLPParser(document).parse();
+
 		System.out.println("codeBase: " + jNLPInfo.codeBase);
 		System.out.println("applet.mainClass: " + jNLPInfo.jNLPAppletDescInfo.mainClassName);
 		System.out.println("applet.name: " + jNLPInfo.jNLPAppletDescInfo.name);
 		System.out.println("applet.parameters: " + jNLPInfo.jNLPAppletDescInfo.parameters);
-		
-		for (JNLPAppletLoader.JNLPResourceInfo jNLPResourceInfo : jNLPInfo.resources) 
+
+		for (JNLPAppletLoader.JNLPResourceInfo jNLPResourceInfo : jNLPInfo.resources)
 			System.out.println(MessageFormat.format("resource: href={0}, os={1}, native={2}", jNLPResourceInfo.href, jNLPResourceInfo.os, jNLPResourceInfo.nativeLib));
-		
+
 		jnlpInputStream.close();
 	}
 
