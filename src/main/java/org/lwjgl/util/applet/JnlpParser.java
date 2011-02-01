@@ -10,8 +10,16 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * Provides a way to parse a JNLP file and produce a class with the file info.
+ * 
+ * @author acoppes
+ */
 public class JnlpParser {
 
+	/**
+	 * Info of a single resource, could be a jar or a nativelib.
+	 */
 	public static class JnlpJarInfo {
 
 		public String href;
@@ -28,6 +36,9 @@ public class JnlpParser {
 
 	}
 
+	/**
+	 * Has the info of the JNLP file.
+	 */
 	public static class JnlpInfo {
 
 		public String codeBase;
@@ -38,6 +49,9 @@ public class JnlpParser {
 
 	}
 
+	/**
+	 * Has the information of the applet-desc of the JNLP.
+	 */
 	public static class AppletDescInfo {
 
 		public String mainClassName;
@@ -54,7 +68,12 @@ public class JnlpParser {
 		this.jnlpDocument = document;
 	}
 
-	public JnlpParser.JnlpInfo parse() {
+	/**
+	 * Parses the Document and returns the JnlpInfo with all the JNLP information.
+	 * 
+	 * @return a JnlpInfo with the JNLP information.
+	 */
+	public JnlpInfo parse() {
 		JnlpInfo jnlpInfo = new JnlpInfo();
 
 		NodeList jnlpElements = jnlpDocument.getElementsByTagName("jnlp");
@@ -65,8 +84,6 @@ public class JnlpParser {
 		Node jnlpElement = jnlpElements.item(0);
 
 		jnlpInfo.codeBase = jnlpElement.getAttributes().getNamedItem("codebase").getNodeValue();
-
-		// jnlpInfo.resources = new ArrayList<JnlpJarInfo>();
 
 		NodeList childNodes = jnlpElement.getChildNodes();
 

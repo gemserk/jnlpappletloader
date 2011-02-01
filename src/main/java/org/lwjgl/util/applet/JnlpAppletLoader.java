@@ -53,6 +53,8 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 			Document document = documentBuilder.parse(jnlpInputStream);
 
 			jnlpInfo = new JnlpParser(document).parse();
+			
+			jnlpInputStream.close();
 
 			setCodeBase(urlBuilder.build(jnlpInfo.codeBase));
 
@@ -90,7 +92,7 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		}
 	}
 
-	public Map<String, String> getAppletParametersFromJnlpInfo(JnlpParser.JnlpInfo jnlpInfo) {
+	protected Map<String, String> getAppletParametersFromJnlpInfo(JnlpParser.JnlpInfo jnlpInfo) {
 		Map<String, String> appletParameters = new HashMap<String, String>();
 		appletParameters.putAll(jnlpInfo.appletDescInfo.parameters);
 
@@ -110,7 +112,7 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		return appletParameters;
 	}
 
-	public void addNativesFor(JnlpParser.JnlpInfo jnlpInfo, Map<String, String> appletParameters, String os, String appletParameter) {
+	protected void addNativesFor(JnlpParser.JnlpInfo jnlpInfo, Map<String, String> appletParameters, String os, String appletParameter) {
 		String parameter = getJarsForOsStartingWith(jnlpInfo.resources, os, true);
 		if ("".equals(parameter.trim())) {
 			System.out.println(os + " has no natives");
@@ -120,7 +122,7 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		appletParameters.put(appletParameter, parameter);
 	}
 
-	public String getJarsForOsStartingWith(List<JnlpParser.JnlpJarInfo> resources, String os, boolean nativeLib) {
+	protected String getJarsForOsStartingWith(List<JnlpParser.JnlpJarInfo> resources, String os, boolean nativeLib) {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
