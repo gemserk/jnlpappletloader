@@ -15,6 +15,19 @@
 		<developerConnection>scm:svn:https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader/</developerConnection>
 	</scm>
 
+	<distributionManagement>
+		<repository>
+			<id>gemserk.releases</id>
+			<name>Gemserk Releases</name>
+			<url>https://maven.gemserk.com/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>gemserk.snapshots</id>
+			<name>Gemserk Snapshots</name>
+			<url>https://maven.gemserk.com/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<build>
 		<plugins>
 			<plugin>
