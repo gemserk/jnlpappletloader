@@ -14,7 +14,7 @@ public class Cache {
 		FileInfo cachedEntry = cachedFiles.get(file.getFileName());
 		if (cachedEntry == null)
 			return false;
-		return file.lastModified == cachedEntry.lastModified;
+		return file.getLastModified() == cachedEntry.getLastModified();
 	}
 
 }

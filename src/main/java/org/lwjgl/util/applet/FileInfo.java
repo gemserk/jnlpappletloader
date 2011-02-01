@@ -2,17 +2,17 @@ package org.lwjgl.util.applet;
 
 public class FileInfo {
 
-	int contentLength;
+	private int contentLength;
 
-	long lastModified;
+	private long lastModified;
 
 	private String fileName;
 
 	public FileInfo(String fileName, int contentLength, long lastModified) {
 		super();
 		this.setFileName(fileName);
-		this.contentLength = contentLength;
-		this.lastModified = lastModified;
+		this.setContentLength(contentLength);
+		this.setLastModified(lastModified);
 	}
 	
 	public String getNameWithoutExtension() {
@@ -25,6 +25,22 @@ public class FileInfo {
 
 	String getFileName() {
 		return fileName;
+	}
+
+	void setLastModified(long lastModified) {
+		this.lastModified = lastModified;
+	}
+
+	long getLastModified() {
+		return lastModified;
+	}
+
+	void setContentLength(int contentLength) {
+		this.contentLength = contentLength;
+	}
+
+	int getContentLength() {
+		return contentLength;
 	}
 	
 }

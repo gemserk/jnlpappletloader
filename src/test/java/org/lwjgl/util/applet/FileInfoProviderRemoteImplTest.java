@@ -50,8 +50,8 @@ public class FileInfoProviderRemoteImplTest {
 		FileInfo info = fileInfoProviderRemoteImpl.getFileInfo(new URL("http://localhost/lwjgl.jar"));
 
 		assertThat(info, IsNull.notNullValue());
-		assertThat(info.contentLength, IsEqual.equalTo(100));
-		assertThat(info.lastModified, IsEqual.equalTo(1000L));
+		assertThat(info.getContentLength(), IsEqual.equalTo(100));
+		assertThat(info.getLastModified(), IsEqual.equalTo(1000L));
 		assertThat(info.getFileName(), IsEqual.equalTo("lwjgl.jar"));
 	}
 	
@@ -83,8 +83,8 @@ public class FileInfoProviderRemoteImplTest {
 		FileInfo info = fileInfoProviderRemoteImpl.getFileInfo("lwjgl.jar");
 
 		assertThat(info, IsNull.notNullValue());
-		assertThat(info.contentLength, IsEqual.equalTo(100));
-		assertThat(info.lastModified, IsEqual.equalTo(1000L));
+		assertThat(info.getContentLength(), IsEqual.equalTo(100));
+		assertThat(info.getLastModified(), IsEqual.equalTo(1000L));
 		assertThat(info.getFileName(), IsEqual.equalTo("lwjgl.jar"));
 	}
 

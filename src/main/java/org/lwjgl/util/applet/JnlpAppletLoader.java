@@ -24,8 +24,12 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 		fileInfoProvider = new FileInfoProviderRemoteImpl(this.getCodeBase());
 
+		JarUtil jarUtils = new JarUtil();
+
 		String tempFolder = System.getProperty("java.io.tmpdir") + File.separator + "lwjgltmp" + File.separator;
+		
 		jarDownloader = new JarDownloader(this.getCodeBase(), tempFolder);
+		jarDownloader.setJarUtils(jarUtils);
 
 		// parseParameters
 
