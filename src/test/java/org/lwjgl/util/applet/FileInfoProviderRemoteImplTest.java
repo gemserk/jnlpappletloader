@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(JMock.class)
-public class FileInfoProviderTest {
+public class FileInfoProviderRemoteImplTest {
 
 	Mockery mockery = new Mockery() {
 		{
@@ -38,7 +38,7 @@ public class FileInfoProviderTest {
 			}
 		});
 
-		FileInfoProvider fileInfoProvider = new FileInfoProvider() {
+		FileInfoProviderRemoteImpl fileInfoProviderRemoteImpl = new FileInfoProviderRemoteImpl() {
 
 			@Override
 			protected URLConnection getUrlConnection(URL url) throws Exception {
@@ -47,7 +47,40 @@ public class FileInfoProviderTest {
 
 		};
 
-		FileInfo info = fileInfoProvider.getFileInfo(new URL("http://localhost/lwjgl.jar"));
+		FileInfo info = fileInfoProviderRemoteImpl.getFileInfo(new URL("http://localhost/lwjgl.jar"));
+
+		assertThat(info, IsNull.notNullValue());
+		assertThat(info.contentLength, IsEqual.equalTo(100));
+		assertThat(info.lastModified, IsEqual.equalTo(1000L));
+		assertThat(info.fileName, IsEqual.equalTo("lwjgl.jar"));
+	}
+	
+	@Test
+	public void shouldGetJarInfoFromString() throws MalformedURLException {
+
+		final URLConnection urlConnection = mockery.mock(URLConnection.class);
+
+		mockery.checking(new Expectations() {
+			{
+				oneOf(urlConnection).getContentLength();
+				will(returnValue(100));
+				oneOf(urlConnection).getLastModified();
+				will(returnValue(1000L));
+			}
+		});
+
+		FileInfoProviderRemoteImpl fileInfoProviderRemoteImpl = new FileInfoProviderRemoteImpl() {
+
+			@Override
+			protected URLConnection getUrlConnection(URL url) throws Exception {
+				assertThat(url, IsEqual.equalTo(new URL("http://localhost/lwjgl.jar")));
+				return urlConnection;
+			}
+
+		};
+		fileInfoProviderRemoteImpl.setCodeBase(new URL("http://localhost/"));
+
+		FileInfo info = fileInfoProviderRemoteImpl.getFileInfo("lwjgl.jar");
 
 		assertThat(info, IsNull.notNullValue());
 		assertThat(info.contentLength, IsEqual.equalTo(100));

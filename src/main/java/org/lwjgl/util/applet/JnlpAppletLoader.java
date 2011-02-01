@@ -13,7 +13,7 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	private static final long serialVersionUID = -2459790398016588477L;
 
-	FileInfoProvider fileInfoProvider = new FileInfoProvider();
+	FileInfoProvider fileInfoProviderRemoteImpl;
 	
 	JarUtil jarUtil = new JarUtil();
 	
@@ -26,6 +26,8 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	@Override
 	public void init() {
+		
+		fileInfoProviderRemoteImpl = new FileInfoProviderRemoteImpl(this.getCodeBase());
 
 		// parseParameters
 
@@ -37,15 +39,14 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		
 		final AppletParameters appletParameters = new AppletParametersProxy(appletParametersUtil).getAppletParameters();
 		
-		List<URL> urls = convertToUrls(getCodeBase(), appletParameters.getJars());
-		
-		for (URL url : urls) 
-			System.out.println(url);
+		// List<URL> urls = convertToUrls(getCodeBase(), appletParameters.getJars());
+		//		
+		// for (URL url : urls)
+		// System.out.println(url);
 
 		List<FileInfo> jarFiles = new ArrayList<FileInfo>();
-
 		
-		jarFiles.addAll(getFilesInfo(urls));
+		jarFiles.addAll(getFilesInfo(appletParameters.getJars()));
 
 		List<FileInfo> nativeFiles = new ArrayList<FileInfo>();
 
@@ -70,10 +71,10 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		switchApplet(appletParameters);
 	}
 
-	public List<FileInfo> getFilesInfo(List<URL> urls) {
+	public List<FileInfo> getFilesInfo(List<String> urls) {
 		List<FileInfo> files = new ArrayList<FileInfo>();
 		for (int i = 0; i < urls.size(); i++)
-			files.add(fileInfoProvider.getFileInfo(urls.get(i)));
+			files.add(fileInfoProviderRemoteImpl.getFileInfo(urls.get(i)));
 		return files;
 	}
 
