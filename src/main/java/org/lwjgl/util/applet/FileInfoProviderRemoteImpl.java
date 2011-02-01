@@ -23,8 +23,8 @@ public class FileInfoProviderRemoteImpl implements FileInfoProvider {
 
 	public FileInfo getFileInfo(URL url) {
 		try {
-			URLConnection urlconnection = getUrlConnection(url);
-			return new FileInfo(UrlUtils.getFileName(url), urlconnection.getContentLength(), urlconnection.getLastModified());
+			URLConnection connection = getUrlConnection(url);
+			return new FileInfo(UrlUtils.getFileName(url), connection.getContentLength(), connection.getLastModified());
 		} catch (Exception e) {
 			throw new RuntimeException("failed to retrieve file info for " + url, e);
 		}
@@ -46,6 +46,10 @@ public class FileInfoProviderRemoteImpl implements FileInfoProvider {
 		urlconnection.setDefaultUseCaches(false);
 		if (urlconnection instanceof HttpURLConnection)
 			((HttpURLConnection) urlconnection).setRequestMethod("HEAD");
+		
+		// if pack200 enabled, if gzip enabled, etc
+		urlconnection.addRequestProperty("Accept-Encoding", "pack200-gzip, gzip");
+		
 		return urlconnection;
 	}
 
