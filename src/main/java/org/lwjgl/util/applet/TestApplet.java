@@ -47,7 +47,7 @@ public class TestApplet extends Applet {
 		super.paint(g);
 
 		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, 320, 240);
+		g.fillRect(0, 0, getWidth(), getHeight());
 
 		g.setColor(Color.WHITE);
 		g.drawString("APPLET TEST", 100, 100);

@@ -3,9 +3,10 @@ package org.lwjgl.util.applet;
 import java.applet.Applet;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.MediaTracker;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,92 +25,60 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	JarDownloader jarDownloader;
 
-	public static class Progress {
-
-		private float total;
-
-		private float current;
-
-		private String status = "";
-
-		public Progress(int total) {
-			this.total = total;
-			this.current = 0;
-		}
-
-		public void increment() {
-			increment(1);
-		}
-
-		public void increment(float count) {
-			current += count;
-			if (current > total)
-				current = total;
-		}
-
-		public void setCurrent(float current) {
-			this.current = current;
-		}
-
-		public float getPercentage() {
-			return 100 * current / total;
-		}
-
-		public void setTotal(float total) {
-			this.total = total;
-		}
-
-		public void setStatus(String status) {
-			this.status = status;
-		}
-
-		public String getStatus() {
-			return status;
-		}
-
-		public void update(String status, int current) {
-			setStatus(status);
-			setCurrent(current);
-
-			// try {
-			// Thread.sleep(1000);
-			// } catch (InterruptedException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-		}
-
-	}
-
 	Progress progress = new Progress(100);
 
-	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
+	private Thread renderThread;
 
-		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, getWidth(), getHeight());
+	private Thread loaderThread;
 
-		g.setColor(Color.BLACK);
+	private ProgressPanel progressPanel;
 
-		String status = "" + progress.getPercentage() + "%";
-		if (!"".equals(progress.getStatus()))
-			status += " - " + progress.getStatus();
-
-		g.drawString(status, getWidth() / 2 - status.length() * 3, getHeight() / 2);
-	}
+	// @Override
+	// public void paint(Graphics g) {
+	// super.paint(g);
+	//
+	// g.setColor(Color.WHITE);
+	// g.fillRect(0, 0, getWidth(), getHeight());
+	//
+	// g.setColor(Color.BLACK);
+	//
+	// String status = "" + progress.getPercentage() + "%";
+	// if (!"".equals(progress.getStatus()))
+	// status += " - " + progress.getStatus();
+	//
+	// g.drawString(status, getWidth() / 2 - status.length() * 3, getHeight() / 2);
+	// }
 
 	@Override
 	public void init() {
 
 		setIgnoreRepaint(true);
 
-		Thread renderThread = new Thread(new Runnable() {
+		AppletParametersUtil appletParametersUtil = new AppletParametersUtil(this);
+
+		final AppletParameters appletParameters = new AppletParametersProxy(appletParametersUtil).getAppletParameters();
+
+		setLayout(new GridLayout(1, 1));
+
+		progressPanel = new ProgressPanel();
+		
+		progressPanel.setIgnoreRepaint(true);
+
+		progressPanel.setSize(getWidth(), getHeight());
+		progressPanel.setProgress(progress);
+
+		progressPanel.setLogo(getImage(appletParameters.getLogo()));
+		progressPanel.setProgressBar(getImage(appletParameters.getProgessbar()));
+		
+		add(progressPanel);
+
+		renderThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					while (true) {
-						repaint();
+						progressPanel.repaint();
+						// repaint();
 						Thread.sleep(100);
 					}
 				} catch (InterruptedException e) {
@@ -119,16 +88,33 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		});
 		renderThread.start();
 
-		Thread updateThread = new Thread(new Runnable() {
+		loaderThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				load();
+				cleanup();
 			}
 		});
-		updateThread.start();
+		loaderThread.start();
 
 		// while ! done { }
 		// thread.join()
+
+		// remove(progressPanel);
+	}
+
+	private void cleanup() {
+
+		remove(progressPanel);
+
+		renderThread.interrupt();
+
+		try {
+			renderThread.join(2000);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 
 	private void load() {
@@ -286,4 +272,36 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		resize(width, height);
 	}
 
+	/**
+	 * Get Image from path provided
+	 * 
+	 * @param s
+	 *            location of the image
+	 * @return the Image file
+	 */
+	protected Image getImage(String s) {
+		try {
+			URL url = Thread.currentThread().getContextClassLoader().getResource(s);
+
+			// if image not found in jar, look outside it
+			if (url == null)
+				url = new URL(getCodeBase(), s);
+			
+			Image image = super.getImage(url);
+
+			// wait for image to load
+			MediaTracker tracker = new MediaTracker(this);
+			tracker.addImage(image, 0);
+			tracker.waitForAll();
+
+			// if no errors return image
+			if (tracker.isErrorAny()) 
+				throw new RuntimeException("failed to get image " + s);
+			
+			return image;
+		} catch (Exception e) {
+			throw new RuntimeException("failed to get image " + s, e);
+		}
+
+	}
 }

@@ -110,16 +110,6 @@ public class JarDownloader {
 			}
 		}
 
-		// public OutputStream getGZipOutputStream(File file) {
-		// try {
-		// return new GZIPOutputStream(new FileOutputStream(file));
-		// } catch (FileNotFoundException e) {
-		// throw new RuntimeException("failed to get gzip output stream for file " + file, e);
-		// } catch (IOException e) {
-		// throw new RuntimeException("failed to get gzip output stream for file " + file, e);
-		// }
-		// }
-
 	}
 
 	Capabilities capabilities = new Capabilities(true, true);
