@@ -20,38 +20,38 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		// get jars info?
 
 		// check cache and remove already downloader jars from jars to download?
-		
+
 		final AppletParameters appletParameters = new AppletParametersProxy(new AppletParametersUtil(this)).getAppletParameters();
-		
+
 		List<FileInfo> jarFiles = new ArrayList<FileInfo>();
 		List<FileInfo> nativeFiles = new ArrayList<FileInfo>();
-		
+
 		List<FileInfo> files = new ArrayList<FileInfo>();
-		
+
 		files.addAll(jarFiles);
 		files.addAll(nativeFiles);
-		
+
 		Cache cache = new Cache(new HashMap<String, FileInfo>());
 		CacheFilter cacheFilter = new CacheFilter(cache);
-		
+
 		List<FileInfo> newFiles = cacheFilter.removeCachedFiles(files);
-		
+
 		// download jars
 
 		// update cache?
-		
+
 		// another stuff
-		
+
 		// switch applet
 
+		switchApplet(appletParameters);
+	}
+
+	private void switchApplet(final AppletParameters appletParameters) {
 		try {
 			EventQueue.invokeAndWait(new Runnable() {
 				public void run() {
-					try {
-						switchApplet(appletParameters.getMain());
-					} catch (Exception e) {
-						throw new RuntimeException("switch applet failed... ", e);
-					}
+					switchApplet(appletParameters.getMain());
 					repaint();
 				}
 			});
@@ -59,28 +59,35 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-	
+
 	/**
 	 * replace the current applet with the lwjgl applet using AppletStub and initialise and start it
-	 * @param appletClassName the applet class name to be loaded.
+	 * 
+	 * @param appletClassName
+	 *            the applet class name to be loaded.
 	 */
 	@SuppressWarnings("unchecked")
-	protected void switchApplet(String appletClassName) throws Exception {
-		Class appletClass = classLoader.loadClass(appletClassName);
-		Applet applet = (Applet) appletClass.newInstance();
+	protected void switchApplet(String appletClassName) {
+		Applet applet;
+		try {
+			Class appletClass = classLoader.loadClass(appletClassName);
+			applet = (Applet) appletClass.newInstance();
 
-		applet.setStub(this);
-		applet.setSize(getWidth(), getHeight());
+			applet.setStub(this);
+			applet.setSize(getWidth(), getHeight());
 
-		setLayout(new BorderLayout());
-		add(applet);
-		validate();
+			setLayout(new BorderLayout());
+			add(applet);
+			validate();
 
-		applet.init();
+			applet.init();
 
-		applet.start();
+			applet.start();
+		} catch (Exception e) {
+			throw new RuntimeException("switch applet failed", e);
+		}
 	}
 
 	@Override
