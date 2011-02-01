@@ -37,7 +37,22 @@ public class AppletLoaderParametersBuilderTest {
 			}
 		};
 		AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
-		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith(jnlpInfo, "Windows", ResourceType.NativeLib), IsEqual.equalTo("lwjgl-win.jar"));
+		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith("Windows", ResourceType.NativeLib), IsEqual.equalTo("lwjgl-win.jar"));
+	}
+	
+	@Test
+	public void shouldGetResourcesWithAdditionalExtension() throws MalformedURLException {
+		JnlpInfo jnlpInfo = new JnlpInfo();
+		jnlpInfo.resources = new ArrayList<JnlpResourceInfo>() {
+			{
+				add(new JnlpResourceInfo("lwjgl.jar", "", ResourceType.Jar));
+				add(new JnlpResourceInfo("jinput.jar", "", ResourceType.Jar));
+			}
+		};
+		
+		AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
+		appletLoaderParametersBuilder.setAdditionalExtension(".pack.gz");
+		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith("", ResourceType.Jar), IsEqual.equalTo("lwjgl.jar.pack.gz, jinput.jar.pack.gz"));
 	}
 
 	@Test
@@ -53,7 +68,7 @@ public class AppletLoaderParametersBuilderTest {
 			}
 		};
 		AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
-		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith(jnlpInfo, "", ResourceType.Jar), IsEqual.equalTo("lwjgl.jar, jinput.jar"));
+		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith("", ResourceType.Jar), IsEqual.equalTo("lwjgl.jar, jinput.jar"));
 	}
 
 	@Test
@@ -67,7 +82,7 @@ public class AppletLoaderParametersBuilderTest {
 			}
 		};
 		AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
-		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith(jnlpInfo, "Windows", ResourceType.Jar), IsEqual.equalTo("lwjgl-win95.jar, lwjgl-win98.jar, lwjgl-win2000.jar"));
+		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith("Windows", ResourceType.Jar), IsEqual.equalTo("lwjgl-win95.jar, lwjgl-win98.jar, lwjgl-win2000.jar"));
 	}
 
 	@Test

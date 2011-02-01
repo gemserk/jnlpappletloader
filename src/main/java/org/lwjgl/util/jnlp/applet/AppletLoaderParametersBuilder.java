@@ -16,8 +16,11 @@ public class AppletLoaderParametersBuilder {
 
 	private final JnlpInfo jnlpInfo;
 
+	private String additionalExtension;
+
 	public AppletLoaderParametersBuilder(JnlpInfo jnlpInfo) {
 		this.jnlpInfo = jnlpInfo;
+		this.additionalExtension = "";
 	}
 
 	public Map<String, String> getParametersFromJnlpInfo() {
@@ -29,7 +32,7 @@ public class AppletLoaderParametersBuilder {
 			appletParameters.put("al_title", jnlpInfo.jnlpAppletDescInfo.name);
 		}
 
-		String al_jars = getJarsForOsStartingWith(jnlpInfo, "", ResourceType.Jar);
+		String al_jars = getJarsForOsStartingWith("", ResourceType.Jar);
 		System.out.println("jars: " + al_jars);
 		appletParameters.put("al_jars", al_jars);
 
@@ -43,7 +46,7 @@ public class AppletLoaderParametersBuilder {
 	}
 
 	protected void addNativesFor(Map<String, String> appletParameters, String os, String appletParameter) {
-		String parameter = getJarsForOsStartingWith(jnlpInfo, os, ResourceType.NativeLib);
+		String parameter = getJarsForOsStartingWith(os, ResourceType.NativeLib);
 		if ("".equals(parameter.trim())) {
 			System.out.println(os + " has no natives");
 			return;
@@ -52,7 +55,7 @@ public class AppletLoaderParametersBuilder {
 		appletParameters.put(appletParameter, parameter);
 	}
 
-	protected String getJarsForOsStartingWith(JnlpInfo jnlpInfo, String os, ResourceType type) {
+	protected String getJarsForOsStartingWith(String os, ResourceType type) {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
@@ -65,10 +68,8 @@ public class AppletLoaderParametersBuilder {
 			if (!jnlpResourceInfo.os.toLowerCase().startsWith(os.toLowerCase()))
 				continue;
 
-			if (this.jnlpInfo == jnlpInfo)
-				stringBuilder.append(jnlpResourceInfo.href);
-			else
-				stringBuilder.append(jnlpInfo.codeBase + jnlpResourceInfo.href);
+			stringBuilder.append(jnlpResourceInfo.href);
+			stringBuilder.append(this.additionalExtension);
 			stringBuilder.append(", ");
 		}
 
@@ -76,6 +77,10 @@ public class AppletLoaderParametersBuilder {
 			stringBuilder.replace(stringBuilder.length() - 2, stringBuilder.length(), "");
 
 		return stringBuilder.toString();
+	}
+
+	public void setAdditionalExtension(String additionalExtension) {
+		this.additionalExtension = additionalExtension;
 	}
 
 }
