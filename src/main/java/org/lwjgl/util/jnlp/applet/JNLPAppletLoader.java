@@ -12,9 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.lwjgl.util.applet.AppletLoader;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class JNLPAppletLoader extends Applet implements AppletStub {
 
@@ -108,10 +105,10 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 
 	protected static Map<String, String> getAppletParametersFromJnlpInfo(JNLPInfo jNLPInfo) {
 		Map<String, String> appletParameters = new HashMap<String, String>();
-		appletParameters.putAll(jNLPInfo.jNLPAppletDescInfo.parameters);
+		appletParameters.putAll(jNLPInfo.jnlpAppletDescInfo.parameters);
 
-		appletParameters.put("al_main", jNLPInfo.jNLPAppletDescInfo.mainClassName);
-		appletParameters.put("al_title", jNLPInfo.jNLPAppletDescInfo.name);
+		appletParameters.put("al_main", jNLPInfo.jnlpAppletDescInfo.mainClassName);
+		appletParameters.put("al_title", jNLPInfo.jnlpAppletDescInfo.name);
 
 		String al_jars = getJarsForOsStartingWith(jNLPInfo.resources, "", false);
 		System.out.println("jars: " + al_jars);
@@ -161,42 +158,6 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 
 	// JNLP parse logic
 
-	static void getResourcesInfo(JNLPInfo jNLPInfo, Node resourcesNode) {
 
-		NamedNodeMap attributes = resourcesNode.getAttributes();
-
-		String os = "";
-		Node osAttribute = attributes.getNamedItem("os");
-
-		if (osAttribute != null)
-			os = osAttribute.getNodeValue();
-
-		NodeList childNodes = resourcesNode.getChildNodes();
-
-		for (int i = 0; i < childNodes.getLength(); i++) {
-
-			Node childNode = childNodes.item(i);
-
-			if ("jar".equals(childNode.getNodeName()))
-				getJarInfo(jNLPInfo, childNode, os);
-
-			if ("nativelib".equals(childNode.getNodeName()))
-				getNativeLibInfo(jNLPInfo, childNode, os);
-
-		}
-
-	}
-
-	private static void getNativeLibInfo(JNLPInfo jNLPInfo, Node childNode, String os) {
-		NamedNodeMap attributes = childNode.getAttributes();
-		Node hrefAttribute = attributes.getNamedItem("href");
-		jNLPInfo.resources.add(new JNLPInfo.JNLPResourceInfo(hrefAttribute.getNodeValue(), os, true));
-	}
-
-	private static void getJarInfo(JNLPInfo jNLPInfo, Node childNode, String os) {
-		NamedNodeMap attributes = childNode.getAttributes();
-		Node hrefAttribute = attributes.getNamedItem("href");
-		jNLPInfo.resources.add(new JNLPInfo.JNLPResourceInfo(hrefAttribute.getNodeValue(), os, false));
-	}
 
 }

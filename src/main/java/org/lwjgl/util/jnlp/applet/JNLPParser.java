@@ -9,6 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPAppletDescInfo;
+import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -16,23 +17,14 @@ import org.w3c.dom.NodeList;
 
 public class JNLPParser {
 
-	URLBuilder urlBuilder;
+	private URLBuilder urlBuilder;
 
 	public void setUrlBuilder(URLBuilder urlBuilder) {
 		this.urlBuilder = urlBuilder;
 	}
 
-	public JNLPInfo parseJnlp(String url) {
-		return parseJnlp(urlBuilder.build(url));
-	}
-
 	public JNLPInfo parseJnlp(URL url) {
-		// try {
 		return parseJnlp(urlBuilder.open(url));
-		// return parseJnlp(url.openStream());
-		// } catch (IOException e) {
-		// throw new RuntimeException("failed to open stream from url " + url, e);
-		// }
 	}
 
 	private JNLPInfo parseJnlp(InputStream is) {
@@ -73,9 +65,8 @@ public class JNLPParser {
 
 			Node childNode = childNodes.item(i);
 
-			if ("resources".equals(childNode.getNodeName())) {
-				JNLPAppletLoader.getResourcesInfo(jnlpInfo, childNode);
-			}
+			if ("resources".equals(childNode.getNodeName())) 
+				getResourcesInfo(jnlpInfo, childNode);
 
 		}
 
@@ -84,7 +75,7 @@ public class JNLPParser {
 		if (appletDescElements.getLength() == 0)
 			return jnlpInfo;
 
-		jnlpInfo.jNLPAppletDescInfo = getAppletDescInfo(appletDescElements.item(0));
+		jnlpInfo.jnlpAppletDescInfo = getAppletDescInfo(appletDescElements.item(0));
 
 		return jnlpInfo;
 	}
@@ -125,6 +116,60 @@ public class JNLPParser {
 		String nameAttribute = attributes.getNamedItem("name").getNodeValue();
 		String valueAttribute = attributes.getNamedItem("value").getNodeValue();
 		jNLPAppletDescInfo.parameters.put(nameAttribute, valueAttribute);
+	}
+	
+	private void getResourcesInfo(JNLPInfo jnlpInfo, Node resourcesNode) {
+
+		NamedNodeMap attributes = resourcesNode.getAttributes();
+
+		String os = "";
+		Node osAttribute = attributes.getNamedItem("os");
+
+		if (osAttribute != null)
+			os = osAttribute.getNodeValue();
+
+		NodeList childNodes = resourcesNode.getChildNodes();
+
+		for (int i = 0; i < childNodes.getLength(); i++) {
+
+			Node childNode = childNodes.item(i);
+
+			if ("jar".equals(childNode.getNodeName()))
+				getJarInfo(jnlpInfo, childNode, os);
+
+			if ("nativelib".equals(childNode.getNodeName()))
+				getNativeLibInfo(jnlpInfo, childNode, os);
+			
+			if ("extension".equals(childNode.getNodeName()))
+				getExtensionInfo(jnlpInfo, childNode);
+
+		}
+
+	}
+
+	private void getExtensionInfo(JNLPInfo jnlpInfo, Node childNode) {
+		NamedNodeMap attributes = childNode.getAttributes();
+		Node hrefAttribute = attributes.getNamedItem("href");
+		
+		JNLPParser jnlpParser = new JNLPParser();
+		jnlpParser.setUrlBuilder(urlBuilder);
+		
+		URL codeBase = urlBuilder.build(jnlpInfo.codeBase);
+		JNLPInfo extensionJnlpInfo = jnlpParser.parseJnlp(urlBuilder.build(codeBase, hrefAttribute.getNodeValue()));
+		
+		jnlpInfo.extensions.add(extensionJnlpInfo);
+	}
+
+	private void getNativeLibInfo(JNLPInfo jnlpInfo, Node childNode, String os) {
+		NamedNodeMap attributes = childNode.getAttributes();
+		Node hrefAttribute = attributes.getNamedItem("href");
+		jnlpInfo.resources.add(new JNLPResourceInfo(hrefAttribute.getNodeValue(), os, true));
+	}
+
+	private void getJarInfo(JNLPInfo jNLPInfo, Node childNode, String os) {
+		NamedNodeMap attributes = childNode.getAttributes();
+		Node hrefAttribute = attributes.getNamedItem("href");
+		jNLPInfo.resources.add(new JNLPResourceInfo(hrefAttribute.getNodeValue(), os, false));
 	}
 
 }

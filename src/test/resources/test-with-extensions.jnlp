@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp spec="1.0+" codebase="." href="test-with-extensions.jnlp">
+<jnlp spec="1.0+" codebase="http://someplace.org/releases/" href="test-with-extensions.jnlp">
 
 	<information>
 		<title>Jnlp With Extensions for Testing Reasons</title>
@@ -17,7 +17,7 @@
 		<j2se version="1.6+" />
 
 		<extension name="jnlp-extension" 
-           href="http://someplace.net/releases/test-extension.jnlp"/>
+           href="test-extension.jnlp"/>
 
 		<jar href="dependency1.jar" />
 		

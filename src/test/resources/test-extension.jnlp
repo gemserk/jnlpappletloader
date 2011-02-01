@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp spec="1.0+" codebase="http://someplace.net/releases/" href="test-extension.jnlp">
+<jnlp spec="1.0+" codebase="http://someplace.org/releases/" href="test-extension.jnlp">
 
 	<information>
 		<title>Jnlp Extension for Testing Reasons</title>

@@ -45,8 +45,10 @@ public class JNLPInfo {
 
 	public String codeBase;
 
-	public JNLPAppletDescInfo jNLPAppletDescInfo;
+	public JNLPAppletDescInfo jnlpAppletDescInfo;
 
 	public List<JNLPResourceInfo> resources = new ArrayList<JNLPResourceInfo>();
+	
+	public List<JNLPInfo> extensions = new ArrayList<JNLPInfo>();
 
 }

@@ -9,6 +9,7 @@ import java.text.MessageFormat;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsNull;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -21,7 +22,7 @@ import org.w3c.dom.Document;
 
 @RunWith(JMock.class)
 public class JNLPParserTest {
-	
+
 	Mockery mockery = new Mockery() {
 		{
 			setImposteriser(ClassImposteriser.INSTANCE);
@@ -52,41 +53,55 @@ public class JNLPParserTest {
 
 	private void printJnlpInfo(JNLPInfo jnlpInfo) {
 		System.out.println("codeBase: " + jnlpInfo.codeBase);
-		System.out.println("applet.mainClass: " + jnlpInfo.jNLPAppletDescInfo.mainClassName);
-		System.out.println("applet.name: " + jnlpInfo.jNLPAppletDescInfo.name);
-		System.out.println("applet.parameters: " + jnlpInfo.jNLPAppletDescInfo.parameters);
+
+		if (jnlpInfo.jnlpAppletDescInfo != null) {
+			System.out.println("applet.mainClass: " + jnlpInfo.jnlpAppletDescInfo.mainClassName);
+			System.out.println("applet.name: " + jnlpInfo.jnlpAppletDescInfo.name);
+			System.out.println("applet.parameters: " + jnlpInfo.jnlpAppletDescInfo.parameters);
+		}
 
 		for (JNLPResourceInfo jnlpResourceInfo : jnlpInfo.resources)
 			System.out.println(MessageFormat.format("resource: href={0}, os={1}, native={2}", jnlpResourceInfo.href, jnlpResourceInfo.os, jnlpResourceInfo.nativeLib));
+
+		for (JNLPInfo jnlpInfo2 : jnlpInfo.extensions)
+			printJnlpInfo(jnlpInfo2);
 	}
 
-	// <extension name="Scenario-0.5"
-	// href="http://download.java.net/javadesktop/scenario/releases/0.5/Scenario-0.5.jnlp"/>
-	
 	@Test
 	public void testParseWithExtension() throws Exception {
-		
-		final String jnlpUrl = "http://someplace.org/releases/test-with-extensions.jnlp";
+
+		// final String jnlpUrl = "http://someplace.org/releases/test-with-extensions.jnlp";
 		final URL url = new URL("file:");
 
 		final URLBuilder urlBuilder = mockery.mock(URLBuilder.class);
-		
+
 		JNLPParser jnlpParser = new JNLPParser();
 		jnlpParser.setUrlBuilder(urlBuilder);
-		
+
 		mockery.checking(new Expectations() {
 			{
-				oneOf(urlBuilder).build(jnlpUrl);
-				will(returnValue(url));
+				// oneOf(urlBuilder).build(jnlpUrl);
+				// will(returnValue(url));
 
 				oneOf(urlBuilder).open(url);
 				will(returnValue(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-with-extensions.jnlp")));
+
+				oneOf(urlBuilder).build("http://someplace.org/releases/");
+				will(returnValue(url));
+
+				oneOf(urlBuilder).build(url, "test-extension.jnlp");
+				will(returnValue(url));
+
+				oneOf(urlBuilder).open(url);
+				will(returnValue(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-extension.jnlp")));
 			}
 		});
-		
-		JNLPInfo jnlpInfo = jnlpParser.parseJnlp(jnlpUrl);
+
+		JNLPInfo jnlpInfo = jnlpParser.parseJnlp(url);
+
 		assertThat(jnlpInfo, IsNull.notNullValue());
-		
+		assertThat(jnlpInfo.extensions.size(), IsEqual.equalTo(1));
+
 		printJnlpInfo(jnlpInfo);
 	}
 
