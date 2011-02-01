@@ -12,8 +12,6 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.lwjgl.util.applet.JnlpParser.JnlpInfo;
-import org.lwjgl.util.applet.JnlpParser.JnlpJarInfo;
 import org.w3c.dom.Document;
 
 public class JnlpAppletLoader extends Applet implements AppletStub {

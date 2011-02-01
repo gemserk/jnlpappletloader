@@ -14,8 +14,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.lwjgl.util.applet.JnlpParser.JnlpJarInfo;
 
-@RunWith(JMock.class)
 @SuppressWarnings("serial")
+@RunWith(JMock.class)
 public class JnlpAppletLoaderTest {
 
 	Mockery mockery = new Mockery() {
