@@ -4,6 +4,7 @@ import java.applet.Applet;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.List;
 public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	private static final long serialVersionUID = -2459790398016588477L;
+
+	FileInfoProvider fileInfoProvider = new FileInfoProvider();
 
 	@Override
 	public void init() {
@@ -24,6 +27,9 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		final AppletParameters appletParameters = new AppletParametersProxy(new AppletParametersUtil(this)).getAppletParameters();
 
 		List<FileInfo> jarFiles = new ArrayList<FileInfo>();
+
+		jarFiles.addAll(getFilesInfo(appletParameters.getJars()));
+
 		List<FileInfo> nativeFiles = new ArrayList<FileInfo>();
 
 		List<FileInfo> files = new ArrayList<FileInfo>();
@@ -45,6 +51,13 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		// switch applet
 
 		switchApplet(appletParameters);
+	}
+
+	public List<FileInfo> getFilesInfo(List<URL> urls) {
+		List<FileInfo> files = new ArrayList<FileInfo>();
+		for (int i = 0; i < urls.size(); i++)
+			files.add(fileInfoProvider.getFileInfo(urls.get(i)));
+		return files;
 	}
 
 	private void switchApplet(final AppletParameters appletParameters) {

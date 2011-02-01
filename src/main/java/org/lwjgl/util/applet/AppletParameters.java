@@ -1,13 +1,13 @@
-/**
- * 
- */
 package org.lwjgl.util.applet;
+
+import java.net.URL;
+import java.util.List;
 
 public class AppletParameters {
 
 	String main;
 
-	String jars;
+	List<URL> jars;
 
 	String logo;
 
@@ -21,11 +21,11 @@ public class AppletParameters {
 		return main;
 	}
 
-	public String getJars() {
+	public List<URL> getJars() {
 		return jars;
 	}
 
-	public void setJars(String jars) {
+	public void setJars(List<URL> jars) {
 		this.jars = jars;
 	}
 

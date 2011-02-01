@@ -1,6 +1,7 @@
 package org.lwjgl.util.applet;
 
 import java.applet.Applet;
+import java.net.URL;
 
 public class AppletParametersUtil {
 
@@ -33,6 +34,10 @@ public class AppletParametersUtil {
 		if (parameter != null)
 			return Boolean.parseBoolean(parameter);
 		return defaultValue;
+	}
+
+	public URL getCodeBase() {
+		return applet.getCodeBase();
 	}
 
 }
