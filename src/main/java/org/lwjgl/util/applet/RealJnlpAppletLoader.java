@@ -54,7 +54,7 @@ public class RealJnlpAppletLoader extends Applet implements AppletStub {
 
 			Document document = documentBuilder.parse(jnlpInputStream);
 
-			jnlpInfo = JnlpParserTest.parse(document);
+			jnlpInfo = new JnlpParser(document).parse();
 
 			appletParameters.putAll(jnlpInfo.appletDescInfo.parameters);
 			
