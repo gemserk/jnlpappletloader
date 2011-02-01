@@ -1,9 +1,5 @@
 package org.lwjgl.util.applet;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -17,51 +13,6 @@ import org.w3c.dom.NodeList;
  */
 public class JNLPParser {
 
-	/**
-	 * Info of a single resource, could be a jar or a nativelib.
-	 */
-	public static class JNLPResourceInfo {
-
-		public String href;
-
-		public String os;
-
-		public boolean nativeLib;
-
-		public JNLPResourceInfo(String href, String os, boolean nativeLib) {
-			this.href = href;
-			this.os = os;
-			this.nativeLib = nativeLib;
-		}
-
-	}
-
-	/**
-	 * Has the info of the JNLP file.
-	 */
-	public static class JNLPInfo {
-
-		public String codeBase;
-
-		public JNLPParser.JNLPAppletDescInfo jNLPAppletDescInfo;
-
-		public List<JNLPResourceInfo> resources = new ArrayList<JNLPResourceInfo>();
-
-	}
-
-	/**
-	 * Has the information of the applet-desc of the JNLP.
-	 */
-	public static class JNLPAppletDescInfo {
-
-		public String mainClassName;
-
-		public String name;
-
-		public Map<String, String> parameters = new HashMap<String, String>();
-
-	}
-
 	private final Document jnlpDocument;
 
 	public JNLPParser(Document document) {
@@ -73,8 +24,8 @@ public class JNLPParser {
 	 * 
 	 * @return a JnlpInfo with the JNLP information.
 	 */
-	public JNLPInfo parse() {
-		JNLPInfo jnlpInfo = new JNLPInfo();
+	public JNLPAppletLoader.JNLPInfo parse() {
+		JNLPAppletLoader.JNLPInfo jnlpInfo = new JNLPAppletLoader.JNLPInfo();
 
 		NodeList jnlpElements = jnlpDocument.getElementsByTagName("jnlp");
 
@@ -107,7 +58,7 @@ public class JNLPParser {
 		return jnlpInfo;
 	}
 
-	private void getResourcesInfo(JNLPParser.JNLPInfo jNLPInfo, Node resourcesNode) {
+	private void getResourcesInfo(JNLPAppletLoader.JNLPInfo jNLPInfo, Node resourcesNode) {
 
 		NamedNodeMap attributes = resourcesNode.getAttributes();
 
@@ -133,25 +84,25 @@ public class JNLPParser {
 
 	}
 
-	private void getNativeLibInfo(JNLPParser.JNLPInfo jNLPInfo, Node childNode, String os) {
+	private void getNativeLibInfo(JNLPAppletLoader.JNLPInfo jNLPInfo, Node childNode, String os) {
 		NamedNodeMap attributes = childNode.getAttributes();
 		Node hrefAttribute = attributes.getNamedItem("href");
-		jNLPInfo.resources.add(new JNLPParser.JNLPResourceInfo(hrefAttribute.getNodeValue(), os, true));
+		jNLPInfo.resources.add(new JNLPAppletLoader.JNLPResourceInfo(hrefAttribute.getNodeValue(), os, true));
 	}
 
-	private void getJarInfo(JNLPParser.JNLPInfo jNLPInfo, Node childNode, String os) {
+	private void getJarInfo(JNLPAppletLoader.JNLPInfo jNLPInfo, Node childNode, String os) {
 		NamedNodeMap attributes = childNode.getAttributes();
 		Node hrefAttribute = attributes.getNamedItem("href");
-		jNLPInfo.resources.add(new JNLPParser.JNLPResourceInfo(hrefAttribute.getNodeValue(), os, false));
+		jNLPInfo.resources.add(new JNLPAppletLoader.JNLPResourceInfo(hrefAttribute.getNodeValue(), os, false));
 	}
 
-	private JNLPParser.JNLPAppletDescInfo getAppletDescInfo(Node appletDescElement) {
+	private JNLPAppletLoader.JNLPAppletDescInfo getAppletDescInfo(Node appletDescElement) {
 		NamedNodeMap attributes = appletDescElement.getAttributes();
 
 		String name = attributes.getNamedItem("name").getNodeValue();
 		String mainClass = attributes.getNamedItem("main-class").getNodeValue();
 
-		JNLPParser.JNLPAppletDescInfo jNLPAppletDescInfo = new JNLPParser.JNLPAppletDescInfo();
+		JNLPAppletLoader.JNLPAppletDescInfo jNLPAppletDescInfo = new JNLPAppletLoader.JNLPAppletDescInfo();
 		jNLPAppletDescInfo.mainClassName = mainClass;
 		jNLPAppletDescInfo.name = name;
 
@@ -169,7 +120,7 @@ public class JNLPParser {
 		return jNLPAppletDescInfo;
 	}
 
-	private void getParamInfo(JNLPParser.JNLPAppletDescInfo jNLPAppletDescInfo, Node childNode) {
+	private void getParamInfo(JNLPAppletLoader.JNLPAppletDescInfo jNLPAppletDescInfo, Node childNode) {
 		NamedNodeMap attributes = childNode.getAttributes();
 		String nameAttribute = attributes.getNamedItem("name").getNodeValue();
 		String valueAttribute = attributes.getNamedItem("value").getNodeValue();

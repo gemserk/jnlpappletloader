@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,14 +14,58 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.lwjgl.util.applet.JNLPParser.JNLPInfo;
 import org.w3c.dom.Document;
 
 public class JNLPAppletLoader extends Applet implements AppletStub {
 
+	/**
+	 * Has the information of the applet-desc of the JNLP.
+	 */
+	public static class JNLPAppletDescInfo {
+	
+		public String mainClassName;
+	
+		public String name;
+	
+		public Map<String, String> parameters = new HashMap<String, String>();
+	
+	}
+
+	/**
+	 * Info of a single resource, could be a jar or a nativelib.
+	 */
+	public static class JNLPResourceInfo {
+	
+		public String href;
+	
+		public String os;
+	
+		public boolean nativeLib;
+	
+		public JNLPResourceInfo(String href, String os, boolean nativeLib) {
+			this.href = href;
+			this.os = os;
+			this.nativeLib = nativeLib;
+		}
+	
+	}
+
+	/**
+	 * Has the info of the JNLP file.
+	 */
+	public static class JNLPInfo {
+	
+		public String codeBase;
+	
+		public JNLPAppletDescInfo jNLPAppletDescInfo;
+	
+		public List<JNLPResourceInfo> resources = new ArrayList<JNLPResourceInfo>();
+	
+	}
+
 	private static final long serialVersionUID = -2459790398016588477L;
 
-	private JNLPInfo jNLPInfo;
+	private JNLPAppletLoader.JNLPInfo jNLPInfo;
 
 	URL codeBase;
 
@@ -76,7 +121,7 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 
 	}
 
-	protected Map<String, String> getAppletParametersFromJnlpInfo(JNLPParser.JNLPInfo jNLPInfo) {
+	protected Map<String, String> getAppletParametersFromJnlpInfo(JNLPAppletLoader.JNLPInfo jNLPInfo) {
 		Map<String, String> appletParameters = new HashMap<String, String>();
 		appletParameters.putAll(jNLPInfo.jNLPAppletDescInfo.parameters);
 
@@ -96,7 +141,7 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 		return appletParameters;
 	}
 
-	protected void addNativesFor(JNLPParser.JNLPInfo jNLPInfo, Map<String, String> appletParameters, String os, String appletParameter) {
+	protected void addNativesFor(JNLPAppletLoader.JNLPInfo jNLPInfo, Map<String, String> appletParameters, String os, String appletParameter) {
 		String parameter = getJarsForOsStartingWith(jNLPInfo.resources, os, true);
 		if ("".equals(parameter.trim())) {
 			System.out.println(os + " has no natives");
@@ -106,12 +151,12 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 		appletParameters.put(appletParameter, parameter);
 	}
 
-	protected String getJarsForOsStartingWith(List<JNLPParser.JNLPResourceInfo> resources, String os, boolean nativeLib) {
+	protected String getJarsForOsStartingWith(List<JNLPAppletLoader.JNLPResourceInfo> resources, String os, boolean nativeLib) {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
 		for (int i = 0; i < resources.size(); i++) {
-			JNLPParser.JNLPResourceInfo jNLPResourceInfo = resources.get(i);
+			JNLPAppletLoader.JNLPResourceInfo jNLPResourceInfo = resources.get(i);
 
 			if (jNLPResourceInfo.nativeLib != nativeLib)
 				continue;
