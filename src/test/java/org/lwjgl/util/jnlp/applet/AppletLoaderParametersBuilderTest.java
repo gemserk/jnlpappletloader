@@ -91,37 +91,4 @@ public class AppletLoaderParametersBuilderTest {
 		assertNotNull(appletParameters.get("al_windows"));
 	}
 
-	// @Test
-	// public void shouldAddExtensionResourcesAsAbsoluteUrls() {
-	// JNLPInfo extensionJnlpInfo = new JNLPInfo();
-	// extensionJnlpInfo.codeBase = "http://someplace.net/releases/";
-	// extensionJnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
-	// {
-	// add(new JNLPResourceInfo("jinput.jar", "", ResourceType.Jar));
-	// add(new JNLPResourceInfo("jutils.jar", "", ResourceType.Jar));
-	// }
-	// };
-	//
-	// JNLPInfo jnlpInfo = new JNLPInfo();
-	// jnlpInfo.codeBase = ".";
-	// jnlpInfo.jnlpAppletDescInfo = new JNLPAppletDescInfo() {
-	// {
-	// mainClassName = "Main";
-	// name = "name";
-	// }
-	// };
-	// jnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
-	// {
-	// add(new JNLPResourceInfo("lwjgl.jar", "", ResourceType.Jar));
-	// }
-	// };
-	// jnlpInfo.extensions.add(extensionJnlpInfo);
-	//
-	// Map<String, String> appletParameters = new AppletLoaderParametersBuilder(jnlpInfo).getParametersFromJnlpInfo();
-	//
-	// String jarsParameter = appletParameters.get("al_jars");
-	// assertThat(jarsParameter, IsNull.notNullValue());
-	// assertThat(jarsParameter, IsEqual.equalTo("lwjgl.jar, http://someplace.net/releases/jinput.jar, http://someplace.net/releases/jutils.jar"));
-	// }
-
 }
