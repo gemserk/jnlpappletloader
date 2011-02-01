@@ -20,10 +20,6 @@ public class JnlpAppletLoaderTest {
 	@Test
 	public void emptyTest() throws MalformedURLException {
 		
-		JnlpAppletLoader jnlpAppletLoader = new JnlpAppletLoader();
-		
-		
-		
 	}
 
 }
