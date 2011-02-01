@@ -9,7 +9,7 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Pack200;
 import java.util.zip.GZIPInputStream;
 
-import org.lwjgl.util.applet.FileDownloader;
+import org.lwjgl.util.applet.FileUtils;
 
 public class FileDownloaderTest {
 
@@ -57,7 +57,7 @@ public class FileDownloaderTest {
 
 		String filePath = path + jarName + downloadExtension;
 
-		FileDownloader fileDownloader = new FileDownloader();
+		FileUtils fileUtils = new FileUtils();
 
 		new File(path).mkdirs();
 
@@ -71,7 +71,7 @@ public class FileDownloaderTest {
 		if (isPack200Encoding || isGZipEncoding)
 			inputStream = new GZIPInputStream(inputStream);
 
-		fileDownloader.download(inputStream, new FileOutputStream(file));
+		fileUtils.copy(inputStream, new FileOutputStream(file));
 		
 		if (!isPack200Encoding)
 			return;

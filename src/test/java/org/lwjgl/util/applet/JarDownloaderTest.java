@@ -32,7 +32,7 @@ public class JarDownloaderTest {
 	String tempDirectory = System.getProperty("java.io.tmpdir");
 
 	@Test
-	public void shouldDownloadFile() throws IOException {
+	public void shouldDownloadJarFile() throws IOException {
 
 		final String path = tempDirectory + File.separator + "jarDownloaderTest" + File.separator;
 
@@ -44,14 +44,14 @@ public class JarDownloaderTest {
 		final InputStream inputStream = mockery.mock(InputStream.class);
 		final OutputStream outputStream = mockery.mock(OutputStream.class);
 
-		final FileDownloader fileDownloader = mockery.mock(FileDownloader.class);
+		final FileUtils fileUtils = mockery.mock(FileUtils.class);
 
 		final FileOutputStreamBuilder fileOutputStreamBuilder = mockery.mock(FileOutputStreamBuilder.class);
 
 		JarDownloader jarDownloader = new JarDownloader(new URL("file:"), path);
 		jarDownloader.setJarUtils(jarUtils);
 		jarDownloader.setUrlConnectionBuilder(urlConnectionBuilder);
-		jarDownloader.setFileDownloader(fileDownloader);
+		jarDownloader.setFileDownloader(fileUtils);
 		jarDownloader.setFileOutputStreamBuilder(fileOutputStreamBuilder);
 
 		// expect
@@ -70,7 +70,7 @@ public class JarDownloaderTest {
 				oneOf(fileOutputStreamBuilder).getFileOutputStream(new File(path + File.separator + "lwjgl.jar"));
 				will(returnValue(outputStream));
 
-				oneOf(fileDownloader).download(inputStream, outputStream);
+				oneOf(fileUtils).copy(inputStream, outputStream);
 
 			}
 		});
@@ -81,32 +81,55 @@ public class JarDownloaderTest {
 		assertThat(downloadedFile.getAbsolutePath(), IsEqual.equalTo(path + "lwjgl.jar"));
 
 	}
+	
+	@Test
+	public void shouldDownloadGzipFile() throws IOException {
 
-	// @Test
-	// public void shouldDownloadFile() throws MalformedURLException {
-	//
-	// final URL codeBase = new URL("http://localhost");
-	// String path = tempDirectory + File.separator + "jarDownloaderTest" + File.separator;
-	//		
-	// final JarUtil jarUtils = mockery.mock(JarUtil.class);
-	//
-	// JarDownloader jarDownloader = new JarDownloader(codeBase, path);
-	// jarDownloader.setJarUtils(jarUtils);
-	//		
-	// FileInfo fileInfo = new FileInfo("lwjgl.jar", 100, 100L);
-	//
-	// mockery.checking(new Expectations() {
-	// {
-	// oneOf(jarUtils).getCodeBasedUrl(codeBase, "lwjgl.jar");
-	// will(returnValue(new URL("http://localhost/lwjgl.jar")));
-	// }
-	// });
-	//
-	// File downloadedFile = jarDownloader.download(fileInfo);
-	//		
-	// assertThat(downloadedFile, IsNull.notNullValue());
-	// assertThat(downloadedFile.getAbsolutePath(), IsEqual.equalTo(path + "lwjgl.jar"));
-	//		
-	// }
+		final String path = tempDirectory + File.separator + "jarDownloaderTest" + File.separator;
+
+		JarUtil jarUtils = new JarUtil();
+
+		final UrlConnectionBuilder urlConnectionBuilder = mockery.mock(UrlConnectionBuilder.class);
+		final URLConnection urlConnection = mockery.mock(URLConnection.class);
+
+		final InputStream inputStream = mockery.mock(InputStream.class);
+		final OutputStream outputStream = mockery.mock(OutputStream.class);
+
+		final FileUtils fileUtils = mockery.mock(FileUtils.class);
+
+		final FileOutputStreamBuilder fileOutputStreamBuilder = mockery.mock(FileOutputStreamBuilder.class);
+
+		JarDownloader jarDownloader = new JarDownloader(new URL("file:"), path);
+		jarDownloader.setJarUtils(jarUtils);
+		jarDownloader.setUrlConnectionBuilder(urlConnectionBuilder);
+		jarDownloader.setFileDownloader(fileUtils);
+		jarDownloader.setFileOutputStreamBuilder(fileOutputStreamBuilder);
+
+		// expect
+
+		mockery.checking(new Expectations() {
+			{
+				oneOf(urlConnectionBuilder).openConnection(new URL("file:lwjgl.jar"), "pack200-gzip, gzip");
+				will(returnValue(urlConnection));
+
+				oneOf(urlConnection).getContentEncoding();
+				will(returnValue("gzip"));
+
+				oneOf(urlConnection).getInputStream();
+				will(returnValue(inputStream));
+
+				oneOf(fileOutputStreamBuilder).getFileOutputStream(new File(path + File.separator + "lwjgl.jar"));
+				will(returnValue(outputStream));
+
+				oneOf(fileUtils).unzip(inputStream, outputStream);
+			}
+		});
+
+		File downloadedFile = jarDownloader.download(new FileInfo("lwjgl.jar", 100, 100L));
+
+		assertThat(downloadedFile, IsNull.notNullValue());
+		assertThat(downloadedFile.getAbsolutePath(), IsEqual.equalTo(path + "lwjgl.jar"));
+
+	}
 
 }

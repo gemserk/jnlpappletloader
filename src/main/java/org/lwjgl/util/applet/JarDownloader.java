@@ -10,7 +10,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Pack200;
-import java.util.zip.GZIPInputStream;
 
 public class JarDownloader {
 
@@ -100,9 +99,9 @@ public class JarDownloader {
 		}
 
 	}
-	
+
 	public static class FileOutputStreamBuilder {
-		
+
 		public OutputStream getFileOutputStream(File file) {
 			try {
 				return new FileOutputStream(file);
@@ -110,27 +109,41 @@ public class JarDownloader {
 				throw new RuntimeException("failed to get output stream for file " + file, e);
 			}
 		}
-		
+
+		// public OutputStream getGZipOutputStream(File file) {
+		// try {
+		// return new GZIPOutputStream(new FileOutputStream(file));
+		// } catch (FileNotFoundException e) {
+		// throw new RuntimeException("failed to get gzip output stream for file " + file, e);
+		// } catch (IOException e) {
+		// throw new RuntimeException("failed to get gzip output stream for file " + file, e);
+		// }
+		// }
+
 	}
 
 	Capabilities capabilities = new Capabilities(true, true);
 
 	UrlConnectionBuilder urlConnectionBuilder = new UrlConnectionBuilder();
-	
-	FileDownloader fileDownloader = new FileDownloader();
-	
+
+	FileUtils fileUtils = new FileUtils();
+
 	FileOutputStreamBuilder fileOutputStreamBuilder = new FileOutputStreamBuilder();
-	
-	public void setFileDownloader(FileDownloader fileDownloader) {
-		this.fileDownloader = fileDownloader;
+
+	public void setFileDownloader(FileUtils fileUtils) {
+		this.fileUtils = fileUtils;
 	}
 
 	public void setUrlConnectionBuilder(UrlConnectionBuilder urlConnectionBuilder) {
 		this.urlConnectionBuilder = urlConnectionBuilder;
 	}
-	
+
 	public void setFileOutputStreamBuilder(FileOutputStreamBuilder fileOutputStreamBuilder) {
 		this.fileOutputStreamBuilder = fileOutputStreamBuilder;
+	}
+
+	public void setCapabilities(Capabilities capabilities) {
+		this.capabilities = capabilities;
 	}
 
 	private File internalDownload(FileInfo fileInfo) throws IOException, FileNotFoundException {
@@ -145,10 +158,6 @@ public class JarDownloader {
 		System.out.println("Accept-Encoding: " + acceptEncoding);
 
 		URLConnection connection = urlConnectionBuilder.openConnection(url, acceptEncoding);
-
-		// URLConnection connection = url.openConnection();
-		// connection.addRequestProperty("Accept-Encoding", acceptEncoding);
-		// connection.connect();
 
 		String contentEncoding = connection.getContentEncoding();
 
@@ -176,9 +185,9 @@ public class JarDownloader {
 		InputStream inputStream = connection.getInputStream();
 
 		if (isPack200Encoding || isGZipEncoding)
-			inputStream = new GZIPInputStream(inputStream);
-
-		fileDownloader.download(inputStream, fileOutputStreamBuilder.getFileOutputStream(file));
+			fileUtils.unzip(inputStream, fileOutputStreamBuilder.getFileOutputStream(file));
+		else
+			fileUtils.copy(inputStream, fileOutputStreamBuilder.getFileOutputStream(file));
 
 		if (!isPack200Encoding)
 			return file;
