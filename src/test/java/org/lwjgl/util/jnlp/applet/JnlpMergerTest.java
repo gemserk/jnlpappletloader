@@ -2,6 +2,7 @@ package org.lwjgl.util.jnlp.applet;
 
 import static org.junit.Assert.assertThat;
 
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -30,6 +31,7 @@ public class JnlpMergerTest {
 
 		final UrlBuilder urlBuilder = mockery.mock(UrlBuilder.class);
 		final JnlpParser jnlpParser = mockery.mock(JnlpParser.class);
+		final InputStream inputStream = mockery.mock(InputStream.class);
 
 		JnlpMerger jnlpMerger = new JnlpMerger();
 		jnlpMerger.setJnlpParser(jnlpParser);
@@ -53,7 +55,10 @@ public class JnlpMergerTest {
 				oneOf(urlBuilder).build(jnlpUrl, "http://someplace.net/extension1.jnlp");
 				will(returnValue(jnlpUrl));
 
-				oneOf(jnlpParser).parseJnlp(jnlpUrl);
+				oneOf(urlBuilder).open(jnlpUrl);
+				will(returnValue(inputStream));
+
+				oneOf(jnlpParser).parseJnlp(inputStream);
 				will(returnValue(extensionJnlpInfo));
 
 				oneOf(urlBuilder).build("http://someplace.net/");

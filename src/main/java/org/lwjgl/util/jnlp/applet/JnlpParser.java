@@ -3,7 +3,6 @@ package org.lwjgl.util.jnlp.applet;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,20 +16,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class JnlpParser {
-
-	private UrlBuilder urlBuilder;
-
-	public void setUrlBuilder(UrlBuilder urlBuilder) {
-		this.urlBuilder = urlBuilder;
-	}
-	
-	public JnlpParser(UrlBuilder urlBuilder) {
-		this.urlBuilder = urlBuilder;
-	}
-
-	public JnlpInfo parseJnlp(URL url) {
-		return parseJnlp(urlBuilder.open(url));
-	}
 
 	public JnlpInfo parseJnlp(InputStream is) {
 		try {

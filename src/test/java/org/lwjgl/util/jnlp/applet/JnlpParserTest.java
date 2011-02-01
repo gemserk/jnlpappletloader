@@ -10,12 +10,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsNull;
-import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
 import org.w3c.dom.Document;
 
 @RunWith(JMock.class)
@@ -39,7 +39,7 @@ public class JnlpParserTest {
 
 		Document document = documentBuilder.parse(jnlpInputStream);
 
-		JnlpInfo jnlpInfo = new JnlpParser(new UrlBuilder()).parse(document);
+		JnlpInfo jnlpInfo = new JnlpParser().parse(document);
 
 		new JnlpPrinter().printJnlpInfo(jnlpInfo);
 
@@ -48,39 +48,15 @@ public class JnlpParserTest {
 	
 	@Test
 	public void testParseWithExtension() throws Exception {
-		final URL url = new URL("file:");
+		JnlpParser jnlpParser = new JnlpParser();
 
-		final UrlBuilder urlBuilder = mockery.mock(UrlBuilder.class);
-
-		JnlpParser jnlpParser = new JnlpParser(urlBuilder);
-		jnlpParser.setUrlBuilder(urlBuilder);
-
-		mockery.checking(new Expectations() {
-			{
-				oneOf(urlBuilder).open(url);
-				will(returnValue(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-with-extensions.jnlp")));
-
-				// ignoring(urlBuilder).build("http://someplace.org/releases/");
-				// will(returnValue(url));
-				//
-				// oneOf(urlBuilder).build(url, "test-extension1.jnlp");
-				// will(returnValue(url));
-				//
-				// oneOf(urlBuilder).open(url);
-				// will(returnValue(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-extension1.jnlp")));
-				//
-				// oneOf(urlBuilder).build(url, "http://anotherplace.net/releases/test-extension2.jnlp");
-				// will(returnValue(url));
-				//
-				// oneOf(urlBuilder).open(url);
-				// will(returnValue(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-extension2.jnlp")));
-			}
-		});
-
-		JnlpInfo jnlpInfo = jnlpParser.parseJnlp(url);
+		JnlpInfo jnlpInfo = jnlpParser.parseJnlp(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-with-extensions.jnlp"));
 
 		assertThat(jnlpInfo, IsNull.notNullValue());
 		assertThat(jnlpInfo.hasExtensions(), IsEqual.equalTo(true));
+		assertThat(jnlpInfo.resources.get(0).type, IsEqual.equalTo(ResourceType.Extension));
+		assertThat(jnlpInfo.resources.get(1).type, IsEqual.equalTo(ResourceType.Extension));
+		
 		// assertThat(jnlpInfo.extensions.size(), IsEqual.equalTo(2));
 
 		// JNLPInfo firstExtensionJnlpInfo = jnlpInfo.extensions.get(0);
