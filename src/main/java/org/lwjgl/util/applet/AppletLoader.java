@@ -1016,9 +1016,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		lwjglApplet.start();
 	}
 
-	class JarInfo {
+	public static class JarInfo {
 
-		final int size;
+		final int contentLength;
 
 		final long lastModified;
 
@@ -1026,12 +1026,44 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		public JarInfo(String name, int size, long lastModified) {
 			this.name = name;
-			this.size = size;
+			this.contentLength = size;
 			this.lastModified = lastModified;
 		}
 
 	}
+	
+	public static class UrlUtils {
+		
+		protected static String getFileName(URL url) {
+			return url.getFile().substring(url.getFile().lastIndexOf('/') + 1);
+		}
+		
+	}
+	
+	public static class JarProvider {
+		
+		public JarInfo getJarInfo(URL url) throws IOException, ProtocolException {
+			URLConnection urlconnection = getUrlConnection(url);
+			JarInfo jarInfo = new JarInfo(UrlUtils.getFileName(url), urlconnection.getContentLength(), urlconnection.getLastModified());
+			return jarInfo;
+		}
+		
+		protected URLConnection getUrlConnection(URL url) throws IOException, ProtocolException {
+			URLConnection urlconnection = url.openConnection();
+			urlconnection.setDefaultUseCaches(false);
+			if (urlconnection instanceof HttpURLConnection)
+				((HttpURLConnection) urlconnection).setRequestMethod("HEAD");
+			return urlconnection;
+		}
+		
+	}
 
+	private JarProvider jarProvider = new JarProvider();
+	
+	public void setJarProvider(JarProvider jarProvider) {
+		this.jarProvider = jarProvider;
+	}
+	
 	/**
 	 * This method will get the files sizes of the files to download. It will further get the lastModified time of files and save it in a hashmap, if cache is enabled it will mark those files that have not changed since last download to not redownloaded.
 	 * 
@@ -1049,9 +1081,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 		// calculate total size of jars to download
 		for (int i = 0; i < urlList.length; i++) {
-			JarInfo jarInfo = getJarInfo(urlList[i]);
+			JarInfo jarInfo = jarProvider.getJarInfo(urlList[i]);
 
-			int size = jarInfo.size;
+			int size = jarInfo.contentLength;
 
 			long lastModified = jarInfo.lastModified;
 			String fileName = jarInfo.name;
@@ -1077,22 +1109,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		}
 	}
 
-	protected JarInfo getJarInfo(URL url) throws IOException, ProtocolException {
-		URLConnection urlconnection = getUrlConnection(url);
-		JarInfo jarInfo = new JarInfo(getFileName(url), urlconnection.getContentLength(), urlconnection.getLastModified());
-		return jarInfo;
-	}
-
 	protected void updateProgress(int progress) {
 		percentage = progress;
-	}
-
-	protected URLConnection getUrlConnection(URL url) throws IOException, ProtocolException {
-		URLConnection urlconnection = url.openConnection();
-		urlconnection.setDefaultUseCaches(false);
-		if (urlconnection instanceof HttpURLConnection)
-			((HttpURLConnection) urlconnection).setRequestMethod("HEAD");
-		return urlconnection;
 	}
 
 	protected HashMap<String, Long> loadCache(File cacheBaseDirectory) throws Exception {

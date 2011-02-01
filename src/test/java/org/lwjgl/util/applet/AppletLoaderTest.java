@@ -3,10 +3,7 @@ package org.lwjgl.util.applet;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 
 import org.jmock.Expectations;
@@ -15,6 +12,8 @@ import org.jmock.integration.junit4.JMock;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.lwjgl.util.applet.AppletLoader.JarInfo;
+import org.lwjgl.util.applet.AppletLoader.JarProvider;
 
 @RunWith(JMock.class)
 public class AppletLoaderTest {
@@ -55,33 +54,25 @@ public class AppletLoaderTest {
 		assertEquals("applet_util.jar", appletLoader.getJarName(new URL("file:///lwjgl/applet_util.jar")));
 
 	}
-	
+
 	@Test
 	public void testGetJarInfoWhenCacheDisabled() throws Exception {
 
-		final URLConnection urlConnection = mockery.mock(URLConnection.class);
+		final JarProvider jarProvider = mockery.mock(JarProvider.class);
 
-		AppletLoader appletLoader = new AppletLoader() {
-
-			@Override
-			protected URLConnection getUrlConnection(URL url) throws IOException, ProtocolException {
-				return urlConnection;
-			}
-
-		};
+		final AppletLoader appletLoader = new AppletLoader();
+		appletLoader.setJarProvider(jarProvider);
 
 		appletLoader.cacheEnabled = false;
 
+		appletLoader.urlList = new URL[] { new URL("file:///" + tempDirectory + "/lwjgltest/lwjgl.jar.pack.lzma") };
+
 		mockery.checking(new Expectations() {
 			{
-				oneOf(urlConnection).getContentLength();
-				will(returnValue(10));
-				oneOf(urlConnection).getLastModified();
-				will(returnValue(1000L));
+				oneOf(jarProvider).getJarInfo(appletLoader.urlList[0]);
+				will(returnValue(new JarInfo("lwjgl.jar.pack.lzma", 10, 1000L)));
 			}
 		});
-
-		appletLoader.urlList = new URL[] { new URL("file:///" + tempDirectory + "/lwjgltest/lwjgl.jar.pack.lzma") };
 
 		File cacheBaseDirectory = new File(tempDirectory + "/lwjgltest/");
 
@@ -97,18 +88,13 @@ public class AppletLoaderTest {
 		assertEquals(1000L, (long) appletLoader.filesLastModified.get("lwjgl.jar.pack.lzma"));
 		assertEquals(10, appletLoader.totalSizeDownload);
 	}
-	
+
 	@Test
 	public void testGetJarInfoWhenCacheEnabledWithFileNotInCache() throws Exception {
 
-		final URLConnection urlConnection = mockery.mock(URLConnection.class);
+		final JarProvider jarProvider = mockery.mock(JarProvider.class);
 
-		AppletLoader appletLoader = new AppletLoader() {
-
-			@Override
-			protected URLConnection getUrlConnection(URL url) throws IOException, ProtocolException {
-				return urlConnection;
-			}
+		final AppletLoader appletLoader = new AppletLoader() {
 
 			@Override
 			protected HashMap<String, Long> loadCache(File cacheBaseDirectory) throws Exception {
@@ -117,18 +103,18 @@ public class AppletLoaderTest {
 
 		};
 
+		appletLoader.setJarProvider(jarProvider);
+
 		appletLoader.cacheEnabled = true;
+
+		appletLoader.urlList = new URL[] { new URL("file:///" + tempDirectory + "/lwjgltest/lwjgl.jar.pack.lzma") };
 
 		mockery.checking(new Expectations() {
 			{
-				oneOf(urlConnection).getContentLength();
-				will(returnValue(10));
-				oneOf(urlConnection).getLastModified();
-				will(returnValue(1000L));
+				oneOf(jarProvider).getJarInfo(appletLoader.urlList[0]);
+				will(returnValue(new JarInfo("lwjgl.jar.pack.lzma", 10, 1000L)));
 			}
 		});
-
-		appletLoader.urlList = new URL[] { new URL("file:///" + tempDirectory + "/lwjgltest/lwjgl.jar.pack.lzma") };
 
 		File cacheBaseDirectory = new File(tempDirectory + "/lwjgltest/");
 
@@ -144,18 +130,13 @@ public class AppletLoaderTest {
 		assertEquals(1000L, (long) appletLoader.filesLastModified.get("lwjgl.jar.pack.lzma"));
 		assertEquals(10, appletLoader.totalSizeDownload);
 	}
-	
+
 	@Test
 	public void testGetJarInfoWhenCacheEnabledWithFileInCacheAndModified() throws Exception {
 
-		final URLConnection urlConnection = mockery.mock(URLConnection.class);
+		final JarProvider jarProvider = mockery.mock(JarProvider.class);
 
-		AppletLoader appletLoader = new AppletLoader() {
-
-			@Override
-			protected URLConnection getUrlConnection(URL url) throws IOException, ProtocolException {
-				return urlConnection;
-			}
+		final AppletLoader appletLoader = new AppletLoader() {
 
 			@Override
 			protected HashMap<String, Long> loadCache(File cacheBaseDirectory) throws Exception {
@@ -168,18 +149,18 @@ public class AppletLoaderTest {
 
 		};
 
+		appletLoader.setJarProvider(jarProvider);
+
 		appletLoader.cacheEnabled = true;
+
+		appletLoader.urlList = new URL[] { new URL("file:///" + tempDirectory + "/lwjgltest/lwjgl.jar.pack.lzma") };
 
 		mockery.checking(new Expectations() {
 			{
-				oneOf(urlConnection).getContentLength();
-				will(returnValue(10));
-				oneOf(urlConnection).getLastModified();
-				will(returnValue(100L));
+				oneOf(jarProvider).getJarInfo(appletLoader.urlList[0]);
+				will(returnValue(new JarInfo("lwjgl.jar.pack.lzma", 10, 100L)));
 			}
 		});
-
-		appletLoader.urlList = new URL[] { new URL("file:///" + tempDirectory + "/lwjgltest/lwjgl.jar.pack.lzma") };
 
 		File cacheBaseDirectory = new File(tempDirectory + "/lwjgltest/");
 
@@ -195,18 +176,13 @@ public class AppletLoaderTest {
 		assertEquals(100L, (long) appletLoader.filesLastModified.get("lwjgl.jar.pack.lzma"));
 		assertEquals(10, appletLoader.totalSizeDownload);
 	}
-	
+
 	@Test
 	public void testGetJarInfoWhenCacheEnabledWithFileInCacheAndNotModified() throws Exception {
 
-		final URLConnection urlConnection = mockery.mock(URLConnection.class);
+		final JarProvider jarProvider = mockery.mock(JarProvider.class);
 
-		AppletLoader appletLoader = new AppletLoader() {
-
-			@Override
-			protected URLConnection getUrlConnection(URL url) throws IOException, ProtocolException {
-				return urlConnection;
-			}
+		final AppletLoader appletLoader = new AppletLoader() {
 
 			@Override
 			protected HashMap<String, Long> loadCache(File cacheBaseDirectory) throws Exception {
@@ -219,18 +195,18 @@ public class AppletLoaderTest {
 
 		};
 
+		appletLoader.setJarProvider(jarProvider);
+
 		appletLoader.cacheEnabled = true;
+
+		appletLoader.urlList = new URL[] { new URL("file:///" + tempDirectory + "/lwjgltest/lwjgl.jar.pack.lzma") };
 
 		mockery.checking(new Expectations() {
 			{
-				oneOf(urlConnection).getContentLength();
-				will(returnValue(10));
-				oneOf(urlConnection).getLastModified();
-				will(returnValue(100L));
+				oneOf(jarProvider).getJarInfo(appletLoader.urlList[0]);
+				will(returnValue(new JarInfo("lwjgl.jar.pack.lzma", 10, 100L)));
 			}
 		});
-
-		appletLoader.urlList = new URL[] { new URL("file:///" + tempDirectory + "/lwjgltest/lwjgl.jar.pack.lzma") };
 
 		File cacheBaseDirectory = new File(tempDirectory + "/lwjgltest/");
 
