@@ -25,6 +25,9 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		// check cache and remove already downloader jars from jars to download?
 
 		final AppletParameters appletParameters = new AppletParametersProxy(new AppletParametersUtil(this)).getAppletParameters();
+		
+		for (URL url : appletParameters.getJars()) 
+			System.out.println(url);
 
 		List<FileInfo> jarFiles = new ArrayList<FileInfo>();
 
