@@ -856,7 +856,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		dos.writeFloat(version);
 		dos.close();
 	}
-
+	
 	/**
 	 * read the current cache file
 	 * 

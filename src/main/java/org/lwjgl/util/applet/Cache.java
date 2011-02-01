@@ -12,7 +12,9 @@ public class Cache {
 
 	public boolean isAlreadyDownloaded(FileInfo file) {
 		FileInfo cachedEntry = cachedFiles.get(file.fileName);
-		return file.equals(cachedEntry);
+		if (cachedEntry == null)
+			return false;
+		return file.lastModified == cachedEntry.lastModified;
 	}
 
 }
