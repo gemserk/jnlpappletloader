@@ -17,8 +17,7 @@ import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.lwjgl.util.jnlp.applet.JNLPAppletLoader;
-import org.lwjgl.util.jnlp.applet.JNLPAppletLoader.JNLPInfo;
-import org.lwjgl.util.jnlp.applet.JNLPAppletLoader.JNLPResourceInfo;
+import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo;
 
 @SuppressWarnings("serial")
 @RunWith(JMock.class)
@@ -34,12 +33,12 @@ public class JNLPAppletLoaderTest {
 	public void shouldGetOnlyNativesForOnePlatform() throws MalformedURLException {
 		JNLPAppletLoader jnlpAppletLoader = new JNLPAppletLoader();
 
-		List<JNLPResourceInfo> resources = new ArrayList<JNLPResourceInfo>() {
+		List<JNLPInfo.JNLPResourceInfo> resources = new ArrayList<JNLPInfo.JNLPResourceInfo>() {
 			{
-				add(new JNLPAppletLoader.JNLPResourceInfo("lwjgl.jar", "Windows", false));
-				add(new JNLPAppletLoader.JNLPResourceInfo("lwjgl-win.jar", "Windows", true));
-				add(new JNLPAppletLoader.JNLPResourceInfo("lwjgl-linux.jar", "Linux", true));
-				add(new JNLPAppletLoader.JNLPResourceInfo("lwjgl-mac.jar", "Mac OS", true));
+				add(new JNLPInfo.JNLPResourceInfo("lwjgl.jar", "Windows", false));
+				add(new JNLPInfo.JNLPResourceInfo("lwjgl-win.jar", "Windows", true));
+				add(new JNLPInfo.JNLPResourceInfo("lwjgl-linux.jar", "Linux", true));
+				add(new JNLPInfo.JNLPResourceInfo("lwjgl-mac.jar", "Mac OS", true));
 			}
 		};
 
@@ -50,13 +49,13 @@ public class JNLPAppletLoaderTest {
 	public void shouldGetOnlyAllNotNativeDependencies() throws MalformedURLException {
 		JNLPAppletLoader jnlpAppletLoader = new JNLPAppletLoader();
 
-		List<JNLPResourceInfo> resources = new ArrayList<JNLPResourceInfo>() {
+		List<JNLPInfo.JNLPResourceInfo> resources = new ArrayList<JNLPInfo.JNLPResourceInfo>() {
 			{
-				add(new JNLPAppletLoader.JNLPResourceInfo("lwjgl.jar", "", false));
-				add(new JNLPAppletLoader.JNLPResourceInfo("jinput.jar", "", false));
-				add(new JNLPAppletLoader.JNLPResourceInfo("lwjgl-win.jar", "Windows", true));
-				add(new JNLPAppletLoader.JNLPResourceInfo("lwjgl-linux.jar", "Linux", true));
-				add(new JNLPAppletLoader.JNLPResourceInfo("lwjgl-mac.jar", "Mac OS", true));
+				add(new JNLPInfo.JNLPResourceInfo("lwjgl.jar", "", false));
+				add(new JNLPInfo.JNLPResourceInfo("jinput.jar", "", false));
+				add(new JNLPInfo.JNLPResourceInfo("lwjgl-win.jar", "Windows", true));
+				add(new JNLPInfo.JNLPResourceInfo("lwjgl-linux.jar", "Linux", true));
+				add(new JNLPInfo.JNLPResourceInfo("lwjgl-mac.jar", "Mac OS", true));
 			}
 		};
 
@@ -67,11 +66,11 @@ public class JNLPAppletLoaderTest {
 	public void shouldGetAllResourcesForAGivenOS() throws MalformedURLException {
 		JNLPAppletLoader jnlpAppletLoader = new JNLPAppletLoader();
 
-		List<JNLPResourceInfo> resources = new ArrayList<JNLPResourceInfo>() {
+		List<JNLPInfo.JNLPResourceInfo> resources = new ArrayList<JNLPInfo.JNLPResourceInfo>() {
 			{
-				add(new JNLPAppletLoader.JNLPResourceInfo("lwjgl-win95.jar", "Windows 95", false));
-				add(new JNLPAppletLoader.JNLPResourceInfo("lwjgl-win98.jar", "Windows 98", false));
-				add(new JNLPAppletLoader.JNLPResourceInfo("lwjgl-win2000.jar", "Windows 2000", false));
+				add(new JNLPInfo.JNLPResourceInfo("lwjgl-win95.jar", "Windows 95", false));
+				add(new JNLPInfo.JNLPResourceInfo("lwjgl-win98.jar", "Windows 98", false));
+				add(new JNLPInfo.JNLPResourceInfo("lwjgl-win2000.jar", "Windows 2000", false));
 			}
 		};
 
@@ -119,8 +118,8 @@ public class JNLPAppletLoaderTest {
 		JNLPAppletLoader jnlpAppletLoader = new JNLPAppletLoader();
 
 		JNLPInfo jNLPInfo = new JNLPInfo();
-		jNLPInfo.resources = new ArrayList<JNLPAppletLoader.JNLPResourceInfo>(){{
-			add(new JNLPAppletLoader.JNLPResourceInfo("lwjgl.jar", "Windows", true));
+		jNLPInfo.resources = new ArrayList<JNLPInfo.JNLPResourceInfo>(){{
+			add(new JNLPInfo.JNLPResourceInfo("lwjgl.jar", "Windows", true));
 		}};
 
 		HashMap<String, String> appletParameters = new HashMap<String, String>();

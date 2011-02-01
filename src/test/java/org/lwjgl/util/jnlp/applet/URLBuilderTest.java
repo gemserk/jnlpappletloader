@@ -22,31 +22,6 @@ public class URLBuilderTest {
 		}
 	};
 	
-	public static class URLBuilder {
-		
-		private final URL codeBase;
-
-		public URLBuilder(URL codeBase) {
-			this.codeBase = codeBase;
-		}
-		
-		/**
-		 * Returns an URL using the context set.
-		 * 
-		 * @param url
-		 *            a String with the path of the URL to build, could be relative or absolute, if absolute then context is not used.
-		 * @return an URL which could be relative to context or absolute.
-		 */
-		public URL build(String url) {
-			try {
-				return new URL(codeBase, url);
-			} catch (MalformedURLException e) {
-				throw new RuntimeException("Failed to create url for " + url, e);
-			}
-		}
-		
-	}
-
 	@Test
 	public void shouldReturnUrlWithinContext() throws MalformedURLException {
 		URLBuilder urlBuilder = new URLBuilder(new URL("http://localhost/"));
