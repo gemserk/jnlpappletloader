@@ -13,14 +13,14 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.lwjgl.util.applet.exceptions.MissingRequiredParameterException;
+import org.lwjgl.util.applet.JnlpParser.JnlpInfo;
 import org.w3c.dom.Document;
 
 public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	private static final long serialVersionUID = -2459790398016588477L;
 
-	private JnlpParser.JnlpInfo jnlpInfo;
+	private JnlpInfo jnlpInfo;
 
 	private URL codeBase;
 
@@ -40,7 +40,7 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		String jnlpHref = getParameter(jnlpParameterName);
 
 		if (jnlpHref == null)
-			throw new MissingRequiredParameterException(jnlpParameterName);
+			throw new RuntimeException("Missing required parameter " + jnlpParameterName);
 
 		try {
 			URL jnlpUrl = urlBuilder.build(jnlpHref);

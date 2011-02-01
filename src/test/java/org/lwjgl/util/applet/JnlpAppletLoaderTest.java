@@ -15,10 +15,8 @@ import org.jmock.integration.junit4.JMock;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.lwjgl.util.applet.JnlpAppletLoader;
 import org.lwjgl.util.applet.JnlpParser.JnlpInfo;
 import org.lwjgl.util.applet.JnlpParser.JnlpJarInfo;
-import org.lwjgl.util.applet.exceptions.MissingRequiredParameterException;
 
 @SuppressWarnings("serial")
 @RunWith(JMock.class)
@@ -78,7 +76,7 @@ public class JnlpAppletLoaderTest {
 		assertThat(jnlpAppletLoader.getJarsForOsStartingWith(resources, "Windows", false), IsEqual.equalTo("lwjgl-win95.jar, lwjgl-win98.jar, lwjgl-win2000.jar"));
 	}
 
-	@Test(expected = MissingRequiredParameterException.class)
+	@Test(expected = RuntimeException.class)
 	public void shouldFailWhenMissingRequiredParameters() {
 
 		final AppletStub appletStub = mockery.mock(AppletStub.class);
