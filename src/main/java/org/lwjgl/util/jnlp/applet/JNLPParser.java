@@ -144,25 +144,29 @@ public class JNLPParser {
 
 			if ("nativelib".equals(childNode.getNodeName()))
 				getNativeLibInfo(jnlpInfo, childNode, os);
-			
+
 			if ("extension".equals(childNode.getNodeName()))
-				getExtensionInfo(jnlpInfo, childNode);
+				getExtensionInfo(jnlpInfo, childNode, os);
 
 		}
 
 	}
 
-	private void getExtensionInfo(JNLPInfo jnlpInfo, Node childNode) {
+	private void getExtensionInfo(JNLPInfo jnlpInfo, Node childNode, String os) {
 		NamedNodeMap attributes = childNode.getAttributes();
 		Node hrefAttribute = attributes.getNamedItem("href");
-		
-		JNLPParser jnlpParser = new JNLPParser(urlBuilder);
-		jnlpParser.setUrlBuilder(urlBuilder);
-		
-		URL codeBase = urlBuilder.build(jnlpInfo.codeBase);
-		JNLPInfo extensionJnlpInfo = jnlpParser.parseJnlp(urlBuilder.build(codeBase, hrefAttribute.getNodeValue()));
-		
-		jnlpInfo.extensions.add(extensionJnlpInfo);
+		jnlpInfo.resources.add(new JNLPResourceInfo(hrefAttribute.getNodeValue(), os, ResourceType.Extension));
+
+		// NamedNodeMap attributes = childNode.getAttributes();
+		// Node hrefAttribute = attributes.getNamedItem("href");
+		//		
+		// JNLPParser jnlpParser = new JNLPParser(urlBuilder);
+		// jnlpParser.setUrlBuilder(urlBuilder);
+		//		
+		// URL codeBase = urlBuilder.build(jnlpInfo.codeBase);
+		// JNLPInfo extensionJnlpInfo = jnlpParser.parseJnlp(urlBuilder.build(codeBase, hrefAttribute.getNodeValue()));
+		//		
+		// jnlpInfo.extensions.add(extensionJnlpInfo);
 	}
 
 	private void getNativeLibInfo(JNLPInfo jnlpInfo, Node childNode, String os) {

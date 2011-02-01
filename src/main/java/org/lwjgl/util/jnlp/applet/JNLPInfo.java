@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo.ResourceType;
+
 
 /**
  * Has the info of the JNLP file.
@@ -52,5 +54,26 @@ public class JNLPInfo {
 	public List<JNLPResourceInfo> resources = new ArrayList<JNLPResourceInfo>();
 	
 	public List<JNLPInfo> extensions = new ArrayList<JNLPInfo>();
+
+	public boolean hasExtensions() {
+		for (int i = 0; i < resources.size(); i++) {
+			if (resources.get(i).type == ResourceType.Extension)
+				return true;
+		}
+		return false;
+	}
+
+	public JNLPResourceInfo getFirstResource(ResourceType type) {
+		for (int i = 0; i < resources.size(); i++) {
+			JNLPResourceInfo jnlpResourceInfo = resources.get(i);
+			if (jnlpResourceInfo.type == type)
+				return jnlpResourceInfo;
+		}
+		return null;
+	}
+
+	public void removeResourceInfo(JNLPResourceInfo jnlpResourceInfo) {
+		resources.remove(jnlpResourceInfo);
+	}
 
 }

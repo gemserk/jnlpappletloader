@@ -11,12 +11,12 @@ import java.util.Map;
 import javax.swing.JEditorPane;
 
 import org.lwjgl.util.applet.AppletLoader;
+import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo;
+import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo.ResourceType;
 
 public class JNLPAppletLoader extends Applet implements AppletStub {
 
 	private static final long serialVersionUID = -2459790398016588477L;
-
-	private JNLPInfo jnlpInfo;
 
 	URL codeBase;
 
@@ -55,7 +55,7 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 
 			URL jnlpUrl = urlBuilder.build(codeBase, jnlpHref);
 
-			jnlpInfo = jnlpParser.parseJnlp(jnlpUrl);
+			JNLPInfo jnlpInfo = getMergedJnlp(jnlpUrl);
 
 			// replaces codebase with jnlp codebase
 			// codeBase = new URL(jnlpInfo.codeBase);
@@ -89,6 +89,37 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 			e.printStackTrace(System.out);
 		}
 
+	}
+
+	public JNLPInfo getMergedJnlp(URL jnlpUrl) {
+		JNLPInfo jnlpInfo = jnlpParser.parseJnlp(jnlpUrl);
+
+		URL codeBase = urlBuilder.build(jnlpInfo.codeBase);
+
+		while (jnlpInfo.hasExtensions()) {
+
+			JNLPResourceInfo jnlpResourceInfo = jnlpInfo.getFirstResource(ResourceType.Extension);
+			jnlpInfo.removeResourceInfo(jnlpResourceInfo);
+
+			// process jnlp from extension
+
+			URL extensionJnlpUrl = urlBuilder.build(codeBase, jnlpResourceInfo.href);
+			JNLPInfo extensionJnlpInfo = jnlpParser.parseJnlp(extensionJnlpUrl);
+
+			// URL extensionJnlpCodebase = urlBuilder.build(codeBase, extensionJnlpInfo.codeBase);
+			// for (int i = 0; i < extensionJnlpInfo.resources.size(); i++) {
+			// JNLPResourceInfo extensionJnlpResourceInfo = extensionJnlpInfo.resources.get(i);
+			// // jnlpInfo.resources.add(new JNLPResourceInfo())
+			// }
+
+			jnlpInfo.extensions.add(extensionJnlpInfo);
+
+			// merge with current jnlp
+			// jnlpInfo.merge(extensionJnlpInfo);
+
+		}
+
+		return jnlpInfo;
 	}
 
 	@Override

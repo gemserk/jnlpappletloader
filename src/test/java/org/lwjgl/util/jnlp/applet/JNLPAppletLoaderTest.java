@@ -1,12 +1,21 @@
 package org.lwjgl.util.jnlp.applet;
 
-import java.net.MalformedURLException;
+import static org.junit.Assert.assertThat;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.hamcrest.collection.IsCollectionContaining;
+import org.hamcrest.core.IsEqual;
+import org.hamcrest.core.IsNull;
+import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo;
+import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo.ResourceType;
 
 @RunWith(JMock.class)
 public class JNLPAppletLoaderTest {
@@ -19,6 +28,48 @@ public class JNLPAppletLoaderTest {
 
 	@Test
 	public void emptyTest() throws MalformedURLException {
+		
+		final URLBuilder urlBuilder = mockery.mock(URLBuilder.class);
+		final JNLPParser jnlpParser = mockery.mock(JNLPParser.class);
+
+		JNLPAppletLoader jnlpAppletLoader = new JNLPAppletLoader();
+		
+		jnlpAppletLoader.codeBase = new URL("file:");
+		jnlpAppletLoader.setJnlpParser(jnlpParser);
+		jnlpAppletLoader.setUrlBuilder(urlBuilder);
+		
+		final URL jnlpUrl = new URL("file:somefile.jnlp");
+		
+		final JNLPInfo jnlpInfo = new JNLPInfo();
+		jnlpInfo.codeBase = "jnlpcontext";
+		jnlpInfo.resources.add(new JNLPResourceInfo("http://someplace.net/extension1.jnlp", "", ResourceType.Extension));
+
+		final JNLPInfo extensionJnlpInfo = new JNLPInfo();
+		extensionJnlpInfo.codeBase = "anothercontext";
+		extensionJnlpInfo.resources.add(new JNLPResourceInfo("lwjgl.jar", "", ResourceType.Jar));
+
+		mockery.checking(new Expectations() {
+			{
+				oneOf(jnlpParser).parseJnlp(jnlpUrl);
+				will(returnValue(jnlpInfo));
+				
+				oneOf(urlBuilder).build(jnlpInfo.codeBase);
+				will(returnValue(jnlpUrl));
+
+				oneOf(urlBuilder).build(jnlpUrl, "http://someplace.net/extension1.jnlp");
+				will(returnValue(jnlpUrl));
+
+				oneOf(jnlpParser).parseJnlp(jnlpUrl);
+				will(returnValue(extensionJnlpInfo));
+			}
+		});
+
+		JNLPInfo mergedJnlp = jnlpAppletLoader.getMergedJnlp(jnlpUrl);
+		
+		assertThat(mergedJnlp, IsNull.notNullValue());
+		assertThat(mergedJnlp.hasExtensions(), IsEqual.equalTo(false));
+//		assertThat(mergedJnlp.resources, IsCollectionContaining.hasItem(extensionJnlpInfo.resources.get(0)));
+		assertThat(mergedJnlp.extensions, IsCollectionContaining.hasItem(extensionJnlpInfo));
 		
 	}
 
@@ -46,3 +97,4 @@ public class JNLPAppletLoaderTest {
 	// }
 
 }
+
