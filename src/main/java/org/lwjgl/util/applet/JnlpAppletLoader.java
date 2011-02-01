@@ -4,7 +4,6 @@ import java.applet.Applet;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,21 +12,14 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	private static final long serialVersionUID = -2459790398016588477L;
 
-	FileInfoProvider fileInfoProviderRemoteImpl;
-	
+	FileInfoProvider fileInfoProvider;
+
 	JarUtil jarUtil = new JarUtil();
-	
-	List<URL> convertToUrls(URL codebase, List<String> files) {
-		List<URL> urls = new ArrayList<URL>();
-		for (String file : files) 
-			urls.add(jarUtil.getCodebasedUrl(codebase, file));
-		return urls;
-	}
 
 	@Override
 	public void init() {
-		
-		fileInfoProviderRemoteImpl = new FileInfoProviderRemoteImpl(this.getCodeBase());
+
+		fileInfoProvider = new FileInfoProviderRemoteImpl(this.getCodeBase());
 
 		// parseParameters
 
@@ -36,16 +28,16 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		// check cache and remove already downloader jars from jars to download?
 
 		AppletParametersUtil appletParametersUtil = new AppletParametersUtil(this);
-		
+
 		final AppletParameters appletParameters = new AppletParametersProxy(appletParametersUtil).getAppletParameters();
-		
+
 		// List<URL> urls = convertToUrls(getCodeBase(), appletParameters.getJars());
 		//		
 		// for (URL url : urls)
 		// System.out.println(url);
 
 		List<FileInfo> jarFiles = new ArrayList<FileInfo>();
-		
+
 		jarFiles.addAll(getFilesInfo(appletParameters.getJars()));
 
 		List<FileInfo> nativeFiles = new ArrayList<FileInfo>();
@@ -74,7 +66,7 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 	public List<FileInfo> getFilesInfo(List<String> urls) {
 		List<FileInfo> files = new ArrayList<FileInfo>();
 		for (int i = 0; i < urls.size(); i++)
-			files.add(fileInfoProviderRemoteImpl.getFileInfo(urls.get(i)));
+			files.add(fileInfoProvider.getFileInfo(urls.get(i)));
 		return files;
 	}
 

@@ -23,13 +23,20 @@ public class JarUtil {
 			throw new RuntimeException("failed to get codebased url for " + jar, e);
 		}
 	}
-	
+
 	public List<URL> getUrls(URL codebase, String jarList) {
 		List<String> jars = getJars(jarList);
 		List<URL> urls = new ArrayList<URL>();
 		for (int i = 0; i < jars.size(); i++) {
 			urls.add(getCodebasedUrl(codebase, jars.get(i)));
 		}
+		return urls;
+	}
+
+	public List<URL> convertToUrls(URL codebase, List<String> files) {
+		List<URL> urls = new ArrayList<URL>();
+		for (String file : files)
+			urls.add(getCodebasedUrl(codebase, file));
 		return urls;
 	}
 
