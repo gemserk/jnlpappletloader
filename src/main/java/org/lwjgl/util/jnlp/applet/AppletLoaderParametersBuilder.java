@@ -16,11 +16,11 @@ public class AppletLoaderParametersBuilder {
 
 	private final JnlpInfo jnlpInfo;
 
-	private String additionalExtension;
+	private String appendedJarExtension;
 
 	public AppletLoaderParametersBuilder(JnlpInfo jnlpInfo) {
 		this.jnlpInfo = jnlpInfo;
-		this.additionalExtension = "";
+		this.appendedJarExtension = "";
 	}
 
 	public Map<String, String> getParametersFromJnlpInfo() {
@@ -69,7 +69,7 @@ public class AppletLoaderParametersBuilder {
 				continue;
 
 			stringBuilder.append(jnlpResourceInfo.href);
-			stringBuilder.append(this.additionalExtension);
+			stringBuilder.append(this.appendedJarExtension);
 			stringBuilder.append(", ");
 		}
 
@@ -79,8 +79,8 @@ public class AppletLoaderParametersBuilder {
 		return stringBuilder.toString();
 	}
 
-	public void setAdditionalExtension(String additionalExtension) {
-		this.additionalExtension = additionalExtension;
+	public void setAppendedJarExtension(String appendedJarExtension) {
+		this.appendedJarExtension = appendedJarExtension;
 	}
 
 }

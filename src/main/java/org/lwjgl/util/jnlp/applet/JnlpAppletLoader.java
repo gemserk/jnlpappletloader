@@ -60,8 +60,11 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 			// replaces codebase with jnlp codebase
 			// codeBase = new URL(jnlpInfo.codeBase);
 			// codeBase = urlBuilder.build(codeBase, jnlpInfo.codeBase);
+			String appendedJarExtension = getParameter("appendedJarExtension");
 
 			AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
+			if (appendedJarExtension != null)
+				appletLoaderParametersBuilder.setAppendedJarExtension(appendedJarExtension);
 			appletParameters.putAll(appletLoaderParametersBuilder.getParametersFromJnlpInfo());
 
 			System.out.println(appletParameters);

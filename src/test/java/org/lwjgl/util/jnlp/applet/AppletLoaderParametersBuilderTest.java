@@ -51,7 +51,7 @@ public class AppletLoaderParametersBuilderTest {
 		};
 		
 		AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
-		appletLoaderParametersBuilder.setAdditionalExtension(".pack.gz");
+		appletLoaderParametersBuilder.setAppendedJarExtension(".pack.gz");
 		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith("", ResourceType.Jar), IsEqual.equalTo("lwjgl.jar.pack.gz, jinput.jar.pack.gz"));
 	}
 
