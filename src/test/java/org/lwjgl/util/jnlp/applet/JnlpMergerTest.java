@@ -76,7 +76,6 @@ public class JnlpMergerTest {
 		assertThat(jnlpInfo.resources.get(2).href, IsEqual.equalTo("http://someplace.net/lwjgl.jar"));
 
 		new JnlpPrinter().printJnlpInfo(jnlpInfo);
-
 	}
 	
 }
