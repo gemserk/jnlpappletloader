@@ -11,41 +11,41 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class JnlpParser {
-	
+
 	public static class JnlpJarInfo {
-	
+
 		public String href;
-	
+
 		public String os;
-		
+
 		public boolean nativeLib;
-	
+
 		public JnlpJarInfo(String href, String os, boolean nativeLib) {
 			this.href = href;
 			this.os = os;
 			this.nativeLib = nativeLib;
 		}
-	
+
 	}
 
 	public static class JnlpInfo {
-	
+
 		public String codeBase;
-	
+
 		public JnlpParser.AppletDescInfo appletDescInfo;
-	
-		public List<JnlpJarInfo> resources;
-	
+
+		public List<JnlpJarInfo> resources = new ArrayList<JnlpJarInfo>();
+
 	}
 
 	public static class AppletDescInfo {
-	
+
 		public String mainClassName;
-	
+
 		public String name;
-	
+
 		public Map<String, String> parameters = new HashMap<String, String>();
-	
+
 	}
 
 	private final Document jnlpDocument;
@@ -53,9 +53,9 @@ public class JnlpParser {
 	public JnlpParser(Document document) {
 		this.jnlpDocument = document;
 	}
-	
+
 	public JnlpParser.JnlpInfo parse() {
-		JnlpParser.JnlpInfo jnlpInfo = new JnlpParser.JnlpInfo();
+		JnlpInfo jnlpInfo = new JnlpInfo();
 
 		NodeList jnlpElements = jnlpDocument.getElementsByTagName("jnlp");
 
@@ -66,7 +66,7 @@ public class JnlpParser {
 
 		jnlpInfo.codeBase = jnlpElement.getAttributes().getNamedItem("codebase").getNodeValue();
 
-		jnlpInfo.resources = new ArrayList<JnlpParser.JnlpJarInfo>();
+		// jnlpInfo.resources = new ArrayList<JnlpJarInfo>();
 
 		NodeList childNodes = jnlpElement.getChildNodes();
 
@@ -137,9 +137,9 @@ public class JnlpParser {
 		JnlpParser.AppletDescInfo appletDescInfo = new JnlpParser.AppletDescInfo();
 		appletDescInfo.mainClassName = mainClass;
 		appletDescInfo.name = name;
-		
+
 		NodeList childNodes = appletDescElement.getChildNodes();
-		
+
 		for (int i = 0; i < childNodes.getLength(); i++) {
 
 			Node childNode = childNodes.item(i);
@@ -148,7 +148,7 @@ public class JnlpParser {
 				getParamInfo(appletDescInfo, childNode);
 
 		}
-		
+
 		return appletDescInfo;
 	}
 
@@ -159,5 +159,4 @@ public class JnlpParser {
 		appletDescInfo.parameters.put(nameAttribute, valueAttribute);
 	}
 
-	
 }

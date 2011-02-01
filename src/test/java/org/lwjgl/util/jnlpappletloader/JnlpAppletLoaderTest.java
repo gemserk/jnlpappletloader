@@ -1,11 +1,11 @@
 package org.lwjgl.util.jnlpappletloader;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.applet.AppletStub;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.hamcrest.core.IsEqual;
@@ -15,6 +15,7 @@ import org.jmock.integration.junit4.JMock;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.lwjgl.util.jnlpappletloader.JnlpParser.JnlpInfo;
 import org.lwjgl.util.jnlpappletloader.JnlpParser.JnlpJarInfo;
 import org.lwjgl.util.jnlpappletloader.exceptions.MissingRequiredParameterException;
 
@@ -41,7 +42,7 @@ public class JnlpAppletLoaderTest {
 			}
 		};
 
-		assertThat(jnlpAppletLoader.getJars(resources, "Windows", true), IsEqual.equalTo("lwjgl-win.jar"));
+		assertThat(jnlpAppletLoader.getJarsForOsStartingWith(resources, "Windows", true), IsEqual.equalTo("lwjgl-win.jar"));
 	}
 
 	@Test
@@ -58,7 +59,22 @@ public class JnlpAppletLoaderTest {
 			}
 		};
 
-		assertThat(jnlpAppletLoader.getJars(resources, "", false), IsEqual.equalTo("lwjgl.jar, jinput.jar"));
+		assertThat(jnlpAppletLoader.getJarsForOsStartingWith(resources, "", false), IsEqual.equalTo("lwjgl.jar, jinput.jar"));
+	}
+
+	@Test
+	public void shouldGetAllResourcesForAGivenOS() throws MalformedURLException {
+		JnlpAppletLoader jnlpAppletLoader = new JnlpAppletLoader();
+
+		List<JnlpJarInfo> resources = new ArrayList<JnlpJarInfo>() {
+			{
+				add(new JnlpJarInfo("lwjgl-win95.jar", "Windows 95", false));
+				add(new JnlpJarInfo("lwjgl-win98.jar", "Windows 98", false));
+				add(new JnlpJarInfo("lwjgl-win2000.jar", "Windows 2000", false));
+			}
+		};
+
+		assertThat(jnlpAppletLoader.getJarsForOsStartingWith(resources, "Windows", false), IsEqual.equalTo("lwjgl-win95.jar, lwjgl-win98.jar, lwjgl-win2000.jar"));
 	}
 
 	@Test(expected = MissingRequiredParameterException.class)
@@ -68,6 +84,8 @@ public class JnlpAppletLoaderTest {
 
 		mockery.checking(new Expectations() {
 			{
+				oneOf(appletStub).getParameter("al_codebase");
+				will(returnValue("file:"));
 				oneOf(appletStub).getParameter("al_jnlp");
 				will(returnValue(null));
 			}
@@ -78,6 +96,35 @@ public class JnlpAppletLoaderTest {
 
 		jnlpAppletLoader.init();
 		fail("should fail if parameter not found");
+
+	}
+
+	@Test
+	public void shouldNotAddParameterIfNoNativesFound() {
+
+		JnlpAppletLoader jnlpAppletLoader = new JnlpAppletLoader();
+
+		JnlpInfo jnlpInfo = new JnlpInfo();
+
+		HashMap<String, String> appletParameters = new HashMap<String, String>();
+		jnlpAppletLoader.addNativesFor(jnlpInfo, appletParameters, "Windows", "al_windows");
+		assertNull(appletParameters.get("al_windows"));
+
+	}
+	
+	@Test
+	public void shouldAddParameterIfNoNativesFound() {
+
+		JnlpAppletLoader jnlpAppletLoader = new JnlpAppletLoader();
+
+		JnlpInfo jnlpInfo = new JnlpInfo();
+		jnlpInfo.resources = new ArrayList<JnlpJarInfo>(){{
+			add(new JnlpJarInfo("lwjgl.jar", "Windows", true));
+		}};
+
+		HashMap<String, String> appletParameters = new HashMap<String, String>();
+		jnlpAppletLoader.addNativesFor(jnlpInfo, appletParameters, "Windows", "al_windows");
+		assertNotNull(appletParameters.get("al_windows"));
 
 	}
 
