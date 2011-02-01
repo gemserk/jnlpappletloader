@@ -15,9 +15,15 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * Parses a Jnlp document.
+ * 
+ * @author acoppes
+ * 
+ */
 public class JnlpParser {
 
-	public JnlpInfo parseJnlp(InputStream is) {
+	public JnlpInfo parse(InputStream is) {
 		try {
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -26,9 +32,16 @@ public class JnlpParser {
 
 			return parse(document);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException("Failed to parser jnlp from specified document", e);
 		} finally {
 			closeStream(is);
+		}
+	}
+
+	private void closeStream(Closeable closeable) {
+		try {
+			closeable.close();
+		} catch (IOException e) {
 		}
 	}
 
@@ -37,10 +50,10 @@ public class JnlpParser {
 	 * 
 	 * @return a JnlpInfo with the JNLP information.
 	 */
-	protected JnlpInfo parse(Document jnlpDocument) {
+	protected JnlpInfo parse(Document document) {
 		JnlpInfo jnlpInfo = new JnlpInfo();
 
-		NodeList jnlpElements = jnlpDocument.getElementsByTagName("jnlp");
+		NodeList jnlpElements = document.getElementsByTagName("jnlp");
 
 		if (jnlpElements.getLength() == 0)
 			throw new RuntimeException("Failed to parse document, jnlp file should have jnlp tag");
@@ -55,12 +68,12 @@ public class JnlpParser {
 
 			Node childNode = childNodes.item(i);
 
-			if ("resources".equals(childNode.getNodeName())) 
+			if ("resources".equals(childNode.getNodeName()))
 				getResourcesInfo(jnlpInfo, childNode);
 
 		}
 
-		NodeList appletDescElements = jnlpDocument.getElementsByTagName("applet-desc");
+		NodeList appletDescElements = document.getElementsByTagName("applet-desc");
 
 		if (appletDescElements.getLength() == 0)
 			return jnlpInfo;
@@ -70,20 +83,13 @@ public class JnlpParser {
 		return jnlpInfo;
 	}
 
-	private void closeStream(Closeable closeable) {
-		try {
-			closeable.close();
-		} catch (IOException e) {
-		}
-	}
-
 	private JnlpAppletDescInfo getAppletDescInfo(Node appletDescElement) {
 		NamedNodeMap attributes = appletDescElement.getAttributes();
 
 		String name = attributes.getNamedItem("name").getNodeValue();
 		String mainClass = attributes.getNamedItem("main-class").getNodeValue();
 
-		JnlpInfo.JnlpAppletDescInfo jnlpAppletDescInfo = new JnlpInfo.JnlpAppletDescInfo();
+		JnlpAppletDescInfo jnlpAppletDescInfo = new JnlpAppletDescInfo();
 		jnlpAppletDescInfo.mainClassName = mainClass;
 		jnlpAppletDescInfo.name = name;
 
@@ -101,13 +107,13 @@ public class JnlpParser {
 		return jnlpAppletDescInfo;
 	}
 
-	private void getParamInfo(JnlpInfo.JnlpAppletDescInfo jnlpAppletDescInfo, Node childNode) {
+	private void getParamInfo(JnlpAppletDescInfo jnlpAppletDescInfo, Node childNode) {
 		NamedNodeMap attributes = childNode.getAttributes();
 		String nameAttribute = attributes.getNamedItem("name").getNodeValue();
 		String valueAttribute = attributes.getNamedItem("value").getNodeValue();
 		jnlpAppletDescInfo.parameters.put(nameAttribute, valueAttribute);
 	}
-	
+
 	private void getResourcesInfo(JnlpInfo jnlpInfo, Node resourcesNode) {
 
 		NamedNodeMap attributes = resourcesNode.getAttributes();

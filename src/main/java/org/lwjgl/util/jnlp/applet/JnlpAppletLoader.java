@@ -92,7 +92,7 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 	}
 
 	public JnlpInfo getMergedJnlp(URL jnlpUrl) {
-		JnlpInfo jnlpInfo = jnlpParser.parseJnlp(urlBuilder.open(jnlpUrl));
+		JnlpInfo jnlpInfo = jnlpParser.parse(urlBuilder.open(jnlpUrl));
 		
 		codeBase = urlBuilder.build(codeBase, jnlpInfo.codeBase);
 		

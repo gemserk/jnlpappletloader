@@ -58,7 +58,7 @@ public class JnlpMergerTest {
 				oneOf(urlBuilder).open(jnlpUrl);
 				will(returnValue(inputStream));
 
-				oneOf(jnlpParser).parseJnlp(inputStream);
+				oneOf(jnlpParser).parse(inputStream);
 				will(returnValue(extensionJnlpInfo));
 
 				oneOf(urlBuilder).build("http://someplace.net/");

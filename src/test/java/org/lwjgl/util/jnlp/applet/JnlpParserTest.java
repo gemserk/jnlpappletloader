@@ -50,7 +50,7 @@ public class JnlpParserTest {
 	public void testParseWithExtension() throws Exception {
 		JnlpParser jnlpParser = new JnlpParser();
 
-		JnlpInfo jnlpInfo = jnlpParser.parseJnlp(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-with-extensions.jnlp"));
+		JnlpInfo jnlpInfo = jnlpParser.parse(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-with-extensions.jnlp"));
 
 		assertThat(jnlpInfo, IsNull.notNullValue());
 		assertThat(jnlpInfo.hasExtensions(), IsEqual.equalTo(true));

@@ -26,7 +26,7 @@ public class JnlpMerger {
 			jnlpInfo.removeResourceInfo(extensionResourceInfo);
 
 			URL extensionUrl = urlBuilder.build(codeBase, extensionResourceInfo.href);
-			JnlpInfo extensionJnlpInfo = jnlpParser.parseJnlp(urlBuilder.open(extensionUrl));
+			JnlpInfo extensionJnlpInfo = jnlpParser.parse(urlBuilder.open(extensionUrl));
 			mergeWithExtensions(extensionJnlpInfo, extensionUrl);
 
 			URL extensionCodeBase = urlBuilder.build(extensionJnlpInfo.codeBase);
