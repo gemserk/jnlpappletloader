@@ -15,6 +15,7 @@
 	<resources>
 		<j2se version="1.6+" />
 		<jar href="main-0.0.1-SNAPSHOT.jar" />
+		<jar href="http://acoppes-laptop.local/prototipos/java2dtest-latest/cglib-2.2.jar" />
 		<jar href="resources-0.0.1-SNAPSHOT.jar" />
 		<jar href="game-0.0.1-SNAPSHOT.jar" />
 		<jar href="logback-classic-0.9.17.jar" />
@@ -25,7 +26,6 @@
 		<jar href="commons-io-1.4.jar" />
 		<jar href="guice-2.0.jar" />
 		<jar href="aopalliance-1.0.jar" />
-		<jar href="cglib-2.2.jar" />
 		<jar href="asm-3.1.jar" />
 		<jar href="resourcesmanager-core-0.0.9-SNAPSHOT.jar" />
 		<jar href="commons-0.0.9-SNAPSHOT.jar" />

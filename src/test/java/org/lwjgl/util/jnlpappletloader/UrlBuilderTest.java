@@ -1,7 +1,6 @@
 package org.lwjgl.util.jnlpappletloader;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -45,4 +44,13 @@ public class UrlBuilderTest {
 		assertNotNull(url);
 		assertThat(url, IsEqual.equalTo(new URL("file:launch.jnlp")));
 	}
+	
+	@Test
+	public void testIsAbsoluteUrl() throws MalformedURLException {
+		UrlBuilder urlBuilder = new UrlBuilder(new URL("http://localhost/"));
+		assertEquals(false, urlBuilder.isAbsolute("launch.jnlp"));
+		assertEquals(true, urlBuilder.isAbsolute("http://someplace/launch.jnlp"));
+		assertEquals(true, urlBuilder.isAbsolute("file:launch.jnlp"));
+	}
+	
 }

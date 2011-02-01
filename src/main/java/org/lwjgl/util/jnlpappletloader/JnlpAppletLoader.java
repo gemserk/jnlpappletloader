@@ -4,6 +4,7 @@ import java.applet.Applet;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -26,17 +27,25 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	Map<String, String> appletParameters = new HashMap<String, String>();
 
+	UrlBuilder urlBuilder;
+
+	static String jnlpParameterName = "al_jnlp";
+
 	@Override
 	public void init() {
 
-		String jnlpHref = getParameter("al_jnlp");
-		
+		initCodeBase();
+
+		urlBuilder = new UrlBuilder(getCodeBase());
+
+		String jnlpHref = getParameter(jnlpParameterName);
+
 		if (jnlpHref == null)
-			throw new MissingRequiredParameterException("al_jnlp");
+			throw new MissingRequiredParameterException(jnlpParameterName);
 
 		try {
-			URL jnlpUrl = new URL(jnlpHref);
-			
+			URL jnlpUrl = urlBuilder.build(jnlpHref);
+
 			InputStream jnlpInputStream = jnlpUrl.openStream();
 
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -46,12 +55,12 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 			jnlpInfo = new JnlpParser(document).parse();
 
+			setCodeBase(urlBuilder.build(jnlpInfo.codeBase));
+
 			appletParameters.putAll(getAppletParametersFromJnlpInfo(jnlpInfo));
 
-			codeBase = new URL(jnlpInfo.codeBase);
-
 			System.out.println(appletParameters);
-			
+
 			AppletLoader appletLoader = new AppletLoader();
 			appletLoader.setStub(this);
 
@@ -68,10 +77,24 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	}
 
+	private void initCodeBase() {
+		String codeBaseParameter = getParameter("al_codebase");
+
+		if (codeBaseParameter == null) {
+			setCodeBase(super.getCodeBase());
+		} else {
+			try {
+				setCodeBase(new URL(codeBaseParameter));
+			} catch (MalformedURLException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
 	public Map<String, String> getAppletParametersFromJnlpInfo(JnlpParser.JnlpInfo jnlpInfo) {
 		Map<String, String> appletParameters = new HashMap<String, String>();
 		appletParameters.putAll(jnlpInfo.appletDescInfo.parameters);
-		
+
 		appletParameters.put("al_main", jnlpInfo.appletDescInfo.mainClassName);
 		appletParameters.put("al_title", jnlpInfo.appletDescInfo.name);
 
@@ -125,6 +148,10 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 	@Override
 	public URL getCodeBase() {
 		return codeBase;
+	}
+
+	public void setCodeBase(URL codeBase) {
+		this.codeBase = codeBase;
 	}
 
 	@Override

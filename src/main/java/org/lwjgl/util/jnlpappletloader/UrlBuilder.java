@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.lwjgl.util.jnlpappletloader;
 
 import java.net.MalformedURLException;
@@ -19,6 +16,20 @@ public class UrlBuilder {
 			return new URL(context, url);
 		} catch (MalformedURLException e) {
 			throw new RuntimeException("Failed to create url for " + url, e);
+		}
+	}
+
+	/**
+	 * Returns whether or not the url is absolute.
+	 * @param urlString
+	 * @return
+	 */
+	public boolean isAbsolute(String urlString) {
+		try {
+			URL url = new URL(new URL("file:"), urlString);
+			return urlString.equals(url.toString()); 
+		} catch (MalformedURLException e) {
+			return false;
 		}
 	}
 
