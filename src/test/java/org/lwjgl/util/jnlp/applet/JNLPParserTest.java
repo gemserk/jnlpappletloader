@@ -41,10 +41,7 @@ public class JNLPParserTest {
 
 		Document document = documentBuilder.parse(jnlpInputStream);
 
-		// Document document = documentBuilder.parse(jnlpFile);
-
 		JNLPInfo jnlpInfo = new JNLPParser().parse(document);
-		// JNLPInfo jNLPInfo = new JNLPParser(document).parse();
 
 		printJnlpInfo(jnlpInfo);
 
@@ -69,8 +66,6 @@ public class JNLPParserTest {
 
 	@Test
 	public void testParseWithExtension() throws Exception {
-
-		// final String jnlpUrl = "http://someplace.org/releases/test-with-extensions.jnlp";
 		final URL url = new URL("file:");
 
 		final URLBuilder urlBuilder = mockery.mock(URLBuilder.class);
@@ -80,9 +75,6 @@ public class JNLPParserTest {
 
 		mockery.checking(new Expectations() {
 			{
-				// oneOf(urlBuilder).build(jnlpUrl);
-				// will(returnValue(url));
-
 				oneOf(urlBuilder).open(url);
 				will(returnValue(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-with-extensions.jnlp")));
 

@@ -5,7 +5,6 @@ import java.applet.AppletStub;
 import java.awt.BorderLayout;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.JLabel;
@@ -39,9 +38,9 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 
 	@Override
 	public void init() {
-		
+
 		jnlpParser.setUrlBuilder(urlBuilder);
-		
+
 		try {
 			// starts using the default codebase
 			codeBase = super.getCodeBase();
@@ -51,7 +50,6 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 			if (jnlpHref == null)
 				throw new RuntimeException("Missing required parameter " + jnlpParameterName);
 
-			// URL jnlpUrl = new URL(codeBase, jnlpHref);
 			URL jnlpUrl = urlBuilder.build(codeBase, jnlpHref);
 
 			jnlpInfo = jnlpParser.parseJnlp(jnlpUrl);
@@ -60,7 +58,8 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 			// codeBase = new URL(jnlpInfo.codeBase);
 			codeBase = urlBuilder.build(codeBase, jnlpInfo.codeBase);
 
-			appletParameters.putAll(getAppletParametersFromJnlpInfo(jnlpInfo));
+			AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
+			appletParameters.putAll(appletLoaderParametersBuilder.getAppletParametersFromJnlpInfo());
 
 			System.out.println(appletParameters);
 
@@ -100,64 +99,5 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 			return appletParameters.get(name);
 		return super.getParameter(name);
 	}
-
-	// Helper methods
-
-	protected static Map<String, String> getAppletParametersFromJnlpInfo(JNLPInfo jNLPInfo) {
-		Map<String, String> appletParameters = new HashMap<String, String>();
-		appletParameters.putAll(jNLPInfo.jnlpAppletDescInfo.parameters);
-
-		appletParameters.put("al_main", jNLPInfo.jnlpAppletDescInfo.mainClassName);
-		appletParameters.put("al_title", jNLPInfo.jnlpAppletDescInfo.name);
-
-		String al_jars = getJarsForOsStartingWith(jNLPInfo.resources, "", false);
-		System.out.println("jars: " + al_jars);
-		appletParameters.put("al_jars", al_jars);
-
-		addNativesFor(jNLPInfo, appletParameters, "Windows", "al_windows");
-		addNativesFor(jNLPInfo, appletParameters, "Linux", "al_linux");
-		addNativesFor(jNLPInfo, appletParameters, "Mac OS", "al_mac");
-		addNativesFor(jNLPInfo, appletParameters, "Solaris", "al_solaris");
-		addNativesFor(jNLPInfo, appletParameters, "FreeBSD", "al_freebsd");
-
-		return appletParameters;
-	}
-
-	protected static void addNativesFor(JNLPInfo jNLPInfo, Map<String, String> appletParameters, String os, String appletParameter) {
-		String parameter = getJarsForOsStartingWith(jNLPInfo.resources, os, true);
-		if ("".equals(parameter.trim())) {
-			System.out.println(os + " has no natives");
-			return;
-		}
-		System.out.println(os + " natives: " + parameter);
-		appletParameters.put(appletParameter, parameter);
-	}
-
-	protected static String getJarsForOsStartingWith(List<JNLPInfo.JNLPResourceInfo> resources, String os, boolean nativeLib) {
-
-		StringBuilder stringBuilder = new StringBuilder();
-
-		for (int i = 0; i < resources.size(); i++) {
-			JNLPInfo.JNLPResourceInfo jNLPResourceInfo = resources.get(i);
-
-			if (jNLPResourceInfo.nativeLib != nativeLib)
-				continue;
-
-			if (!jNLPResourceInfo.os.toLowerCase().startsWith(os.toLowerCase()))
-				continue;
-
-			stringBuilder.append(jNLPResourceInfo.href);
-			stringBuilder.append(", ");
-		}
-
-		if (stringBuilder.length() > 0)
-			stringBuilder.replace(stringBuilder.length() - 2, stringBuilder.length(), "");
-
-		return stringBuilder.toString();
-	}
-
-	// JNLP parse logic
-
-
 
 }
