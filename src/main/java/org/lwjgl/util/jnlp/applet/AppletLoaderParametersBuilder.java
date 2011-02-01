@@ -72,13 +72,13 @@ public class AppletLoaderParametersBuilder {
 			stringBuilder.append(", ");
 		}
 
-		if (stringBuilder.length() > 0 && jnlpInfo.extensions.size() == 0)
+		if (stringBuilder.length() > 0)
 			stringBuilder.replace(stringBuilder.length() - 2, stringBuilder.length(), "");
 
-		for (int i = 0; i < jnlpInfo.extensions.size(); i++) {
-			JNLPInfo extensionJnlpInfo = jnlpInfo.extensions.get(i);
-			stringBuilder.append(getJarsForOsStartingWith(extensionJnlpInfo, os, type));
-		}
+		// for (int i = 0; i < jnlpInfo.extensions.size(); i++) {
+		// JNLPInfo extensionJnlpInfo = jnlpInfo.extensions.get(i);
+		// stringBuilder.append(getJarsForOsStartingWith(extensionJnlpInfo, os, type));
+		// }
 
 		return stringBuilder.toString();
 	}

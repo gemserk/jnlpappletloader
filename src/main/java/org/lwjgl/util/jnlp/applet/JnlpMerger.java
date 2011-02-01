@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.lwjgl.util.jnlp.applet;
 
 import java.net.URL;
@@ -22,14 +19,15 @@ public class JnlpMerger {
 		this.urlBuilder = urlBuilder;
 	}
 
-	public void mergeWithExtensions(JNLPInfo jnlpInfo) {
+	public void mergeWithExtensions(JNLPInfo jnlpInfo, URL codeBase) {
 
 		while (jnlpInfo.hasExtensions()) {
 			JNLPResourceInfo extensionResourceInfo = jnlpInfo.getFirstResource(ResourceType.Extension);
 			jnlpInfo.removeResourceInfo(extensionResourceInfo);
 
-			JNLPInfo extensionJnlpInfo = jnlpParser.parseJnlp(urlBuilder.build(extensionResourceInfo.href));
-			mergeWithExtensions(extensionJnlpInfo);
+			URL extensionUrl = urlBuilder.build(codeBase, extensionResourceInfo.href);
+			JNLPInfo extensionJnlpInfo = jnlpParser.parseJnlp(extensionUrl);
+			mergeWithExtensions(extensionJnlpInfo, extensionUrl);
 
 			URL extensionCodeBase = urlBuilder.build(extensionJnlpInfo.codeBase);
 			for (int i = 0; i < extensionJnlpInfo.resources.size(); i++) {

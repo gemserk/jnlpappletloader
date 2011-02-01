@@ -53,8 +53,6 @@ public class JNLPInfo {
 
 	public List<JNLPResourceInfo> resources = new ArrayList<JNLPResourceInfo>();
 	
-	public List<JNLPInfo> extensions = new ArrayList<JNLPInfo>();
-
 	public boolean hasExtensions() {
 		for (int i = 0; i < resources.size(); i++) {
 			if (resources.get(i).type == ResourceType.Extension)

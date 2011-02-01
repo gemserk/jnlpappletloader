@@ -32,7 +32,7 @@ public class JNLPParser {
 		return parseJnlp(urlBuilder.open(url));
 	}
 
-	private JNLPInfo parseJnlp(InputStream is) {
+	public JNLPInfo parseJnlp(InputStream is) {
 		try {
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();

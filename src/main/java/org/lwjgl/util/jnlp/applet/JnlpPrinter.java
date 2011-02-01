@@ -18,8 +18,6 @@ public class JnlpPrinter {
 		for (JNLPResourceInfo jnlpResourceInfo : jnlpInfo.resources)
 			System.out.println(MessageFormat.format("resource: href={0}, os={1}, type={2}", jnlpResourceInfo.href, jnlpResourceInfo.os, jnlpResourceInfo.type));
 
-		for (JNLPInfo jnlpInfo2 : jnlpInfo.extensions)
-			printJnlpInfo(jnlpInfo2);
 	}
 	
 }

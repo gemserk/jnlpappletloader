@@ -50,7 +50,7 @@ public class JnlpMergerTest {
 
 		mockery.checking(new Expectations() {
 			{
-				oneOf(urlBuilder).build("http://someplace.net/extension1.jnlp");
+				oneOf(urlBuilder).build(jnlpUrl, "http://someplace.net/extension1.jnlp");
 				will(returnValue(jnlpUrl));
 
 				oneOf(jnlpParser).parseJnlp(jnlpUrl);
@@ -67,11 +67,10 @@ public class JnlpMergerTest {
 			}
 		});
 
-		jnlpMerger.mergeWithExtensions(jnlpInfo);
+		jnlpMerger.mergeWithExtensions(jnlpInfo, jnlpUrl);
 
 		assertThat(jnlpInfo, IsNull.notNullValue());
 		assertThat(jnlpInfo.hasExtensions(), IsEqual.equalTo(false));
-		assertThat(jnlpInfo.extensions.size(), IsEqual.equalTo(0));
 		assertThat(jnlpInfo.resources.size(), IsEqual.equalTo(4));
 		assertThat(jnlpInfo.resources.get(2).type, IsEqual.equalTo(ResourceType.Jar));
 		assertThat(jnlpInfo.resources.get(2).href, IsEqual.equalTo("http://someplace.net/lwjgl.jar"));
@@ -79,5 +78,5 @@ public class JnlpMergerTest {
 		new JnlpPrinter().printJnlpInfo(jnlpInfo);
 
 	}
-
+	
 }

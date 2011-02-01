@@ -54,6 +54,8 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 			URL jnlpUrl = urlBuilder.build(codeBase, jnlpHref);
 
 			JNLPInfo jnlpInfo = getMergedJnlp(jnlpUrl);
+			
+			new JnlpPrinter().printJnlpInfo(jnlpInfo);
 
 			// replaces codebase with jnlp codebase
 			// codeBase = new URL(jnlpInfo.codeBase);
@@ -96,7 +98,7 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 		jnlpMerger.setJnlpParser(jnlpParser);
 		jnlpMerger.setUrlBuilder(urlBuilder);
 		
-		jnlpMerger.mergeWithExtensions(jnlpInfo);
+		jnlpMerger.mergeWithExtensions(jnlpInfo, codeBase);
 		
 		return jnlpInfo;
 	}
