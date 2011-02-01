@@ -24,27 +24,27 @@ public class UrlBuilderTest {
 
 	@Test
 	public void shouldReturnUrlWithinContext() throws MalformedURLException {
-		JnlpAppletLoader jnlpAppletLoader = new JnlpAppletLoader();
-		jnlpAppletLoader.codeBase = new URL("http://localhost/");
-		URL url = jnlpAppletLoader.build("launch.jnlp");
+		JNLPAppletLoader jNLPAppletLoader = new JNLPAppletLoader();
+		jNLPAppletLoader.codeBase = new URL("http://localhost/");
+		URL url = jNLPAppletLoader.build("launch.jnlp");
 		assertNotNull(url);
 		assertThat(url, IsEqual.equalTo(new URL("http://localhost/launch.jnlp")));
 	}
 
 	@Test
 	public void shouldReturnProperUrlWhenItIsAbsoluteFromHttp() throws MalformedURLException {
-		JnlpAppletLoader jnlpAppletLoader = new JnlpAppletLoader();
-		jnlpAppletLoader.codeBase = new URL("http://localhost/");
-		URL url = jnlpAppletLoader.build("http://acoppes/launch.jnlp");
+		JNLPAppletLoader jNLPAppletLoader = new JNLPAppletLoader();
+		jNLPAppletLoader.codeBase = new URL("http://localhost/");
+		URL url = jNLPAppletLoader.build("http://acoppes/launch.jnlp");
 		assertNotNull(url);
 		assertThat(url, IsEqual.equalTo(new URL("http://acoppes/launch.jnlp")));
 	}
 
 	@Test
 	public void shouldReturnProperUrlWhenItIsAbsoluteFromFileSystem() throws MalformedURLException {
-		JnlpAppletLoader jnlpAppletLoader = new JnlpAppletLoader();
-		jnlpAppletLoader.codeBase = new URL("http://localhost/");
-		URL url = jnlpAppletLoader.build("file:launch.jnlp");
+		JNLPAppletLoader jNLPAppletLoader = new JNLPAppletLoader();
+		jNLPAppletLoader.codeBase = new URL("http://localhost/");
+		URL url = jNLPAppletLoader.build("file:launch.jnlp");
 		assertNotNull(url);
 		assertThat(url, IsEqual.equalTo(new URL("file:launch.jnlp")));
 	}
