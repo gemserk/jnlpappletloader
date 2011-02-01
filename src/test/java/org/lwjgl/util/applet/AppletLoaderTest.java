@@ -3,6 +3,7 @@ package org.lwjgl.util.applet;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
@@ -221,6 +222,16 @@ public class AppletLoaderTest {
 		assertEquals(-2, appletLoader.fileSizes[0]);
 		assertEquals(100L, (long) appletLoader.filesLastModified.get("lwjgl.jar.pack.lzma"));
 		assertEquals(0, appletLoader.totalSizeDownload);
+	}
+	
+	@Test
+	public void testGetJarName() throws MalformedURLException {
+		
+		AppletLoader appletLoader = new AppletLoader();
+		assertEquals("lwjgl.jar", appletLoader.getJarName(new URL("file:///" + tempDirectory + "/lwjgltest/lwjgl.jar")));
+		assertEquals("lwjgl.jar", appletLoader.getJarName(new URL("file:///" + tempDirectory + "/lwjgltest/lwjgl.jar.pack")));
+		assertEquals("lwjgl.jar", appletLoader.getJarName(new URL("file:///" + tempDirectory + "/lwjgltest/lwjgl.jar.pack.lzma")));
+		
 	}
 
 }

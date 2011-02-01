@@ -84,13 +84,10 @@ import sun.security.util.SecurityConstants;
 
 /**
  * <p>
- * The AppletLoader enables deployment of LWJGL to applets in an easy
- * and polished way. The loader will display a configurable logo and progressbar
- * while the relevant jars (generic and native) are downloaded from a specified source.
+ * The AppletLoader enables deployment of LWJGL to applets in an easy and polished way. The loader will display a configurable logo and progressbar while the relevant jars (generic and native) are downloaded from a specified source.
  * </p>
  * <p>
- * The downloaded jars are extracted to the users temporary directory - and if enabled, cached for
- * faster loading in future uses.
+ * The downloaded jars are extracted to the users temporary directory - and if enabled, cached for faster loading in future uses.
  * </p>
  * <p>
  * The following applet parameters are required:
@@ -109,8 +106,7 @@ import sun.security.util.SecurityConstants;
  * <p>
  * Additionally the following parameters can be supplied to tweak the behaviour of the AppletLoader.
  * <ul>
- * <li>al_version - [int or float] Version of deployment. If this is specified, the jars will be cached and
- * reused if the version matches. If version doesn't match all of the files are reloaded.</li>
+ * <li>al_version - [int or float] Version of deployment. If this is specified, the jars will be cached and reused if the version matches. If version doesn't match all of the files are reloaded.</li>
  * <li>al_cache - [boolean] Whether to use cache system. <i>Default: true</i>.</li>
  * <li>al_debug - [boolean] Whether to enable debug mode. <i>Default: false</i>.</li>
  * <li>al_prepend_host - [boolean] Whether to limit caching to this domain, disable if your applet is hosted on multple domains and needs to share the cache. <i>Default: true</i>.</li>
@@ -124,136 +120,132 @@ import sun.security.util.SecurityConstants;
  * <li>boxfgcolor - [String] any String AWT color ("red", "blue", etc), RGB (0-255) or hex formated color (#RRGGBB) to use as foreground. <i>Default: #000000</i>.</li>
  * </ul>
  * </p>
+ * 
  * @author kappaOne
  * @author Brian Matzon <brian@matzon.dk>
- * @version $Revision$
- * $Id$
+ * @version $Revision$ $Id$
  */
 public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/** initializing */
-	public static final int STATE_INIT 						= 1;
+	public static final int STATE_INIT = 1;
 
 	/** determining which packages that are required */
-	public static final int STATE_DETERMINING_PACKAGES 		= 2;
+	public static final int STATE_DETERMINING_PACKAGES = 2;
 
 	/** checking for already downloaded files */
-	public static final int STATE_CHECKING_CACHE 			= 3;
+	public static final int STATE_CHECKING_CACHE = 3;
 
 	/** downloading packages */
-	public static final int STATE_DOWNLOADING 				= 4;
+	public static final int STATE_DOWNLOADING = 4;
 
 	/** extracting packages */
-	public static final int STATE_EXTRACTING_PACKAGES 		= 5;
+	public static final int STATE_EXTRACTING_PACKAGES = 5;
 
 	/** updating the classpath */
-	public static final int STATE_UPDATING_CLASSPATH 		= 6;
+	public static final int STATE_UPDATING_CLASSPATH = 6;
 
 	/** switching to real applet */
-	public static final int STATE_SWITCHING_APPLET 			= 7;
+	public static final int STATE_SWITCHING_APPLET = 7;
 
 	/** initializing real applet */
-	public static final int STATE_INITIALIZE_REAL_APPLET	= 8;
+	public static final int STATE_INITIALIZE_REAL_APPLET = 8;
 
 	/** stating real applet */
-	public static final int STATE_START_REAL_APPLET 		= 9;
+	public static final int STATE_START_REAL_APPLET = 9;
 
 	/** done */
-	public static final int STATE_DONE 						= 10;
+	public static final int STATE_DONE = 10;
 
 	/** used to calculate length of progress bar */
-	protected int		percentage;
+	protected int percentage;
 
 	/** current size of download in bytes */
-	protected int		currentSizeDownload;
+	protected int currentSizeDownload;
 
 	/** total size of download in bytes */
-	protected int		totalSizeDownload;
+	protected int totalSizeDownload;
 
 	/** current size of extracted in bytes */
-	protected int		currentSizeExtract;
+	protected int currentSizeExtract;
 
 	/** total size of extracted in bytes */
-	protected int		totalSizeExtract;
+	protected int totalSizeExtract;
 
 	/** logo to be shown while loading */
-	protected Image		logo, logoBuffer;
+	protected Image logo, logoBuffer;
 
 	/** progressbar to render while loading */
-	protected Image		progressbar, progressbarBuffer;
+	protected Image progressbar, progressbarBuffer;
 
 	/** offscreen image used */
-	protected Image 	offscreen;
+	protected Image offscreen;
 
 	/** set to true while painting is done */
-	protected boolean 	painting;
+	protected boolean painting;
 
 	/** background color of applet */
-	protected Color		bgColor 	= Color.white;
+	protected Color bgColor = Color.white;
 
 	/** color to write foreground in */
-	protected Color		fgColor 	= Color.black;
+	protected Color fgColor = Color.black;
 
 	/** urls of the jars to download */
-	protected URL[]		urlList;
+	protected URL[] urlList;
 
 	/** classLoader used to add downloaded jars to the classpath */
 	protected ClassLoader classLoader;
 
 	/** actual thread that does the loading */
-	protected Thread	loaderThread;
+	protected Thread loaderThread;
 
 	/** animation thread that renders our load screen while loading */
-	protected Thread 	animationThread;
+	protected Thread animationThread;
 
 	/** applet to load after all downloads are complete */
-	protected Applet	lwjglApplet;
+	protected Applet lwjglApplet;
 
 	/** whether a fatal error occured */
-	protected boolean	fatalError;
+	protected boolean fatalError;
 
 	/** whether we're running in debug mode */
-	protected boolean 	debugMode;
+	protected boolean debugMode;
 
 	/** whether to prepend host to cache path */
-	protected boolean 	prependHost;
+	protected boolean prependHost;
 
 	/** Used to store file names with lastModified time */
-	protected HashMap<String, Long> 	filesLastModified;
+	protected HashMap<String, Long> filesLastModified;
 
 	/** Sizes of files to download */
-	protected int[] 	fileSizes;
-	
+	protected int[] fileSizes;
+
 	/** Number of native jars */
-	protected int		nativeJarCount;
+	protected int nativeJarCount;
 
 	/** whether to use caching system, only download files that have changed */
-	protected boolean 	cacheEnabled;
+	protected boolean cacheEnabled;
 
 	/** String to display as a subtask */
-	protected String	subtaskMessage = "";
+	protected String subtaskMessage = "";
 
 	/** state of applet loader */
 	protected volatile int state = STATE_INIT;
 
 	/** whether lzma is supported */
-	protected boolean 	lzmaSupported;
+	protected boolean lzmaSupported;
 
 	/** whether pack200 is supported */
-	protected boolean 	pack200Supported;
+	protected boolean pack200Supported;
 
 	/** generic error message to display on error */
-	protected String[] 	genericErrorMessage = {	"An error occured while loading the applet.",
-												"Please contact support to resolve this issue.",
-												"<placeholder for error message>"};
+	protected String[] genericErrorMessage = { "An error occured while loading the applet.", "Please contact support to resolve this issue.", "<placeholder for error message>" };
 
 	/** whether a certificate refused error occured */
-	protected boolean	certificateRefused;
+	protected boolean certificateRefused;
 
-	/** error message to display if user refuses to accept certicate*/
-	protected String[] 	certificateRefusedMessage = { "Permissions for Applet Refused.",
-												      "Please accept the permissions dialog to allow",
-												      "the applet to continue the loading process."};
+	/** error message to display if user refuses to accept certicate */
+	protected String[] certificateRefusedMessage = { "Permissions for Applet Refused.", "Please accept the permissions dialog to allow", "the applet to continue the loading process." };
 
 	/** have natives been loaded by another instance of this applet */
 	protected static boolean natives_loaded;
@@ -263,33 +255,33 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	public void init() {
 		setState(STATE_INIT);
-		
+
 		// sanity check
-		String[] requiredArgs = {"al_main", "al_logo", "al_progressbar", "al_jars"};
-		for ( String requiredArg : requiredArgs ) {
-			if ( getParameter(requiredArg) == null ) {
+		String[] requiredArgs = { "al_main", "al_logo", "al_progressbar", "al_jars" };
+		for (String requiredArg : requiredArgs) {
+			if (getParameter(requiredArg) == null) {
 				fatalErrorOccured("missing required applet parameter: " + requiredArg, null);
 				return;
 			}
 		}
 
 		// whether to use cache system
-		cacheEnabled	= getBooleanParameter("al_cache", true);
+		cacheEnabled = getBooleanParameter("al_cache", true);
 
 		// whether to run in debug mode
-		debugMode 		= getBooleanParameter("al_debug", false);
+		debugMode = getBooleanParameter("al_debug", false);
 
 		// whether to prepend host to cache path
-		prependHost 	= getBooleanParameter("al_prepend_host", true);
+		prependHost = getBooleanParameter("al_prepend_host", true);
 
 		// get colors of applet
-		bgColor 		= getColor("boxbgcolor", Color.white);
+		bgColor = getColor("boxbgcolor", Color.white);
 		setBackground(bgColor);
-		fgColor 		= getColor("boxfgcolor", Color.black);
+		fgColor = getColor("boxfgcolor", Color.black);
 
 		// load logos, if value is "" then skip
 		if (getParameter("al_logo").length() > 0) {
-			logo 		= getImage(getParameter("al_logo"));
+			logo = getImage(getParameter("al_logo"));
 		}
 		if (getParameter("al_progressbar").length() > 0) {
 			progressbar = getImage(getParameter("al_progressbar"));
@@ -314,7 +306,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/**
 	 * Generates a stacktrace in the form of a string
-	 * @param exception Exception to make stacktrace of
+	 * 
+	 * @param exception
+	 *            Exception to make stacktrace of
 	 * @return Stacktrace of exception in the form of a string
 	 */
 	private static String generateStacktrace(Exception exception) {
@@ -330,16 +324,15 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	public void start() {
 		if (lwjglApplet != null) {
 			lwjglApplet.start();
-		}
-		else {
-			if(loaderThread == null && !fatalError) {
+		} else {
+			if (loaderThread == null && !fatalError) {
 				loaderThread = new Thread(this);
 				loaderThread.setName("AppletLoader.loaderThread");
 				loaderThread.start();
 
 				animationThread = new Thread() {
 					public void run() {
-						while(loaderThread != null) {
+						while (loaderThread != null) {
 							repaint();
 							AppletLoader.this.sleep(100);
 						}
@@ -375,7 +368,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	protected void cleanUp() {
 		progressbar = null;
-		logo 		= null;
+		logo = null;
 
 		logoBuffer = null;
 		progressbarBuffer = null;
@@ -409,7 +402,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	public void paint(Graphics g) {
 		// don't paint loader if applet loaded
-		if(state == STATE_DONE) {
+		if (state == STATE_DONE) {
 			cleanUp(); // clean up resources
 			return;
 		}
@@ -451,8 +444,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		if (fatalError) {
 			String[] errorMessage = (certificateRefused) ? certificateRefusedMessage : genericErrorMessage;
 
-			for(int i=0; i<errorMessage.length; i++) {
-				if(errorMessage[i] != null) {
+			for (int i = 0; i < errorMessage.length; i++) {
+				if (errorMessage[i] != null) {
 					int messageX = (offscreen.getWidth(null) - fm.stringWidth(errorMessage[i])) / 2;
 					int messageY = (offscreen.getHeight(null) - (fm.getHeight() * errorMessage.length)) / 2;
 
@@ -477,8 +470,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			int messageX = (offscreen.getWidth(null) - fm.stringWidth(message)) / 2;
 			int messageY = y + 20;
 
-			if (logo != null) messageY += logo.getHeight(null)/2;
-			else if (progressbar != null) messageY += progressbar.getHeight(null)/2;
+			if (logo != null)
+				messageY += logo.getHeight(null) / 2;
+			else if (progressbar != null)
+				messageY += progressbar.getHeight(null) / 2;
 
 			og.drawString(message, messageX, messageY);
 
@@ -505,24 +500,25 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * When an animated gif frame is ready to be drawn the ImageObserver
-	 * will call this method.
+	 * When an animated gif frame is ready to be drawn the ImageObserver will call this method.
 	 * 
-	 * The Image frame is copied into a buffer, which is then drawn.
-	 * This is done to prevent image tearing on gif animations.
+	 * The Image frame is copied into a buffer, which is then drawn. This is done to prevent image tearing on gif animations.
 	 */
 	public boolean imageUpdate(Image img, int flag, int x, int y, int width, int height) {
 
 		// finish with this ImageObserver
-		if (state == STATE_DONE) return false;
+		if (state == STATE_DONE)
+			return false;
 
 		// if image frame is ready to be drawn and is currently not being painted
 		if (flag == ImageObserver.FRAMEBITS && !painting) {
 			Image buffer;
 
 			// select which buffer to fill
-			if (img == logo) buffer = logoBuffer;
-			else buffer = progressbarBuffer;
+			if (img == logo)
+				buffer = logoBuffer;
+			else
+				buffer = progressbarBuffer;
 
 			Graphics g = buffer.getGraphics();
 
@@ -532,8 +528,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 			// buffer background is cleared, so draw logo under progressbar
 			if (img == progressbar && logo != null) {
-				g.drawImage(logoBuffer, progressbar.getWidth(null)/2-logo.getWidth(null)/2,
-										progressbar.getHeight(null)/2-logo.getHeight(null)/2, null);
+				g.drawImage(logoBuffer, progressbar.getWidth(null) / 2 - logo.getWidth(null) / 2, progressbar.getHeight(null) / 2 - logo.getHeight(null) / 2, null);
 			}
 
 			g.drawImage(img, 0, 0, this);
@@ -577,7 +572,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/**
 	 * Trims the passed file string based on the available capabilities
-	 * @param file string of files to be trimmed
+	 * 
+	 * @param file
+	 *            string of files to be trimmed
 	 * @return trimmed string based on capabilities of client
 	 */
 	protected String trimExtensionByCapabilities(String file) {
@@ -592,9 +589,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * Reads list of jars to download and adds the urls to urlList
-	 * also finds out which OS you are on and adds appropriate native
-	 * jar to the urlList
+	 * Reads list of jars to download and adds the urls to urlList also finds out which OS you are on and adds appropriate native jar to the urlList
 	 */
 	protected void loadJarURLs() throws Exception {
 		setState(STATE_DETERMINING_PACKAGES);
@@ -645,18 +640,18 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		if (nativeJarList == null) {
 			fatalErrorOccured("no lwjgl natives files found", null);
 			return;
-		} 
-		
+		}
+
 		jarList = trimExtensionByCapabilities(jarList);
 		StringTokenizer jars = new StringTokenizer(jarList, ", ");
 
 		nativeJarList = trimExtensionByCapabilities(nativeJarList);
 		StringTokenizer nativeJars = new StringTokenizer(nativeJarList, ", ");
-		
+
 		int jarCount = jars.countTokens();
 		nativeJarCount = nativeJars.countTokens();
-		
-		urlList = new URL[jarCount+nativeJarCount];
+
+		urlList = new URL[jarCount + nativeJarCount];
 
 		URL path = getCodeBase();
 
@@ -665,7 +660,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			urlList[i] = new URL(path, jars.nextToken());
 		}
 
-		for (int i = jarCount; i < jarCount+nativeJarCount; i++) {
+		for (int i = jarCount; i < jarCount + nativeJarCount; i++) {
 			urlList[i] = new URL(path, nativeJars.nextToken());
 		}
 	}
@@ -673,11 +668,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/**
 	 * 4 steps
 	 * 
-	 * 1) check version of applet and decide whether to download jars
-	 * 2) download the jars
-	 * 3) extract natives
-	 * 4) add to jars to class path
-	 * 5) switch applets
+	 * 1) check version of applet and decide whether to download jars 2) download the jars 3) extract natives 4) add to jars to class path 5) switch applets
 	 */
 	public void run() {
 		setState(STATE_CHECKING_CACHE);
@@ -746,7 +737,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			// if jars not available or need updating download them
 			if (!versionAvailable) {
 				// get jars file sizes and check cache
-				getJarsInfo(dir);		// 5-15%
+				getJarsInfo(dir); // 5-15%
 
 				// downloads jars from the server
 				downloadJars(path); // 15-55%
@@ -775,15 +766,15 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 			// switch to LWJGL Applet
 			EventQueue.invokeAndWait(new Runnable() {
-	            public void run() {
+				public void run() {
 					try {
-			switchApplet();
+						switchApplet();
 					} catch (Exception e) {
 						fatalErrorOccured("This occurred while '" + getDescriptionForState() + "'", e);
 					}
 					setState(STATE_DONE);
 					repaint();
-	            }
+				}
 			});
 
 		} catch (AccessControlException ace) {
@@ -797,8 +788,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * Parses the java_arguments list and sets lwjgl specific 
-	 * properties accordingly, before the launch.
+	 * Parses the java_arguments list and sets lwjgl specific properties accordingly, before the launch.
 	 */
 	protected void setLWJGLProperties() {
 		String lwjglArguments = getParameter("lwjgl_arguments");
@@ -838,9 +828,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/**
 	 * read the current version file
 	 * 
-	 * @param file the file to read
+	 * @param file
+	 *            the file to read
 	 * @return the version value of saved file
-	 * @throws Exception if it fails to read value
+	 * @throws Exception
+	 *             if it fails to read value
 	 */
 	protected float readVersionFile(File file) throws Exception {
 		DataInputStream dis = new DataInputStream(new FileInputStream(file));
@@ -852,9 +844,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/**
 	 * write out version file of applet
 	 * 
-	 * @param file the file to write out to
-	 * @param version the version of the applet as a float
-	 * @throws Exception if it fails to write file
+	 * @param file
+	 *            the file to write out to
+	 * @param version
+	 *            the version of the applet as a float
+	 * @throws Exception
+	 *             if it fails to write file
 	 */
 	protected void writeVersionFile(File file, float version) throws Exception {
 		DataOutputStream dos = new DataOutputStream(new FileOutputStream(file));
@@ -865,9 +860,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/**
 	 * read the current cache file
 	 * 
-	 * @param file the file to read
+	 * @param file
+	 *            the file to read
 	 * @return the hashmap containing the files names and lastModified times
-	 * @throws Exception if it fails to read hashmap
+	 * @throws Exception
+	 *             if it fails to read hashmap
 	 */
 	@SuppressWarnings("unchecked")
 	protected HashMap<String, Long> readCacheFile(File file) throws Exception {
@@ -880,9 +877,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/**
 	 * write out cache file of applet
 	 * 
-	 * @param file the file to write out to
-	 * @param filesLastModified the hashmap containing files names and lastModified times
-	 * @throws Exception if it fails to write file
+	 * @param file
+	 *            the file to write out to
+	 * @param filesLastModified
+	 *            the hashmap containing files names and lastModified times
+	 * @throws Exception
+	 *             if it fails to write file
 	 */
 	protected void writeCacheFile(File file, HashMap<String, Long> filesLastModified) throws Exception {
 		ObjectOutputStream dos = new ObjectOutputStream(new FileOutputStream(file));
@@ -891,12 +891,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * Edits the ClassPath at runtime to include the jars
-	 * that have just been downloaded and then adds the
-	 * lwjgl natives folder property.
+	 * Edits the ClassPath at runtime to include the jars that have just been downloaded and then adds the lwjgl natives folder property.
 	 * 
-	 * @param path location where applet is stored
-	 * @throws Exception if it fails to add classpath
+	 * @param path
+	 *            location where applet is stored
+	 * @throws Exception
+	 *             if it fails to add classpath
 	 */
 	protected void updateClassPath(final String path) throws Exception {
 
@@ -926,8 +926,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 					if (host != null && (host.length() > 0)) {
 						// add permission for downloaded jars to access host they were from
 						perms.add(new SocketPermission(host, SecurityConstants.SOCKET_CONNECT_ACCEPT_ACTION));
-			        }
-			        else if ( "file".equals(codesource.getLocation().getProtocol()) ) {
+					} else if ("file".equals(codesource.getLocation().getProtocol())) {
 						// if running locally add file permission
 						String path = codesource.getLocation().getFile().replace('/', File.separatorChar);
 						perms.add(new FilePermission(path, SecurityConstants.FILE_READ_ACTION));
@@ -967,22 +966,14 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/**
 	 * Unload natives loaded by a different classloader.
 	 * 
-	 * Due to limitations of the jvm, native files can only
-	 * be loaded once and only be used by the classloader
-	 * they were loaded from.
+	 * Due to limitations of the jvm, native files can only be loaded once and only be used by the classloader they were loaded from.
 	 * 
-	 * Due to the way applets on plugin1 work, one jvm must
-	 * be used for all applets. We need to use multiple
-	 * classloaders in the same jvm due to LWJGL's static
-	 * nature. In order to solve this we simply remove the
-	 * natives from a previous classloader allowing a new
-	 * classloader to use those natives in the same jvm.
+	 * Due to the way applets on plugin1 work, one jvm must be used for all applets. We need to use multiple classloaders in the same jvm due to LWJGL's static nature. In order to solve this we simply remove the natives from a previous classloader allowing a new classloader to use those natives in the same jvm.
 	 * 
-	 * This method will only attempt to unload natives from a
-	 * previous classloader if it detects that the natives have
-	 * been loaded in the same jvm.
+	 * This method will only attempt to unload natives from a previous classloader if it detects that the natives have been loaded in the same jvm.
 	 * 
-	 * @param nativePath directory where natives are stored
+	 * @param nativePath
+	 *            directory where natives are stored
 	 */
 	private void unloadNatives(String nativePath) {
 
@@ -1013,8 +1004,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * replace the current applet with the lwjgl applet
-	 * using AppletStub and initialise and start it
+	 * replace the current applet with the lwjgl applet using AppletStub and initialise and start it
 	 */
 	protected void switchApplet() throws Exception {
 
@@ -1042,36 +1032,51 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	public static class JarInfo {
 
-		final int contentLength;
+		int contentLength;
 
-		final long lastModified;
+		long lastModified;
 
-		final String name;
+		String fileName;
 
-		public JarInfo(String name, int size, long lastModified) {
-			this.name = name;
+		String jarName;
+
+		public String getFileName() {
+			return fileName;
+		}
+
+		public JarInfo(String filename, int size, long lastModified) {
+			this.fileName = filename;
 			this.contentLength = size;
 			this.lastModified = lastModified;
+
+			jarName = fileName.substring(fileName.lastIndexOf('/') + 1);
+
+			if (jarName.endsWith(".pack.lzma"))
+				jarName = jarName.replaceAll(".pack.lzma", "");
+			else if (jarName.endsWith(".pack"))
+				jarName = jarName.replaceAll(".pack", "");
+			else if (jarName.endsWith(".lzma"))
+				jarName = jarName.replaceAll(".lzma", "");
+		}
+
+		public String getJarName() {
+			return jarName;
 		}
 
 	}
-	
-	public static class UrlUtils {
-		
-		protected static String getFileName(URL url) {
-			return url.getFile().substring(url.getFile().lastIndexOf('/') + 1);
-		}
-		
-	}
-	
+
 	public static class JarProvider {
-		
-		public JarInfo getJarInfo(URL url) throws Exception {
-			URLConnection urlconnection = getUrlConnection(url);
-			JarInfo jarInfo = new JarInfo(UrlUtils.getFileName(url), urlconnection.getContentLength(), urlconnection.getLastModified());
-			return jarInfo;
+
+		public JarInfo getJarInfo(URL url) {
+			URLConnection urlconnection;
+			try {
+				urlconnection = getUrlConnection(url);
+				return new JarInfo(UrlUtils.getFileName(url), urlconnection.getContentLength(), urlconnection.getLastModified());
+			} catch (Exception e) {
+				throw new RuntimeException("failed to retrieve jar info for " + url, e);
+			}
 		}
-		
+
 		protected URLConnection getUrlConnection(URL url) throws Exception {
 			URLConnection urlconnection = url.openConnection();
 			urlconnection.setDefaultUseCaches(false);
@@ -1079,15 +1084,15 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				((HttpURLConnection) urlconnection).setRequestMethod("HEAD");
 			return urlconnection;
 		}
-		
+
 	}
 
 	private JarProvider jarProvider = new JarProvider();
-	
+
 	public void setJarProvider(JarProvider jarProvider) {
 		this.jarProvider = jarProvider;
 	}
-	
+
 	/**
 	 * This method will get the files sizes of the files to download. It will further get the lastModified time of files and save it in a hashmap, if cache is enabled it will mark those files that have not changed since last download to not redownloaded.
 	 * 
@@ -1110,7 +1115,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			int size = jarInfo.contentLength;
 
 			long lastModified = jarInfo.lastModified;
-			String fileName = jarInfo.name;
+			String fileName = jarInfo.fileName;
 
 			if (cacheEnabled && lastModified != 0 && filesLastModified.containsKey(fileName)) {
 				long savedLastModified = filesLastModified.get(fileName);
@@ -1148,11 +1153,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * Will download the jars from the server using the list of urls
-	 * in urlList, while at the same time updating progress bar
+	 * Will download the jars from the server using the list of urls in urlList, while at the same time updating progress bar
 	 * 
-	 * @param path location of the directory to save to
-	 * @throws Exception if download fails
+	 * @param path
+	 *            location of the directory to save to
+	 * @throws Exception
+	 *             if download fails
 	 */
 	protected void downloadJars(String path) throws Exception {
 
@@ -1167,7 +1173,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		for (int i = 0; i < urlList.length; i++) {
 
 			// skip file if marked as -2 (already downloaded and not changed)
-			if (fileSizes[i] == -2) continue;
+			if (fileSizes[i] == -2)
+				continue;
 
 			int unsuccessfulAttempts = 0;
 			int maxUnsuccessfulAttempts = 3;
@@ -1230,19 +1237,16 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				if (urlconnection instanceof HttpURLConnection) {
 					if (fileSize == fileSizes[i]) {
 						// successful download
-	                }
-	                else if (fileSizes[i] <= 0) {
+					} else if (fileSizes[i] <= 0) {
 						// If contentLength for fileSizes[i] <= 0, we don't know if the download
 						// is complete. We're going to guess the download is complete.
-                    }
-                    else {
+					} else {
 						unsuccessfulAttempts++;
 						// download failed try again
 						if (unsuccessfulAttempts < maxUnsuccessfulAttempts) {
 							downloadFile = true;
 							currentSizeDownload -= fileSize; // reset progress bar
-                    	}
-                    	else {
+						} else {
 							// retry attempts exhasted, download failed
 							throw new Exception("failed to download " + currentFile);
 						}
@@ -1255,7 +1259,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/**
 	 * Retrieves a jar files input stream. This method exists primarily to fix an Opera hang in getInputStream
-	 * @param urlconnection connection to get input stream from
+	 * 
+	 * @param urlconnection
+	 *            connection to get input stream from
 	 * @return InputStream or null if not possible
 	 */
 	protected InputStream getJarInputStream(final String currentFile, final URLConnection urlconnection) throws Exception {
@@ -1304,9 +1310,13 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/**
 	 * Extract LZMA File
-	 *  @param in Input path to pack file
-	 *  @param out output path to resulting file
-	 *  @throws Exception if any errors occur
+	 * 
+	 * @param in
+	 *            Input path to pack file
+	 * @param out
+	 *            output path to resulting file
+	 * @throws Exception
+	 *             if any errors occur
 	 */
 	protected void extractLZMA(String in, String out) throws Exception {
 
@@ -1341,9 +1351,13 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/**
 	 * Extract Pack File
-	 *  @param in Input path to pack file
-	 *  @param out output path to resulting file
-	 *  @throws Exception if any errors occur
+	 * 
+	 * @param in
+	 *            Input path to pack file
+	 * @param out
+	 *            output path to resulting file
+	 * @throws Exception
+	 *             if any errors occur
 	 */
 	protected void extractPack(String in, String out) throws Exception {
 		File f = new File(in);
@@ -1361,8 +1375,10 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/**
 	 * Extract all jars from any lzma/pack files
 	 * 
-	 *  @param path output path
-	 *  @throws Exception if any errors occur
+	 * @param path
+	 *            output path
+	 * @throws Exception
+	 *             if any errors occur
 	 */
 	protected void extractJars(String path) throws Exception {
 		setState(STATE_EXTRACTING_PACKAGES);
@@ -1372,7 +1388,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		for (int i = 0; i < urlList.length; i++) {
 
 			// if file has not changed, skip it
-			if (fileSizes[i] == -2) continue;
+			if (fileSizes[i] == -2)
+				continue;
 
 			percentage = 55 + (int) (increment * (i + 1));
 			String filename = getFileName(urlList[i]);
@@ -1385,13 +1402,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 				subtaskMessage = "Extracting: " + filename.replaceAll(".lzma", "") + " to " + filename.replaceAll(".pack.lzma", "");
 				debug_sleep(1000);
 				extractPack(path + filename.replaceAll(".lzma", ""), path + filename.replaceAll(".pack.lzma", ""));
-			}
-			else if (filename.endsWith(".pack")) {
+			} else if (filename.endsWith(".pack")) {
 				subtaskMessage = "Extracting: " + filename + " to " + filename.replace(".pack", "");
 				debug_sleep(1000);
 				extractPack(path + filename, path + filename.replace(".pack", ""));
-			}
-			else if (filename.endsWith(".lzma")) {
+			} else if (filename.endsWith(".lzma")) {
 				subtaskMessage = "Extracting: " + filename + " to " + filename.replace(".lzma", "");
 				debug_sleep(1000);
 				extractLZMA(path + filename, path + filename.replace(".lzma", ""));
@@ -1400,12 +1415,12 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * This method will extract all file from the native jar and extract them
-	 * to the subdirectory called "natives" in the local path, will also check
-	 * to see if the native jar files is signed properly
+	 * This method will extract all file from the native jar and extract them to the subdirectory called "natives" in the local path, will also check to see if the native jar files is signed properly
 	 * 
-	 * @param path base folder containing all downloaded jars
-	 * @throws Exception if it fails to extract files
+	 * @param path
+	 *            base folder containing all downloaded jars
+	 * @throws Exception
+	 *             if it fails to extract files
 	 */
 	protected void extractNatives(String path) throws Exception {
 
@@ -1431,100 +1446,102 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		}
 
 		for (int i = fileSizes.length - nativeJarCount; i < fileSizes.length; i++) {
-		
+
 			int initialPercentage = percentage;
-			
+
 			// if a new native jar was not downloaded, no extracting needed
 			if (fileSizes[i] == -2) {
 				continue;
-		}
+			}
 
 			// get name of jar file with natives from urlList
 			String nativeJar = getJarName(urlList[i]);
-	
-		// open jar file
-		JarFile jarFile = new JarFile(path + nativeJar, true);
 
-		// get list of files in jar
-		Enumeration entities = jarFile.entries();
+			// open jar file
+			JarFile jarFile = new JarFile(path + nativeJar, true);
 
-		totalSizeExtract = 0;
+			// get list of files in jar
+			Enumeration entities = jarFile.entries();
 
-		// calculate the size of the files to extract for progress bar
-		while (entities.hasMoreElements()) {
-			JarEntry entry = (JarEntry) entities.nextElement();
+			totalSizeExtract = 0;
 
-			// skip directories and anything in directories
-			// conveniently ignores the manifest
-			if (entry.isDirectory() || entry.getName().indexOf('/') != -1) {
-				continue;
-			}
-			totalSizeExtract += entry.getSize();
-		}
+			// calculate the size of the files to extract for progress bar
+			while (entities.hasMoreElements()) {
+				JarEntry entry = (JarEntry) entities.nextElement();
 
-		currentSizeExtract = 0;
-
-		// reset point to begining by getting list of file again
-		entities = jarFile.entries();
-
-		// extract all files from the jar
-		while (entities.hasMoreElements()) {
-			JarEntry entry = (JarEntry) entities.nextElement();
-
-			// skip directories and anything in directories
-			// conveniently ignores the manifest
-			if (entry.isDirectory() || entry.getName().indexOf('/') != -1) 
-				continue;
-
-			// check if native file already exists if so delete it to make room for new one
-			// useful when using the reload button on the browser
-			File f = new File(path + "natives" + File.separator + entry.getName());
-			if (f.exists()) {
-				if (!f.delete()) {
-					continue; // unable to delete file, it is in use, skip extracting it
+				// skip directories and anything in directories
+				// conveniently ignores the manifest
+				if (entry.isDirectory() || entry.getName().indexOf('/') != -1) {
+					continue;
 				}
+				totalSizeExtract += entry.getSize();
 			}
 
-			debug_sleep(1000);
+			currentSizeExtract = 0;
 
-			InputStream in = jarFile.getInputStream(jarFile.getEntry(entry.getName()));
-			OutputStream out = new FileOutputStream(path + "natives" + File.separator + entry.getName());
+			// reset point to begining by getting list of file again
+			entities = jarFile.entries();
 
-			int bufferSize;
-			byte buffer[] = new byte[65536];
+			// extract all files from the jar
+			while (entities.hasMoreElements()) {
+				JarEntry entry = (JarEntry) entities.nextElement();
 
-			while ((bufferSize = in.read(buffer, 0, buffer.length)) != -1) {
-				debug_sleep(10);
-				out.write(buffer, 0, bufferSize);
-				currentSizeExtract += bufferSize;
+				// skip directories and anything in directories
+				// conveniently ignores the manifest
+				if (entry.isDirectory() || entry.getName().indexOf('/') != -1)
+					continue;
 
-				// update progress bar
-				percentage = initialPercentage + ((currentSizeExtract * 20) / totalSizeExtract);
-				subtaskMessage = "Extracting: " + entry.getName() + " " + ((currentSizeExtract * 100) / totalSizeExtract) + "%";
+				// check if native file already exists if so delete it to make room for new one
+				// useful when using the reload button on the browser
+				File f = new File(path + "natives" + File.separator + entry.getName());
+				if (f.exists()) {
+					if (!f.delete()) {
+						continue; // unable to delete file, it is in use, skip extracting it
+					}
+				}
+
+				debug_sleep(1000);
+
+				InputStream in = jarFile.getInputStream(jarFile.getEntry(entry.getName()));
+				OutputStream out = new FileOutputStream(path + "natives" + File.separator + entry.getName());
+
+				int bufferSize;
+				byte buffer[] = new byte[65536];
+
+				while ((bufferSize = in.read(buffer, 0, buffer.length)) != -1) {
+					debug_sleep(10);
+					out.write(buffer, 0, bufferSize);
+					currentSizeExtract += bufferSize;
+
+					// update progress bar
+					percentage = initialPercentage + ((currentSizeExtract * 20) / totalSizeExtract);
+					subtaskMessage = "Extracting: " + entry.getName() + " " + ((currentSizeExtract * 100) / totalSizeExtract) + "%";
+				}
+
+				// validate if the certificate for native file is correct
+				validateCertificateChain(certificate, entry.getCertificates());
+
+				in.close();
+				out.close();
 			}
+			subtaskMessage = "";
 
-			// validate if the certificate for native file is correct
-			validateCertificateChain(certificate, entry.getCertificates());
+			jarFile.close();
 
-			in.close();
-			out.close();
-		}
-		subtaskMessage = "";
+			// delete native jar as it is no longer needed
+			File f = new File(path + nativeJar);
+			f.delete();
 
-		jarFile.close();
-
-		// delete native jar as it is no longer needed
-		File f = new File(path + nativeJar);
-		f.delete();
-		
 		}
 	}
 
 	/**
 	 * Validates the certificate chain for a single file
 	 * 
-	 * @param ownCerts Chain of certificates to check against
-	 * @param native_certs Chain of certificates to check
+	 * @param ownCerts
+	 *            Chain of certificates to check against
+	 * @param native_certs
+	 *            Chain of certificates to check
 	 */
 	protected static void validateCertificateChain(Certificate[] ownCerts, Certificate[] native_certs) throws Exception {
 		if (native_certs == null)
@@ -1543,7 +1560,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/**
 	 * Get Image from path provided
 	 * 
-	 * @param s location of the image
+	 * @param s
+	 *            location of the image
 	 * @return the Image file
 	 */
 	protected Image getImage(String s) {
@@ -1578,27 +1596,19 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/**
 	 * Get jar name from URL.
 	 * 
-	 * @param url Get jar file name from this url
+	 * @param url
+	 *            Get jar file name from this url
 	 * @return file name as string
 	 */
 	protected String getJarName(URL url) {
-		String fileName = url.getFile();
-
-		if (fileName.endsWith(".pack.lzma")) {
-			fileName = fileName.replaceAll(".pack.lzma", "");
-		} else if (fileName.endsWith(".pack")) {
-			fileName = fileName.replaceAll(".pack", "");
-		} else if (fileName.endsWith(".lzma")) {
-			fileName = fileName.replaceAll(".lzma", "");
-		}
-
-		return fileName.substring(fileName.lastIndexOf('/') + 1);
+		return jarProvider.getJarInfo(url).getJarName();
 	}
 
 	/**
 	 * Get file name portion of URL.
 	 * 
-	 * @param url Get file name from this url
+	 * @param url
+	 *            Get file name from this url
 	 * @return file name as string
 	 */
 	protected String getFileName(URL url) {
@@ -1609,14 +1619,17 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/**
 	 * Retrieves the color
 	 * 
-	 * @param param Color to load
-	 * @param defaultColor Default color to use if no color to load
+	 * @param param
+	 *            Color to load
+	 * @param defaultColor
+	 *            Default color to use if no color to load
 	 * @return Color to use
 	 */
 	protected Color getColor(String param, Color defaultColor) {
 		String color = getParameter(param);
 
-		if (color == null) return defaultColor;
+		if (color == null)
+			return defaultColor;
 
 		// Check if RGB format
 		if (color.indexOf(",") != -1) {
@@ -1624,9 +1637,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 			// We've got three components for the color
 			try {
-            	return new Color(Integer.parseInt(st.nextToken().trim()),
-    							 Integer.parseInt(st.nextToken().trim()),
-    							 Integer.parseInt(st.nextToken().trim()));
+				return new Color(Integer.parseInt(st.nextToken().trim()), Integer.parseInt(st.nextToken().trim()), Integer.parseInt(st.nextToken().trim()));
 			} catch (Exception e) {
 				// failed to parse
 				return defaultColor;
@@ -1650,8 +1661,11 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/**
 	 * Retrieves the boolean value for the applet
-	 * @param name Name of parameter
-	 * @param defaultValue default value to return if no such parameter
+	 * 
+	 * @param name
+	 *            Name of parameter
+	 * @param defaultValue
+	 *            default value to return if no such parameter
 	 * @return value of parameter or defaultValue
 	 */
 	protected boolean getBooleanParameter(String name, boolean defaultValue) {
@@ -1665,7 +1679,8 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	/**
 	 * Sets the state of the loaded and prints some debug information
 	 * 
-	 * @param error Error message to print
+	 * @param error
+	 *            Error message to print
 	 */
 	protected void fatalErrorOccured(String error, Exception e) {
 		fatalError = true;
@@ -1680,20 +1695,22 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	}
 
 	/**
-	 * set the state of applet loader 
+	 * set the state of applet loader
+	 * 
 	 * @param new state of applet loader
 	 * */
 	protected void setState(int state) {
 		this.state = state;
-		if(debugMode) {
+		if (debugMode) {
 			System.out.println(getDescriptionForState());
 		}
 	}
-	
+
 	/**
-	 * Utility method for sleeping
-	 * Will only really sleep if debug has been enabled
-	 * @param ms milliseconds to sleep
+	 * Utility method for sleeping Will only really sleep if debug has been enabled
+	 * 
+	 * @param ms
+	 *            milliseconds to sleep
 	 */
 	protected void debug_sleep(long ms) {
 		if (debugMode) {
@@ -1703,7 +1720,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 
 	/**
 	 * Utility method for sleeping
-	 * @param ms milliseconds to sleep
+	 * 
+	 * @param ms
+	 *            milliseconds to sleep
 	 */
 	protected void sleep(long ms) {
 		try {
