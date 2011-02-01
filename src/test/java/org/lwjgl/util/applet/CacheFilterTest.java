@@ -35,9 +35,9 @@ public class CacheFilterTest {
 
 		mockery.checking(new Expectations() {
 			{
-				oneOf(cache).cached(notCachedFile);
+				oneOf(cache).isAlreadyDownloaded(notCachedFile);
 				will(returnValue(false));
-				oneOf(cache).cached(cachedFile);
+				oneOf(cache).isAlreadyDownloaded(cachedFile);
 				will(returnValue(true));
 			}
 		});

@@ -19,7 +19,7 @@ public class CacheFilter {
 
 		for (int i = 0; i < files.size(); i++) {
 			FileInfo file = files.get(i);
-			if (!cache.cached(file))
+			if (!cache.isAlreadyDownloaded(file))
 				filteredFiles.add(file);
 		}
 
