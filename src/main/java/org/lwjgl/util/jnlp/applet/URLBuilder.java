@@ -1,5 +1,7 @@
 package org.lwjgl.util.jnlp.applet;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -43,6 +45,14 @@ public class URLBuilder {
 			return new URL(context, url);
 		} catch (MalformedURLException e) {
 			throw new RuntimeException("Failed to create url for " + url, e);
+		}
+	}
+
+	public InputStream open(URL url) {
+		try {
+			return url.openStream();
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to open input stream for url " + url, e);
 		}
 	}
 

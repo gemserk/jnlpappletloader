@@ -16,12 +16,23 @@ import org.w3c.dom.NodeList;
 
 public class JNLPParser {
 
+	URLBuilder urlBuilder;
+
+	public void setUrlBuilder(URLBuilder urlBuilder) {
+		this.urlBuilder = urlBuilder;
+	}
+
+	public JNLPInfo parseJnlp(String url) {
+		return parseJnlp(urlBuilder.build(url));
+	}
+
 	public JNLPInfo parseJnlp(URL url) {
-		try {
-			return parseJnlp(url.openStream());
-		} catch (IOException e) {
-			throw new RuntimeException("failed to open stream from url " + url, e);
-		}
+		// try {
+		return parseJnlp(urlBuilder.open(url));
+		// return parseJnlp(url.openStream());
+		// } catch (IOException e) {
+		// throw new RuntimeException("failed to open stream from url " + url, e);
+		// }
 	}
 
 	private JNLPInfo parseJnlp(InputStream is) {

@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import org.lwjgl.util.applet.AppletLoader;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -36,40 +39,51 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 	public void setUrlBuilder(URLBuilder urlBuilder) {
 		this.urlBuilder = urlBuilder;
 	}
-	
+
 	@Override
 	public void init() {
+		
+		jnlpParser.setUrlBuilder(urlBuilder);
+		
+		try {
+			// starts using the default codebase
+			codeBase = super.getCodeBase();
 
-		// starts using the default codebase
-		codeBase = super.getCodeBase();
+			String jnlpHref = getParameter(jnlpParameterName);
 
-		String jnlpHref = getParameter(jnlpParameterName);
+			if (jnlpHref == null)
+				throw new RuntimeException("Missing required parameter " + jnlpParameterName);
 
-		if (jnlpHref == null)
-			throw new RuntimeException("Missing required parameter " + jnlpParameterName);
+			// URL jnlpUrl = new URL(codeBase, jnlpHref);
+			URL jnlpUrl = urlBuilder.build(codeBase, jnlpHref);
 
-		// URL jnlpUrl = new URL(codeBase, jnlpHref);
-		URL jnlpUrl = urlBuilder.build(codeBase, jnlpHref);
+			jnlpInfo = jnlpParser.parseJnlp(jnlpUrl);
 
-		jnlpInfo = jnlpParser.parseJnlp(jnlpUrl);
+			// replaces codebase with jnlp codebase
+			// codeBase = new URL(jnlpInfo.codeBase);
+			codeBase = urlBuilder.build(codeBase, jnlpInfo.codeBase);
 
-		// replaces codebase with jnlp codebase
-		// codeBase = new URL(jnlpInfo.codeBase);
-		codeBase = urlBuilder.build(codeBase, jnlpInfo.codeBase);
+			appletParameters.putAll(getAppletParametersFromJnlpInfo(jnlpInfo));
 
-		appletParameters.putAll(getAppletParametersFromJnlpInfo(jnlpInfo));
+			System.out.println(appletParameters);
 
-		System.out.println(appletParameters);
+			AppletLoader appletLoader = new AppletLoader();
+			appletLoader.setStub(this);
 
-		AppletLoader appletLoader = new AppletLoader();
-		appletLoader.setStub(this);
+			appletLoader.init();
+			appletLoader.start();
 
-		appletLoader.init();
-		appletLoader.start();
+			setLayout(new BorderLayout());
 
-		setLayout(new BorderLayout());
+			this.add(appletLoader);
 
-		this.add(appletLoader);
+		} catch (Exception e) {
+			JPanel jPanel = new JPanel();
+			jPanel.setLayout(new BorderLayout());
+			jPanel.add(new JLabel(e.getMessage()));
+			add(jPanel);
+			e.printStackTrace(System.out);
+		}
 
 	}
 
