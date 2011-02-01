@@ -56,6 +56,8 @@ public class RealJnlpAppletLoader extends Applet implements AppletStub {
 
 			jnlpInfo = JnlpParserTest.parse(document);
 
+			appletParameters.putAll(jnlpInfo.appletDescInfo.parameters);
+			
 			appletParameters.put("al_main", jnlpInfo.appletDescInfo.mainClassName);
 			appletParameters.put("al_title", jnlpInfo.appletDescInfo.name);
 
@@ -78,6 +80,8 @@ public class RealJnlpAppletLoader extends Applet implements AppletStub {
 			codeBase = new URL(jnlpInfo.codeBase);
 
 			// al_jars = jnlpInfo.appletDescInfo.mainClassName;
+			
+			System.out.println(appletParameters);
 
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block

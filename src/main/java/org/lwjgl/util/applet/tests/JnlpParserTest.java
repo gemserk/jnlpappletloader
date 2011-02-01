@@ -3,6 +3,7 @@ package org.lwjgl.util.applet.tests;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class JnlpParserTest {
 
 		//
 
-		public Map<String, String> parameters;
+		public Map<String, String> parameters = new HashMap<String, String>();
 
 	}
 
@@ -185,7 +186,26 @@ public class JnlpParserTest {
 		AppletDescInfo appletDescInfo = new AppletDescInfo();
 		appletDescInfo.mainClassName = mainClass;
 		appletDescInfo.name = name;
+		
+		NodeList childNodes = appletDescElement.getChildNodes();
+		
+		for (int i = 0; i < childNodes.getLength(); i++) {
+
+			Node childNode = childNodes.item(i);
+
+			if ("param".equals(childNode.getNodeName()))
+				getParamInfo(appletDescInfo, childNode);
+
+		}
+		
 		return appletDescInfo;
+	}
+
+	private static void getParamInfo(AppletDescInfo appletDescInfo, Node childNode) {
+		NamedNodeMap attributes = childNode.getAttributes();
+		String nameAttribute = attributes.getNamedItem("name").getNodeValue();
+		String valueAttribute = attributes.getNamedItem("value").getNodeValue();
+		appletDescInfo.parameters.put(nameAttribute, valueAttribute);
 	}
 
 }
