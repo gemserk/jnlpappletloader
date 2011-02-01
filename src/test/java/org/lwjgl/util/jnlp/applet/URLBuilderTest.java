@@ -1,4 +1,4 @@
-package org.lwjgl.util.applet;
+package org.lwjgl.util.jnlp.applet;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;

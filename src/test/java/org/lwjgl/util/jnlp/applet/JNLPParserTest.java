@@ -1,4 +1,4 @@
-package org.lwjgl.util.applet;
+package org.lwjgl.util.jnlp.applet;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -8,7 +8,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.junit.Test;
-import org.lwjgl.util.applet.JNLPAppletLoader.JNLPInfo;
+import org.lwjgl.util.jnlp.applet.JNLPAppletLoader;
+import org.lwjgl.util.jnlp.applet.JNLPAppletLoader.JNLPInfo;
 import org.w3c.dom.Document;
 
 public class JNLPParserTest {

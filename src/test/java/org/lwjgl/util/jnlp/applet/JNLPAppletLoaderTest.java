@@ -1,4 +1,4 @@
-package org.lwjgl.util.applet;
+package org.lwjgl.util.jnlp.applet;
 
 import static org.junit.Assert.*;
 
@@ -16,8 +16,9 @@ import org.jmock.integration.junit4.JMock;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.lwjgl.util.applet.JNLPAppletLoader.JNLPInfo;
-import org.lwjgl.util.applet.JNLPAppletLoader.JNLPResourceInfo;
+import org.lwjgl.util.jnlp.applet.JNLPAppletLoader;
+import org.lwjgl.util.jnlp.applet.JNLPAppletLoader.JNLPInfo;
+import org.lwjgl.util.jnlp.applet.JNLPAppletLoader.JNLPResourceInfo;
 
 @SuppressWarnings("serial")
 @RunWith(JMock.class)

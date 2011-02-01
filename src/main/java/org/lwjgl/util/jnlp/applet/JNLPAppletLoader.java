@@ -1,4 +1,4 @@
-package org.lwjgl.util.applet;
+package org.lwjgl.util.jnlp.applet;
 
 import java.applet.Applet;
 import java.applet.AppletStub;
@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.lwjgl.util.applet.AppletLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
