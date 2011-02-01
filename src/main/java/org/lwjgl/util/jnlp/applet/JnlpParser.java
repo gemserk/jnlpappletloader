@@ -125,45 +125,23 @@ public class JnlpParser {
 			Node childNode = childNodes.item(i);
 
 			if ("jar".equals(childNode.getNodeName()))
-				getJarInfo(jnlpInfo, childNode, os);
+				jnlpInfo.resources.add(getResourceInfo(childNode, os, ResourceType.Jar));
 
 			if ("nativelib".equals(childNode.getNodeName()))
-				getNativeLibInfo(jnlpInfo, childNode, os);
+				jnlpInfo.resources.add(getResourceInfo(childNode, os, ResourceType.NativeLib));
 
 			if ("extension".equals(childNode.getNodeName()))
-				getExtensionInfo(jnlpInfo, childNode, os);
+				jnlpInfo.resources.add(getResourceInfo(childNode, os, ResourceType.Extension));
 
 		}
 
 	}
 
-	private void getExtensionInfo(JnlpInfo jnlpInfo, Node childNode, String os) {
+	private JnlpResourceInfo getResourceInfo(Node childNode, String os, ResourceType type) {
 		NamedNodeMap attributes = childNode.getAttributes();
 		Node hrefAttribute = attributes.getNamedItem("href");
-		jnlpInfo.resources.add(new JnlpResourceInfo(hrefAttribute.getNodeValue(), os, ResourceType.Extension));
-
-		// NamedNodeMap attributes = childNode.getAttributes();
-		// Node hrefAttribute = attributes.getNamedItem("href");
-		//		
-		// JNLPParser jnlpParser = new JNLPParser(urlBuilder);
-		// jnlpParser.setUrlBuilder(urlBuilder);
-		//		
-		// URL codeBase = urlBuilder.build(jnlpInfo.codeBase);
-		// JNLPInfo extensionJnlpInfo = jnlpParser.parseJnlp(urlBuilder.build(codeBase, hrefAttribute.getNodeValue()));
-		//		
-		// jnlpInfo.extensions.add(extensionJnlpInfo);
-	}
-
-	private void getNativeLibInfo(JnlpInfo jnlpInfo, Node childNode, String os) {
-		NamedNodeMap attributes = childNode.getAttributes();
-		Node hrefAttribute = attributes.getNamedItem("href");
-		jnlpInfo.resources.add(new JnlpResourceInfo(hrefAttribute.getNodeValue(), os, ResourceType.NativeLib));
-	}
-
-	private void getJarInfo(JnlpInfo jnlpInfo, Node childNode, String os) {
-		NamedNodeMap attributes = childNode.getAttributes();
-		Node hrefAttribute = attributes.getNamedItem("href");
-		jnlpInfo.resources.add(new JnlpResourceInfo(hrefAttribute.getNodeValue(), os, ResourceType.Jar));
+		JnlpResourceInfo jnlpResourceInfo = new JnlpResourceInfo(hrefAttribute.getNodeValue(), os, type);
+		return jnlpResourceInfo;
 	}
 
 }
