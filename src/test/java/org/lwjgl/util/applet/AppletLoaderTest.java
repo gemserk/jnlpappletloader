@@ -26,21 +26,21 @@ public class AppletLoaderTest {
 
 	String tempDirectory = System.getProperty("java.io.tmpdir");
 
-	@Test
-	public void shouldNotExtractNativesWhenNoNewNativeJarWasDownloaded() throws Exception {
-
-		AppletLoader appletLoader = new AppletLoader();
-
-		appletLoader.state = AppletLoader.STATE_INIT;
-
-		appletLoader.urlList = new URL[] { new URL("file:///" + tempDirectory + "/lwjgltest/lwjgl.jar.pack.lzma"), new URL("file:///" + tempDirectory + "/lwjgltest/lwjgl-natives.jar.pack.lzma") };
-		appletLoader.fileSizes = new int[] { 10, -2 };
-
-		appletLoader.extractNatives(tempDirectory + "/lwjgltest/");
-
-		assertEquals(AppletLoader.STATE_INIT, appletLoader.state);
-
-	}
+	// @Test
+	// public void shouldNotExtractNativesWhenNoNewNativeJarWasDownloaded() throws Exception {
+	//
+	// AppletLoader appletLoader = new AppletLoader();
+	//
+	// appletLoader.state = AppletLoader.STATE_INIT;
+	//
+	// appletLoader.urlList = new URL[] { new URL("file:///" + tempDirectory + "/lwjgltest/lwjgl.jar.pack.lzma"), new URL("file:///" + tempDirectory + "/lwjgltest/lwjgl-natives.jar.pack.lzma") };
+	// appletLoader.fileSizes = new int[] { 10, -2 };
+	//
+	// appletLoader.extractNatives(tempDirectory + "/lwjgltest/");
+	//
+	// assertEquals(AppletLoader.STATE_INIT, appletLoader.state);
+	//
+	// }
 
 	@Test
 	public void testGetJarNameFromUrl() throws Exception {
