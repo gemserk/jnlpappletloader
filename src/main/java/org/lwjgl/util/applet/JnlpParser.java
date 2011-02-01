@@ -44,8 +44,6 @@ public class JnlpParser {
 	
 		public String name;
 	
-		//
-	
 		public Map<String, String> parameters = new HashMap<String, String>();
 	
 	}
