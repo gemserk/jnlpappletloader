@@ -5,14 +5,16 @@ import static org.junit.Assert.*;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 import org.hamcrest.core.IsEqual;
+import org.hamcrest.core.IsNull;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPAppletDescInfo;
 import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo;
 
 @SuppressWarnings("serial")
@@ -27,41 +29,47 @@ public class AppletLoaderParametersBuilderTest {
 
 	@Test
 	public void shouldGetOnlyNativesForOnePlatform() throws MalformedURLException {
-		List<JNLPResourceInfo> resources = new ArrayList<JNLPResourceInfo>() {
+		JNLPInfo jnlpInfo = new JNLPInfo();
+		jnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
 			{
-				add(new JNLPInfo.JNLPResourceInfo("lwjgl.jar", "Windows", false));
-				add(new JNLPInfo.JNLPResourceInfo("lwjgl-win.jar", "Windows", true));
-				add(new JNLPInfo.JNLPResourceInfo("lwjgl-linux.jar", "Linux", true));
-				add(new JNLPInfo.JNLPResourceInfo("lwjgl-mac.jar", "Mac OS", true));
+				add(new JNLPResourceInfo("lwjgl.jar", "Windows", false));
+				add(new JNLPResourceInfo("lwjgl-win.jar", "Windows", true));
+				add(new JNLPResourceInfo("lwjgl-linux.jar", "Linux", true));
+				add(new JNLPResourceInfo("lwjgl-mac.jar", "Mac OS", true));
 			}
 		};
-		assertThat(new AppletLoaderParametersBuilder(null).getJarsForOsStartingWith(resources, "Windows", true), IsEqual.equalTo("lwjgl-win.jar"));
+		AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
+		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith(jnlpInfo, "Windows", true), IsEqual.equalTo("lwjgl-win.jar"));
 	}
 
 	@Test
 	public void shouldGetOnlyAllNotNativeDependencies() throws MalformedURLException {
-		List<JNLPResourceInfo> resources = new ArrayList<JNLPResourceInfo>() {
+		JNLPInfo jnlpInfo = new JNLPInfo();
+		jnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
 			{
-				add(new JNLPInfo.JNLPResourceInfo("lwjgl.jar", "", false));
-				add(new JNLPInfo.JNLPResourceInfo("jinput.jar", "", false));
-				add(new JNLPInfo.JNLPResourceInfo("lwjgl-win.jar", "Windows", true));
-				add(new JNLPInfo.JNLPResourceInfo("lwjgl-linux.jar", "Linux", true));
-				add(new JNLPInfo.JNLPResourceInfo("lwjgl-mac.jar", "Mac OS", true));
+				add(new JNLPResourceInfo("lwjgl.jar", "", false));
+				add(new JNLPResourceInfo("jinput.jar", "", false));
+				add(new JNLPResourceInfo("lwjgl-win.jar", "Windows", true));
+				add(new JNLPResourceInfo("lwjgl-linux.jar", "Linux", true));
+				add(new JNLPResourceInfo("lwjgl-mac.jar", "Mac OS", true));
 			}
 		};
-		assertThat(new AppletLoaderParametersBuilder(null).getJarsForOsStartingWith(resources, "", false), IsEqual.equalTo("lwjgl.jar, jinput.jar"));
+		AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
+		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith(jnlpInfo, "", false), IsEqual.equalTo("lwjgl.jar, jinput.jar"));
 	}
 
 	@Test
 	public void shouldGetAllResourcesForAGivenOS() throws MalformedURLException {
-		List<JNLPResourceInfo> resources = new ArrayList<JNLPResourceInfo>() {
+		JNLPInfo jnlpInfo = new JNLPInfo();
+		jnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
 			{
-				add(new JNLPInfo.JNLPResourceInfo("lwjgl-win95.jar", "Windows 95", false));
-				add(new JNLPInfo.JNLPResourceInfo("lwjgl-win98.jar", "Windows 98", false));
-				add(new JNLPInfo.JNLPResourceInfo("lwjgl-win2000.jar", "Windows 2000", false));
+				add(new JNLPResourceInfo("lwjgl-win95.jar", "Windows 95", false));
+				add(new JNLPResourceInfo("lwjgl-win98.jar", "Windows 98", false));
+				add(new JNLPResourceInfo("lwjgl-win2000.jar", "Windows 2000", false));
 			}
 		};
-		assertThat(new AppletLoaderParametersBuilder(null).getJarsForOsStartingWith(resources, "Windows", false), IsEqual.equalTo("lwjgl-win95.jar, lwjgl-win98.jar, lwjgl-win2000.jar"));
+		AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
+		assertThat(appletLoaderParametersBuilder.getJarsForOsStartingWith(jnlpInfo, "Windows", false), IsEqual.equalTo("lwjgl-win95.jar, lwjgl-win98.jar, lwjgl-win2000.jar"));
 	}
 
 	@Test
@@ -75,14 +83,47 @@ public class AppletLoaderParametersBuilderTest {
 	@Test
 	public void shouldAddParameterIfNoNativesFound() {
 		JNLPInfo jnlpInfo = new JNLPInfo();
-		jnlpInfo.resources = new ArrayList<JNLPInfo.JNLPResourceInfo>() {
+		jnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
 			{
-				add(new JNLPInfo.JNLPResourceInfo("lwjgl.jar", "Windows", true));
+				add(new JNLPResourceInfo("lwjgl.jar", "Windows", true));
 			}
 		};
 		HashMap<String, String> appletParameters = new HashMap<String, String>();
 		new AppletLoaderParametersBuilder(jnlpInfo).addNativesFor(appletParameters, "Windows", "al_windows");
 		assertNotNull(appletParameters.get("al_windows"));
+	}
+
+	@Test
+	public void shouldAddExtensionResourcesAsAbsoluteUrls() {
+		JNLPInfo extensionJnlpInfo = new JNLPInfo();
+		extensionJnlpInfo.codeBase = "http://someplace.net/releases/";
+		extensionJnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
+			{
+				add(new JNLPResourceInfo("jinput.jar", "", false));
+				add(new JNLPResourceInfo("jutils.jar", "", false));
+			}
+		};
+
+		JNLPInfo jnlpInfo = new JNLPInfo();
+		jnlpInfo.codeBase = ".";
+		jnlpInfo.jnlpAppletDescInfo = new JNLPAppletDescInfo() {
+			{
+				mainClassName = "Main";
+				name = "name";
+			}
+		};
+		jnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
+			{
+				add(new JNLPResourceInfo("lwjgl.jar", "", false));
+			}
+		};
+		jnlpInfo.extensions.add(extensionJnlpInfo);
+
+		Map<String, String> appletParameters = new AppletLoaderParametersBuilder(jnlpInfo).getAppletParametersFromJnlpInfo();
+
+		String jarsParameter = appletParameters.get("al_jars");
+		assertThat(jarsParameter, IsNull.notNullValue());
+		assertThat(jarsParameter, IsEqual.equalTo("lwjgl.jar, http://someplace.net/releases/jinput.jar, http://someplace.net/releases/jutils.jar"));
 	}
 
 }
