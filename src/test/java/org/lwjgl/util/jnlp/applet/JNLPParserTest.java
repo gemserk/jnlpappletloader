@@ -78,21 +78,34 @@ public class JNLPParserTest {
 				oneOf(urlBuilder).open(url);
 				will(returnValue(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-with-extensions.jnlp")));
 
-				oneOf(urlBuilder).build("http://someplace.org/releases/");
+				
+				ignoring(urlBuilder).build("http://someplace.org/releases/");
 				will(returnValue(url));
 
-				oneOf(urlBuilder).build(url, "test-extension.jnlp");
+				oneOf(urlBuilder).build(url, "test-extension1.jnlp");
 				will(returnValue(url));
 
 				oneOf(urlBuilder).open(url);
-				will(returnValue(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-extension.jnlp")));
+				will(returnValue(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-extension1.jnlp")));
+
+				oneOf(urlBuilder).build(url, "http://anotherplace.net/releases/test-extension2.jnlp");
+				will(returnValue(url));
+
+				oneOf(urlBuilder).open(url);
+				will(returnValue(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-extension2.jnlp")));
 			}
 		});
 
 		JNLPInfo jnlpInfo = jnlpParser.parseJnlp(url);
 
 		assertThat(jnlpInfo, IsNull.notNullValue());
-		assertThat(jnlpInfo.extensions.size(), IsEqual.equalTo(1));
+		assertThat(jnlpInfo.extensions.size(), IsEqual.equalTo(2));
+		
+		JNLPInfo firstExtensionJnlpInfo = jnlpInfo.extensions.get(0);
+		assertThat(firstExtensionJnlpInfo.codeBase, IsEqual.equalTo("http://someplace.org/releases/"));
+
+		JNLPInfo secondExtensionJnlpInfo = jnlpInfo.extensions.get(1);
+		assertThat(secondExtensionJnlpInfo.codeBase, IsEqual.equalTo("http://anotherplace.net/releases/"));
 
 		printJnlpInfo(jnlpInfo);
 	}

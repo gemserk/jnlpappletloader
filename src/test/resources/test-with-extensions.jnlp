@@ -16,8 +16,11 @@
 	<resources>
 		<j2se version="1.6+" />
 
-		<extension name="jnlp-extension" 
-           href="test-extension.jnlp"/>
+		<extension name="jnlp-extension1" 
+           href="test-extension1.jnlp"/>
+
+		<extension name="jnlp-extension2" 
+           href="http://anotherplace.net/releases/test-extension2.jnlp"/>
 
 		<jar href="dependency1.jar" />
 		
