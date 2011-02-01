@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.lwjgl.util.applet;
 
 import java.net.HttpURLConnection;

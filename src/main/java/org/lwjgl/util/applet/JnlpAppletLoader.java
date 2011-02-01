@@ -14,6 +14,15 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 	private static final long serialVersionUID = -2459790398016588477L;
 
 	FileInfoProvider fileInfoProvider = new FileInfoProvider();
+	
+	JarUtil jarUtil = new JarUtil();
+	
+	List<URL> convertToUrls(URL codebase, List<String> files) {
+		List<URL> urls = new ArrayList<URL>();
+		for (String file : files) 
+			urls.add(jarUtil.getCodebasedUrl(codebase, file));
+		return urls;
+	}
 
 	@Override
 	public void init() {
@@ -24,14 +33,19 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 		// check cache and remove already downloader jars from jars to download?
 
-		final AppletParameters appletParameters = new AppletParametersProxy(new AppletParametersUtil(this)).getAppletParameters();
+		AppletParametersUtil appletParametersUtil = new AppletParametersUtil(this);
 		
-		for (URL url : appletParameters.getJars()) 
+		final AppletParameters appletParameters = new AppletParametersProxy(appletParametersUtil).getAppletParameters();
+		
+		List<URL> urls = convertToUrls(getCodeBase(), appletParameters.getJars());
+		
+		for (URL url : urls) 
 			System.out.println(url);
 
 		List<FileInfo> jarFiles = new ArrayList<FileInfo>();
 
-		jarFiles.addAll(getFilesInfo(appletParameters.getJars()));
+		
+		jarFiles.addAll(getFilesInfo(urls));
 
 		List<FileInfo> nativeFiles = new ArrayList<FileInfo>();
 
