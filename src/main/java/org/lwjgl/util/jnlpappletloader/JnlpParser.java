@@ -1,4 +1,4 @@
-package org.lwjgl.util.applet;
+package org.lwjgl.util.jnlpappletloader;
 
 import java.util.ArrayList;
 import java.util.HashMap;

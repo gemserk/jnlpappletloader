@@ -1,4 +1,4 @@
-package org.lwjgl.util.applet;
+package org.lwjgl.util.jnlpappletloader;
 
 import static org.junit.Assert.assertThat;
 
@@ -12,7 +12,8 @@ import org.jmock.integration.junit4.JMock;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.lwjgl.util.applet.JnlpParser.JnlpJarInfo;
+import org.lwjgl.util.jnlpappletloader.JnlpAppletLoader;
+import org.lwjgl.util.jnlpappletloader.JnlpParser.JnlpJarInfo;
 
 @SuppressWarnings("serial")
 @RunWith(JMock.class)
