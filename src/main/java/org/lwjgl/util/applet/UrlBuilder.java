@@ -1,4 +1,4 @@
-package org.lwjgl.util.jnlpappletloader;
+package org.lwjgl.util.applet;
 
 import java.net.MalformedURLException;
 import java.net.URL;

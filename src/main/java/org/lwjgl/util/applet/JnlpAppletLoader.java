@@ -1,4 +1,4 @@
-package org.lwjgl.util.jnlpappletloader;
+package org.lwjgl.util.applet;
 
 import java.applet.Applet;
 import java.applet.AppletStub;
@@ -13,8 +13,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.lwjgl.util.applet.AppletLoader;
-import org.lwjgl.util.jnlpappletloader.exceptions.MissingRequiredParameterException;
+import org.lwjgl.util.applet.exceptions.MissingRequiredParameterException;
 import org.w3c.dom.Document;
 
 public class JnlpAppletLoader extends Applet implements AppletStub {

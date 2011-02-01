@@ -1,4 +1,4 @@
-package org.lwjgl.util.jnlpappletloader.exceptions;
+package org.lwjgl.util.applet.exceptions;
 
 public class MissingRequiredParameterException extends RuntimeException {
 

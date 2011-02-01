@@ -1,4 +1,4 @@
-package org.lwjgl.util.jnlpappletloader;
+package org.lwjgl.util.applet;
 
 import static org.junit.Assert.*;
 
@@ -15,9 +15,10 @@ import org.jmock.integration.junit4.JMock;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.lwjgl.util.jnlpappletloader.JnlpParser.JnlpInfo;
-import org.lwjgl.util.jnlpappletloader.JnlpParser.JnlpJarInfo;
-import org.lwjgl.util.jnlpappletloader.exceptions.MissingRequiredParameterException;
+import org.lwjgl.util.applet.JnlpAppletLoader;
+import org.lwjgl.util.applet.JnlpParser.JnlpInfo;
+import org.lwjgl.util.applet.JnlpParser.JnlpJarInfo;
+import org.lwjgl.util.applet.exceptions.MissingRequiredParameterException;
 
 @SuppressWarnings("serial")
 @RunWith(JMock.class)

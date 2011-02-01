@@ -1,4 +1,4 @@
-package org.lwjgl.util.jnlpappletloader;
+package org.lwjgl.util.applet;
 
 import static org.junit.Assert.assertThat;
 
