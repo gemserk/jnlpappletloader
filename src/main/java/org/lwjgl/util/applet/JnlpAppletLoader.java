@@ -3,7 +3,9 @@ package org.lwjgl.util.applet;
 import java.applet.Applet;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Graphics;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,8 +24,114 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	JarDownloader jarDownloader;
 
+	public static class Progress {
+
+		private float total;
+
+		private float current;
+
+		private String status = "";
+
+		public Progress(int total) {
+			this.total = total;
+			this.current = 0;
+		}
+
+		public void increment() {
+			increment(1);
+		}
+
+		public void increment(float count) {
+			current += count;
+			if (current > total)
+				current = total;
+		}
+
+		public void setCurrent(float current) {
+			this.current = current;
+		}
+
+		public float getPercentage() {
+			return 100 * current / total;
+		}
+
+		public void setTotal(float total) {
+			this.total = total;
+		}
+
+		public void setStatus(String status) {
+			this.status = status;
+		}
+
+		public String getStatus() {
+			return status;
+		}
+
+		public void update(String status, int current) {
+			setStatus(status);
+			setCurrent(current);
+
+			// try {
+			// Thread.sleep(1000);
+			// } catch (InterruptedException e) {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
+		}
+
+	}
+
+	Progress progress = new Progress(100);
+
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, getWidth(), getHeight());
+
+		g.setColor(Color.BLACK);
+
+		String status = "" + progress.getPercentage() + "%";
+		if (!"".equals(progress.getStatus()))
+			status += " - " + progress.getStatus();
+
+		g.drawString(status, getWidth() / 2 - status.length() * 3, getHeight() / 2);
+	}
+
 	@Override
 	public void init() {
+
+		setIgnoreRepaint(true);
+
+		Thread renderThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					while (true) {
+						repaint();
+						Thread.sleep(100);
+					}
+				} catch (InterruptedException e) {
+					System.out.println("animation thread interrupted");
+				}
+			}
+		});
+		renderThread.start();
+
+		Thread updateThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				load();
+			}
+		});
+		updateThread.start();
+
+		// while ! done { }
+		// thread.join()
+	}
+
+	private void load() {
 
 		URL codeBase = internalGetCodeBase();
 
@@ -44,6 +152,8 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 		AppletParametersUtil appletParametersUtil = new AppletParametersUtil(this);
 
+		progress.update("getting parameters", 5);
+
 		final AppletParameters appletParameters = new AppletParametersProxy(appletParametersUtil).getAppletParameters();
 
 		// List<URL> urls = convertToUrls(getCodeBase(), appletParameters.getJars());
@@ -52,6 +162,8 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		// System.out.println(url);
 
 		List<FileInfo> jarFiles = new ArrayList<FileInfo>();
+
+		progress.update("getting files information", 10);
 
 		jarFiles.addAll(getFilesInfo(appletParameters.getJars()));
 
@@ -62,16 +174,24 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		files.addAll(jarFiles);
 		files.addAll(nativeFiles);
 
+		progress.update("filter files from cache", 15);
+
 		Cache cache = new Cache(new HashMap<String, FileInfo>());
 		CacheFilter cacheFilter = new CacheFilter(cache);
 
 		List<FileInfo> newFiles = cacheFilter.removeCachedFiles(files);
 
+		progress.update("downloading files", 25);
+
 		for (FileInfo fileInfo : newFiles) {
 			// update progress based on file info content length?
 			System.out.println("Downloading " + fileInfo.getFileName() + " [" + fileInfo.getContentLength() + "]" + "...");
 			jarDownloader.download(fileInfo);
+
+			progress.update("downloading " + fileInfo.getFileName(), 25);
 		}
+
+		progress.update("extracting jars", 55);
 
 		// download jars
 

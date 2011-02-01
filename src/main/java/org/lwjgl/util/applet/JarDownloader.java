@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.jar.JarOutputStream;
@@ -46,6 +47,92 @@ public class JarDownloader {
 		}
 	}
 
+	public static class Capabilities {
+
+		private boolean pack200Enabled;
+
+		private boolean gZipEnabled;
+
+		private String acceptEncoding;
+
+		public Capabilities(boolean pack200Enabled, boolean gZipEnabled) {
+			this.pack200Enabled = pack200Enabled;
+			this.gZipEnabled = gZipEnabled;
+		}
+
+		public boolean isPack200Enabled() {
+			return pack200Enabled;
+		}
+
+		public void setPack200Enabled(boolean pack200Enabled) {
+			this.pack200Enabled = pack200Enabled;
+		}
+
+		public boolean isGZipEnabled() {
+			return gZipEnabled;
+		}
+
+		public void setGZipEnabled(boolean gZipEnabled) {
+			this.gZipEnabled = gZipEnabled;
+		}
+
+		public String getAcceptEncoding() {
+			return acceptEncoding;
+		}
+
+		public void setAcceptEncoding(String acceptEncoding) {
+			this.acceptEncoding = acceptEncoding;
+		}
+
+	}
+
+	public static class UrlConnectionBuilder {
+
+		public URLConnection openConnection(URL url, String acceptedEncoding) {
+			try {
+				URLConnection connection = url.openConnection();
+				connection.addRequestProperty("Accept-Encoding", acceptedEncoding);
+				connection.connect();
+				return connection;
+			} catch (IOException e) {
+				throw new RuntimeException("failed to establish connection with " + url, e);
+			}
+		}
+
+	}
+	
+	public static class FileOutputStreamBuilder {
+		
+		public OutputStream getFileOutputStream(File file) {
+			try {
+				return new FileOutputStream(file);
+			} catch (FileNotFoundException e) {
+				throw new RuntimeException("failed to get output stream for file " + file, e);
+			}
+		}
+		
+	}
+
+	Capabilities capabilities = new Capabilities(true, true);
+
+	UrlConnectionBuilder urlConnectionBuilder = new UrlConnectionBuilder();
+	
+	FileDownloader fileDownloader = new FileDownloader();
+	
+	FileOutputStreamBuilder fileOutputStreamBuilder = new FileOutputStreamBuilder();
+	
+	public void setFileDownloader(FileDownloader fileDownloader) {
+		this.fileDownloader = fileDownloader;
+	}
+
+	public void setUrlConnectionBuilder(UrlConnectionBuilder urlConnectionBuilder) {
+		this.urlConnectionBuilder = urlConnectionBuilder;
+	}
+	
+	public void setFileOutputStreamBuilder(FileOutputStreamBuilder fileOutputStreamBuilder) {
+		this.fileOutputStreamBuilder = fileOutputStreamBuilder;
+	}
+
 	private File internalDownload(FileInfo fileInfo) throws IOException, FileNotFoundException {
 		URL url = jarUtils.getCodeBasedUrl(codeBase, fileInfo.getFileName());
 
@@ -53,14 +140,19 @@ public class JarDownloader {
 
 		File jarFile = new File(path + jarName + jarExtension);
 
-		URLConnection connection = url.openConnection();
-		
-		connection.addRequestProperty("Accept-Encoding", "pack200-gzip, gzip");
-		connection.connect();
+		String acceptEncoding = getAcceptEncoding(capabilities);
+
+		System.out.println("Accept-Encoding: " + acceptEncoding);
+
+		URLConnection connection = urlConnectionBuilder.openConnection(url, acceptEncoding);
+
+		// URLConnection connection = url.openConnection();
+		// connection.addRequestProperty("Accept-Encoding", acceptEncoding);
+		// connection.connect();
 
 		String contentEncoding = connection.getContentEncoding();
 
-		System.out.println(contentEncoding);
+		System.out.println("Content-Encoding: " + contentEncoding);
 
 		boolean isPack200Encoding = pack200GZipEncoding.equals(contentEncoding);
 		boolean isGZipEncoding = gzipEncoding.equals(contentEncoding);
@@ -74,8 +166,6 @@ public class JarDownloader {
 
 		String filePath = path + jarName + downloadExtension;
 
-		FileDownloader fileDownloader = new FileDownloader();
-
 		new File(path).mkdirs();
 
 		File file = new File(filePath);
@@ -88,7 +178,7 @@ public class JarDownloader {
 		if (isPack200Encoding || isGZipEncoding)
 			inputStream = new GZIPInputStream(inputStream);
 
-		fileDownloader.download(inputStream, new FileOutputStream(file));
+		fileDownloader.download(inputStream, fileOutputStreamBuilder.getFileOutputStream(file));
 
 		if (!isPack200Encoding)
 			return file;
@@ -101,6 +191,24 @@ public class JarDownloader {
 		out.close();
 
 		return new File(path + fileInfo.getFileName());
+	}
+
+	private String getAcceptEncoding(Capabilities capabilities) {
+		StringBuilder acceptEncodingStringBuilder = new StringBuilder("");
+
+		if (capabilities.isPack200Enabled())
+			appendAcceptedEncoding(acceptEncodingStringBuilder, "pack200-gzip");
+
+		if (capabilities.isGZipEnabled())
+			appendAcceptedEncoding(acceptEncodingStringBuilder, "gzip");
+
+		return acceptEncodingStringBuilder.toString();
+	}
+
+	private void appendAcceptedEncoding(StringBuilder sb, String encoding) {
+		if (sb.length() != 0)
+			sb.append(", ");
+		sb.append(encoding);
 	}
 
 	// if pack 200 available, should try with file.jar.pack
