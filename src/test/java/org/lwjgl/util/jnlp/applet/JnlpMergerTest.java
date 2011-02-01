@@ -28,7 +28,7 @@ public class JnlpMergerTest {
 	@Test
 	public void testMergeWithExtensions() throws MalformedURLException {
 
-		final URLBuilder urlBuilder = mockery.mock(URLBuilder.class);
+		final UrlBuilder urlBuilder = mockery.mock(UrlBuilder.class);
 		final JnlpParser jnlpParser = mockery.mock(JnlpParser.class);
 
 		JnlpMerger jnlpMerger = new JnlpMerger();

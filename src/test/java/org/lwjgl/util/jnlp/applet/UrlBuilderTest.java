@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(JMock.class)
-public class URLBuilderTest {
+public class UrlBuilderTest {
 
 	Mockery mockery = new Mockery() {
 		{
@@ -26,7 +26,7 @@ public class URLBuilderTest {
 	
 	@Test
 	public void shouldReturnUrlWithinContext() throws MalformedURLException {
-		URLBuilder urlBuilder = new URLBuilder(new URL("http://localhost/"));
+		UrlBuilder urlBuilder = new UrlBuilder(new URL("http://localhost/"));
 		URL url = urlBuilder.build("launch.jnlp");
 		assertNotNull(url);
 		assertThat(url, IsEqual.equalTo(new URL("http://localhost/launch.jnlp")));
@@ -34,7 +34,7 @@ public class URLBuilderTest {
 
 	@Test
 	public void shouldReturnProperUrlWhenItIsAbsoluteFromHttp() throws MalformedURLException {
-		URLBuilder urlBuilder = new URLBuilder(new URL("http://localhost/"));
+		UrlBuilder urlBuilder = new UrlBuilder(new URL("http://localhost/"));
 		URL url = urlBuilder.build("http://acoppes/launch.jnlp");
 		assertNotNull(url);
 		assertThat(url, IsEqual.equalTo(new URL("http://acoppes/launch.jnlp")));
@@ -42,7 +42,7 @@ public class URLBuilderTest {
 
 	@Test
 	public void shouldReturnProperUrlWhenItIsAbsoluteFromFileSystem() throws MalformedURLException {
-		URLBuilder urlBuilder = new URLBuilder(new URL("http://localhost/"));
+		UrlBuilder urlBuilder = new UrlBuilder(new URL("http://localhost/"));
 		URL url = urlBuilder.build("file:launch.jnlp");
 		assertNotNull(url);
 		assertThat(url, IsEqual.equalTo(new URL("file:launch.jnlp")));
@@ -51,13 +51,13 @@ public class URLBuilderTest {
 	@Test(expected=RuntimeException.class)
 	public void testOpenUrlInputStreamFromFileNotFound() throws Exception {
 		URL url = new URL("file:");
-		URLBuilder urlBuilder = new URLBuilder();
+		UrlBuilder urlBuilder = new UrlBuilder();
 		urlBuilder.open(url);
 	}
 	
 	@Test
 	public void testOpenUrlInputStreamFromFile() throws Exception {
-		URLBuilder urlBuilder = new URLBuilder();
+		UrlBuilder urlBuilder = new UrlBuilder();
 		InputStream is = urlBuilder.open(Thread.currentThread().getContextClassLoader().getResource("test-with-extensions.jnlp"));
 		assertThat(is, IsNull.notNullValue());
 		is.close();

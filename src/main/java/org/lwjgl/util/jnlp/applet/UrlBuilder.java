@@ -8,15 +8,15 @@ import java.net.URL;
 /**
  * URL Builder util class.
  */
-public class URLBuilder {
+public class UrlBuilder {
 
 	private URL context;
 
-	public URLBuilder() {
+	public UrlBuilder() {
 
 	}
 
-	public URLBuilder(URL context) {
+	public UrlBuilder(URL context) {
 		this.context = context;
 	}
 

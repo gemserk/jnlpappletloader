@@ -39,7 +39,7 @@ public class JnlpParserTest {
 
 		Document document = documentBuilder.parse(jnlpInputStream);
 
-		JnlpInfo jnlpInfo = new JnlpParser(new URLBuilder()).parse(document);
+		JnlpInfo jnlpInfo = new JnlpParser(new UrlBuilder()).parse(document);
 
 		new JnlpPrinter().printJnlpInfo(jnlpInfo);
 
@@ -50,7 +50,7 @@ public class JnlpParserTest {
 	public void testParseWithExtension() throws Exception {
 		final URL url = new URL("file:");
 
-		final URLBuilder urlBuilder = mockery.mock(URLBuilder.class);
+		final UrlBuilder urlBuilder = mockery.mock(UrlBuilder.class);
 
 		JnlpParser jnlpParser = new JnlpParser(urlBuilder);
 		jnlpParser.setUrlBuilder(urlBuilder);

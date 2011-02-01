@@ -18,13 +18,13 @@ import org.w3c.dom.NodeList;
 
 public class JnlpParser {
 
-	private URLBuilder urlBuilder;
+	private UrlBuilder urlBuilder;
 
-	public void setUrlBuilder(URLBuilder urlBuilder) {
+	public void setUrlBuilder(UrlBuilder urlBuilder) {
 		this.urlBuilder = urlBuilder;
 	}
 	
-	public JnlpParser(URLBuilder urlBuilder) {
+	public JnlpParser(UrlBuilder urlBuilder) {
 		this.urlBuilder = urlBuilder;
 	}
 

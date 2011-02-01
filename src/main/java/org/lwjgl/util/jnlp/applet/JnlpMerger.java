@@ -7,7 +7,7 @@ import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
 
 public class JnlpMerger {
 
-	URLBuilder urlBuilder;
+	UrlBuilder urlBuilder;
 
 	JnlpParser jnlpParser;
 
@@ -15,7 +15,7 @@ public class JnlpMerger {
 		this.jnlpParser = jnlpParser;
 	}
 
-	public void setUrlBuilder(URLBuilder urlBuilder) {
+	public void setUrlBuilder(UrlBuilder urlBuilder) {
 		this.urlBuilder = urlBuilder;
 	}
 

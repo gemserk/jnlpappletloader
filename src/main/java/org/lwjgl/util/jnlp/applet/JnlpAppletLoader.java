@@ -24,18 +24,18 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	private JnlpParser jnlpParser;
 
-	private URLBuilder urlBuilder;
+	private UrlBuilder urlBuilder;
 
 	public void setJnlpParser(JnlpParser jnlpParser) {
 		this.jnlpParser = jnlpParser;
 	}
 
-	public void setUrlBuilder(URLBuilder urlBuilder) {
+	public void setUrlBuilder(UrlBuilder urlBuilder) {
 		this.urlBuilder = urlBuilder;
 	}
 
 	public JnlpAppletLoader() {
-		urlBuilder = new URLBuilder();
+		urlBuilder = new UrlBuilder();
 		jnlpParser = new JnlpParser(urlBuilder);
 	}
 
