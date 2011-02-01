@@ -4,6 +4,7 @@ import java.applet.Applet;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,10 +17,15 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	JarUtil jarUtil = new JarUtil();
 
+	JarDownloader jarDownloader;
+
 	@Override
 	public void init() {
 
 		fileInfoProvider = new FileInfoProviderRemoteImpl(this.getCodeBase());
+
+		String tempFolder = System.getProperty("java.io.tmpdir") + File.separator + "lwjgltmp" + File.separator;
+		jarDownloader = new JarDownloader(this.getCodeBase(), tempFolder);
 
 		// parseParameters
 
@@ -53,6 +59,10 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		List<FileInfo> newFiles = cacheFilter.removeCachedFiles(files);
 
 		// download jars
+
+		// extract jars
+
+		// validate jars?
 
 		// update cache?
 

@@ -42,7 +42,7 @@ public class JnlpAppletLoaderTest {
 	public void testGetCodeBasedUrlForJarList() throws MalformedURLException {
 		URL codebase = new URL("http://localhost");
 		JarUtil jarUtil = new JarUtil();
-		assertThat(new URL("http://localhost/lwjgl-2.6.jar"), IsEqual.equalTo(jarUtil.getCodebasedUrl(codebase, "lwjgl-2.6.jar")));
+		assertThat(new URL("http://localhost/lwjgl-2.6.jar"), IsEqual.equalTo(jarUtil.getCodeBasedUrl(codebase, "lwjgl-2.6.jar")));
 	}
 
 //	@Test

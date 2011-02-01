@@ -1,5 +1,14 @@
 package org.lwjgl.util.applet;
 
+import static org.junit.Assert.assertThat;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.hamcrest.core.IsEqual;
+import org.hamcrest.core.IsNull;
+import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.lib.legacy.ClassImposteriser;
@@ -14,17 +23,34 @@ public class JarDownloaderTest {
 			setImposteriser(ClassImposteriser.INSTANCE);
 		}
 	};
-	
+
+	String tempDirectory = System.getProperty("java.io.tmpdir");
+
 	@Test
-	public void test() {
+	public void shouldDownloadFile() throws MalformedURLException {
+
+		final URL codeBase = new URL("http://localhost");
+		String path = tempDirectory + File.separator + "jarDownloaderTest" + File.separator;
 		
-		JarDownloader jarDownloader = new JarDownloader();
+		final JarUtil jarUtils = mockery.mock(JarUtil.class);
+
+		JarDownloader jarDownloader = new JarDownloader(codeBase, path);
+		jarDownloader.setJarUtils(jarUtils);
 		
 		FileInfo fileInfo = new FileInfo("lwjgl.jar", 100, 100L);
+
+		mockery.checking(new Expectations() {
+			{
+				oneOf(jarUtils).getCodeBasedUrl(codeBase, "lwjgl.jar");
+				will(returnValue(new URL("http://localhost/lwjgl.jar")));
+			}
+		});
+
+		File downloadedFile = jarDownloader.download(fileInfo);
 		
-		// jarDownloader.download(fileInfo);
+		assertThat(downloadedFile, IsNull.notNullValue());
+		assertThat(downloadedFile.getAbsolutePath(), IsEqual.equalTo(path + "lwjgl.jar"));
 		
 	}
-
 
 }

@@ -16,19 +16,19 @@ public class JarUtil {
 		return jars;
 	}
 
-	public URL getCodebasedUrl(URL codebase, String jar) {
+	public URL getCodeBasedUrl(URL codeBase, String jar) {
 		try {
-			return new URL(codebase, jar);
+			return new URL(codeBase, jar);
 		} catch (MalformedURLException e) {
 			throw new RuntimeException("failed to get codebased url for " + jar, e);
 		}
 	}
 
-	public List<URL> getUrls(URL codebase, String jarList) {
+	public List<URL> getUrls(URL codeBase, String jarList) {
 		List<String> jars = getJars(jarList);
 		List<URL> urls = new ArrayList<URL>();
 		for (int i = 0; i < jars.size(); i++) {
-			urls.add(getCodebasedUrl(codebase, jars.get(i)));
+			urls.add(getCodeBasedUrl(codeBase, jars.get(i)));
 		}
 		return urls;
 	}
@@ -36,7 +36,7 @@ public class JarUtil {
 	public List<URL> convertToUrls(URL codebase, List<String> files) {
 		List<URL> urls = new ArrayList<URL>();
 		for (String file : files)
-			urls.add(getCodebasedUrl(codebase, file));
+			urls.add(getCodeBasedUrl(codebase, file));
 		return urls;
 	}
 
