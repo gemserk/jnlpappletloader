@@ -5,6 +5,8 @@ import java.applet.AppletStub;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,18 +19,20 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	JarUtil jarUtil = new JarUtil();
 
-	JarDownloader jarDownloader;
+	JarDownloader jarDownloader; 
 
 	@Override
 	public void init() {
-
-		fileInfoProvider = new FileInfoProviderRemoteImpl(this.getCodeBase());
+		
+		URL codeBase = internalGetCodeBase();
+		
+		fileInfoProvider = new FileInfoProviderRemoteImpl(codeBase);
 
 		JarUtil jarUtils = new JarUtil();
-
-		String tempFolder = System.getProperty("java.io.tmpdir") + File.separator + "lwjgltmp" + File.separator;
 		
-		jarDownloader = new JarDownloader(this.getCodeBase(), tempFolder);
+		String tempFolder = System.getProperty("java.io.tmpdir") + File.separator + "lwjgltmp" + File.separator;
+
+		jarDownloader = new JarDownloader(codeBase, tempFolder);
 		jarDownloader.setJarUtils(jarUtils);
 
 		// parseParameters
@@ -62,6 +66,12 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 		List<FileInfo> newFiles = cacheFilter.removeCachedFiles(files);
 
+		for (FileInfo fileInfo : newFiles) {
+			// update progress based on file info content length?
+			System.out.println("Downloading " + fileInfo.getFileName() + " [" + fileInfo.getContentLength() + "]" + "...");
+			jarDownloader.download(fileInfo);
+		}
+
 		// download jars
 
 		// extract jars
@@ -75,6 +85,15 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		// switch applet
 
 		switchApplet(appletParameters);
+	}
+
+	private URL internalGetCodeBase() {
+		// return this.getCodeBase();
+		try {
+			return new URL("http://acoppes-laptop.local/prototipos/discoverthename-test/");
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public List<FileInfo> getFilesInfo(List<String> urls) {
