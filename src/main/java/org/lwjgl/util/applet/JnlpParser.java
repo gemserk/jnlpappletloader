@@ -1,10 +1,10 @@
 package org.lwjgl.util.applet;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.lwjgl.util.applet.tests.JnlpParserTest.AppletDescInfo;
-import org.lwjgl.util.applet.tests.JnlpParserTest.JarInfo;
-import org.lwjgl.util.applet.tests.JnlpParserTest.JnlpInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -12,14 +12,52 @@ import org.w3c.dom.NodeList;
 
 public class JnlpParser {
 	
+	public static class JnlpJarInfo {
+	
+		public String href;
+	
+		public String os;
+		
+		public boolean nativeLib;
+	
+		public JnlpJarInfo(String href, String os, boolean nativeLib) {
+			this.href = href;
+			this.os = os;
+			this.nativeLib = nativeLib;
+		}
+	
+	}
+
+	public static class JnlpInfo {
+	
+		public String codeBase;
+	
+		public JnlpParser.AppletDescInfo appletDescInfo;
+	
+		public List<JnlpJarInfo> resources;
+	
+	}
+
+	public static class AppletDescInfo {
+	
+		public String mainClassName;
+	
+		public String name;
+	
+		//
+	
+		public Map<String, String> parameters = new HashMap<String, String>();
+	
+	}
+
 	private final Document jnlpDocument;
 
 	public JnlpParser(Document document) {
 		this.jnlpDocument = document;
 	}
 	
-	public JnlpInfo parse() {
-		JnlpInfo jnlpInfo = new JnlpInfo();
+	public JnlpParser.JnlpInfo parse() {
+		JnlpParser.JnlpInfo jnlpInfo = new JnlpParser.JnlpInfo();
 
 		NodeList jnlpElements = jnlpDocument.getElementsByTagName("jnlp");
 
@@ -30,7 +68,7 @@ public class JnlpParser {
 
 		jnlpInfo.codeBase = jnlpElement.getAttributes().getNamedItem("codebase").getNodeValue();
 
-		jnlpInfo.resources = new ArrayList<JarInfo>();
+		jnlpInfo.resources = new ArrayList<JnlpParser.JnlpJarInfo>();
 
 		NodeList childNodes = jnlpElement.getChildNodes();
 
@@ -54,7 +92,7 @@ public class JnlpParser {
 		return jnlpInfo;
 	}
 
-	private void getResourcesInfo(JnlpInfo jnlpInfo, Node resourcesNode) {
+	private void getResourcesInfo(JnlpParser.JnlpInfo jnlpInfo, Node resourcesNode) {
 
 		NamedNodeMap attributes = resourcesNode.getAttributes();
 
@@ -80,25 +118,25 @@ public class JnlpParser {
 
 	}
 
-	private void getNativeLibInfo(JnlpInfo jnlpInfo, Node childNode, String os) {
+	private void getNativeLibInfo(JnlpParser.JnlpInfo jnlpInfo, Node childNode, String os) {
 		NamedNodeMap attributes = childNode.getAttributes();
 		Node hrefAttribute = attributes.getNamedItem("href");
-		jnlpInfo.resources.add(new JarInfo(hrefAttribute.getNodeValue(), os, true));
+		jnlpInfo.resources.add(new JnlpParser.JnlpJarInfo(hrefAttribute.getNodeValue(), os, true));
 	}
 
-	private void getJarInfo(JnlpInfo jnlpInfo, Node childNode, String os) {
+	private void getJarInfo(JnlpParser.JnlpInfo jnlpInfo, Node childNode, String os) {
 		NamedNodeMap attributes = childNode.getAttributes();
 		Node hrefAttribute = attributes.getNamedItem("href");
-		jnlpInfo.resources.add(new JarInfo(hrefAttribute.getNodeValue(), os, false));
+		jnlpInfo.resources.add(new JnlpParser.JnlpJarInfo(hrefAttribute.getNodeValue(), os, false));
 	}
 
-	private AppletDescInfo getAppletDescInfo(Node appletDescElement) {
+	private JnlpParser.AppletDescInfo getAppletDescInfo(Node appletDescElement) {
 		NamedNodeMap attributes = appletDescElement.getAttributes();
 
 		String name = attributes.getNamedItem("name").getNodeValue();
 		String mainClass = attributes.getNamedItem("main-class").getNodeValue();
 
-		AppletDescInfo appletDescInfo = new AppletDescInfo();
+		JnlpParser.AppletDescInfo appletDescInfo = new JnlpParser.AppletDescInfo();
 		appletDescInfo.mainClassName = mainClass;
 		appletDescInfo.name = name;
 		
@@ -116,7 +154,7 @@ public class JnlpParser {
 		return appletDescInfo;
 	}
 
-	private void getParamInfo(AppletDescInfo appletDescInfo, Node childNode) {
+	private void getParamInfo(JnlpParser.AppletDescInfo appletDescInfo, Node childNode) {
 		NamedNodeMap attributes = childNode.getAttributes();
 		String nameAttribute = attributes.getNamedItem("name").getNodeValue();
 		String valueAttribute = attributes.getNamedItem("value").getNodeValue();

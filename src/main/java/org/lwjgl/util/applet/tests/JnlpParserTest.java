@@ -2,58 +2,16 @@ package org.lwjgl.util.applet.tests;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.lwjgl.util.applet.JnlpParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class JnlpParserTest {
-
-	public static class AppletDescInfo {
-
-		public String mainClassName;
-
-		public String name;
-
-		//
-
-		public Map<String, String> parameters = new HashMap<String, String>();
-
-	}
-
-	public static class JarInfo {
-
-		public String href;
-
-		public String os;
-		
-		public boolean nativeLib;
-
-		public JarInfo(String href, String os, boolean nativeLib) {
-			this.href = href;
-			this.os = os;
-			this.nativeLib = nativeLib;
-		}
-
-	}
-
-	public static class JnlpInfo {
-
-		public String codeBase;
-
-		public AppletDescInfo appletDescInfo;
-
-		public List<JarInfo> resources;
-
-	}
 
 	public static void main(String[] args) throws Exception {
 

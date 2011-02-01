@@ -12,15 +12,15 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.lwjgl.util.applet.tests.JnlpParserTest.JarInfo;
-import org.lwjgl.util.applet.tests.JnlpParserTest.JnlpInfo;
+import org.lwjgl.util.applet.JnlpParser.JnlpInfo;
+import org.lwjgl.util.applet.JnlpParser.JnlpJarInfo;
 import org.w3c.dom.Document;
 
 public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	private static final long serialVersionUID = -2459790398016588477L;
 
-	private JnlpInfo jnlpInfo;
+	private JnlpParser.JnlpInfo jnlpInfo;
 
 	private URL codeBase;
 
@@ -65,7 +65,7 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	}
 
-	private Map<String, String> getAppletParametersFromJnlpInfo(JnlpInfo jnlpInfo) {
+	public Map<String, String> getAppletParametersFromJnlpInfo(JnlpParser.JnlpInfo jnlpInfo) {
 		Map<String, String> appletParameters = new HashMap<String, String>();
 		appletParameters.putAll(jnlpInfo.appletDescInfo.parameters);
 		
@@ -90,29 +90,28 @@ public class JnlpAppletLoader extends Applet implements AppletStub {
 		return appletParameters;
 	}
 
-	private String getJars(List<JarInfo> resources, String os, boolean nativeLib) {
+	public String getJars(List<JnlpParser.JnlpJarInfo> resources, String os, boolean nativeLib) {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
 		for (int i = 0; i < resources.size(); i++) {
-			JarInfo jarInfo = resources.get(i);
+			JnlpParser.JnlpJarInfo jnlpJarInfo = resources.get(i);
 
-			if (jarInfo.nativeLib != nativeLib)
+			if (jnlpJarInfo.nativeLib != nativeLib)
 				continue;
 
 			// starts with?
-			if (!"".equals(os) && !os.equals(jarInfo.os))
+			if (!"".equals(os) && !os.equals(jnlpJarInfo.os))
 				continue;
 
-			stringBuilder.append(jarInfo.href);
+			stringBuilder.append(jnlpJarInfo.href);
 			stringBuilder.append(", ");
 		}
 
 		if (stringBuilder.length() > 0)
 			stringBuilder.replace(stringBuilder.length() - 2, stringBuilder.length(), "");
 
-		String al_jars = stringBuilder.toString();
-		return al_jars;
+		return stringBuilder.toString();
 	}
 
 	@Override
