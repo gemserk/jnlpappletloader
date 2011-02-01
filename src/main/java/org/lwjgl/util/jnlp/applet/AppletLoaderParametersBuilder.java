@@ -3,8 +3,8 @@ package org.lwjgl.util.jnlp.applet;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo;
-import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo.ResourceType;
+import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
+import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
 
 /**
  * Helper class to build LWJGL AppletLoader needed parameters from a JNLPInfo.
@@ -14,9 +14,9 @@ import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo.ResourceType;
  */
 public class AppletLoaderParametersBuilder {
 
-	private final JNLPInfo jnlpInfo;
+	private final JnlpInfo jnlpInfo;
 
-	public AppletLoaderParametersBuilder(JNLPInfo jnlpInfo) {
+	public AppletLoaderParametersBuilder(JnlpInfo jnlpInfo) {
 		this.jnlpInfo = jnlpInfo;
 	}
 
@@ -52,12 +52,12 @@ public class AppletLoaderParametersBuilder {
 		appletParameters.put(appletParameter, parameter);
 	}
 
-	protected String getJarsForOsStartingWith(JNLPInfo jnlpInfo, String os, ResourceType type) {
+	protected String getJarsForOsStartingWith(JnlpInfo jnlpInfo, String os, ResourceType type) {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
 		for (int i = 0; i < jnlpInfo.resources.size(); i++) {
-			JNLPResourceInfo jnlpResourceInfo = jnlpInfo.resources.get(i);
+			JnlpResourceInfo jnlpResourceInfo = jnlpInfo.resources.get(i);
 
 			if (jnlpResourceInfo.type != type)
 				continue;

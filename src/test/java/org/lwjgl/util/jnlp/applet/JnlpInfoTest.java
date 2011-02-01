@@ -5,25 +5,25 @@ import static org.junit.Assert.assertThat;
 import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsSame;
 import org.junit.Test;
-import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo;
-import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo.ResourceType;
+import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
+import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
 
-public class JNLPInfoTest {
+public class JnlpInfoTest {
 
 	@Test
 	public void testHasExtensions() {
-		JNLPInfo jnlpInfo = new JNLPInfo();
+		JnlpInfo jnlpInfo = new JnlpInfo();
 		assertThat(jnlpInfo.hasExtensions(), IsEqual.equalTo(false));
-		jnlpInfo.resources.add(new JNLPResourceInfo("http://someplace.net", "", ResourceType.Extension));
+		jnlpInfo.resources.add(new JnlpResourceInfo("http://someplace.net", "", ResourceType.Extension));
 		assertThat(jnlpInfo.hasExtensions(), IsEqual.equalTo(true));
 	}
 
 	@Test
 	public void testGetFirstResourceMatching() {
-		JNLPInfo jnlpInfo = new JNLPInfo();
+		JnlpInfo jnlpInfo = new JnlpInfo();
 
-		JNLPResourceInfo first = new JNLPResourceInfo("http://someplace.net/1", "", ResourceType.Extension);
-		JNLPResourceInfo second = new JNLPResourceInfo("http://someplace.net/2", "", ResourceType.Extension);
+		JnlpResourceInfo first = new JnlpResourceInfo("http://someplace.net/1", "", ResourceType.Extension);
+		JnlpResourceInfo second = new JnlpResourceInfo("http://someplace.net/2", "", ResourceType.Extension);
 
 		jnlpInfo.resources.add(first);
 		jnlpInfo.resources.add(second);
@@ -33,10 +33,10 @@ public class JNLPInfoTest {
 
 	@Test
 	public void testRemoveResourceInfo() {
-		JNLPInfo jnlpInfo = new JNLPInfo();
+		JnlpInfo jnlpInfo = new JnlpInfo();
 
-		JNLPResourceInfo first = new JNLPResourceInfo("http://someplace.net/1", "", ResourceType.Extension);
-		JNLPResourceInfo second = new JNLPResourceInfo("http://someplace.net/2", "", ResourceType.Extension);
+		JnlpResourceInfo first = new JnlpResourceInfo("http://someplace.net/1", "", ResourceType.Extension);
+		JnlpResourceInfo second = new JnlpResourceInfo("http://someplace.net/2", "", ResourceType.Extension);
 
 		jnlpInfo.resources.add(first);
 		jnlpInfo.resources.add(second);

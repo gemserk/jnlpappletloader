@@ -5,18 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo.ResourceType;
+import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
 
 
 /**
  * Has the info of the JNLP file.
  */
-public class JNLPInfo {
+public class JnlpInfo {
 
 	/**
 	 * Info of a single resource, could be a jar or a nativelib.
 	 */
-	public static class JNLPResourceInfo {
+	public static class JnlpResourceInfo {
 		
 		public static enum ResourceType { Jar, NativeLib, Extension }
 	
@@ -26,7 +26,7 @@ public class JNLPInfo {
 	
 		public ResourceType type;
 	
-		public JNLPResourceInfo(String href, String os, ResourceType type) {
+		public JnlpResourceInfo(String href, String os, ResourceType type) {
 			this.href = href;
 			this.os = os;
 			this.type = type;
@@ -37,7 +37,7 @@ public class JNLPInfo {
 	/**
 	 * Has the information of the applet-desc of the JNLP.
 	 */
-	public static class JNLPAppletDescInfo {
+	public static class JnlpAppletDescInfo {
 	
 		public String mainClassName;
 	
@@ -49,9 +49,9 @@ public class JNLPInfo {
 
 	public String codeBase;
 
-	public JNLPAppletDescInfo jnlpAppletDescInfo;
+	public JnlpAppletDescInfo jnlpAppletDescInfo;
 
-	public List<JNLPResourceInfo> resources = new ArrayList<JNLPResourceInfo>();
+	public List<JnlpResourceInfo> resources = new ArrayList<JnlpResourceInfo>();
 	
 	public boolean hasExtensions() {
 		for (int i = 0; i < resources.size(); i++) {
@@ -61,16 +61,16 @@ public class JNLPInfo {
 		return false;
 	}
 
-	public JNLPResourceInfo getFirstResource(ResourceType type) {
+	public JnlpResourceInfo getFirstResource(ResourceType type) {
 		for (int i = 0; i < resources.size(); i++) {
-			JNLPResourceInfo jnlpResourceInfo = resources.get(i);
+			JnlpResourceInfo jnlpResourceInfo = resources.get(i);
 			if (jnlpResourceInfo.type == type)
 				return jnlpResourceInfo;
 		}
 		return null;
 	}
 
-	public void removeResourceInfo(JNLPResourceInfo jnlpResourceInfo) {
+	public void removeResourceInfo(JnlpResourceInfo jnlpResourceInfo) {
 		resources.remove(jnlpResourceInfo);
 	}
 

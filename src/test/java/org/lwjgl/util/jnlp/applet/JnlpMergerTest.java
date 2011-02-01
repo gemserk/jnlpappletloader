@@ -13,8 +13,8 @@ import org.jmock.integration.junit4.JMock;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo;
-import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo.ResourceType;
+import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
+import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
 
 @RunWith(JMock.class)
 public class JnlpMergerTest {
@@ -29,7 +29,7 @@ public class JnlpMergerTest {
 	public void testMergeWithExtensions() throws MalformedURLException {
 
 		final URLBuilder urlBuilder = mockery.mock(URLBuilder.class);
-		final JNLPParser jnlpParser = mockery.mock(JNLPParser.class);
+		final JnlpParser jnlpParser = mockery.mock(JnlpParser.class);
 
 		JnlpMerger jnlpMerger = new JnlpMerger();
 		jnlpMerger.setJnlpParser(jnlpParser);
@@ -37,16 +37,16 @@ public class JnlpMergerTest {
 
 		final URL jnlpUrl = new URL("file:somefile.jnlp");
 
-		final JNLPInfo jnlpInfo = new JNLPInfo();
+		final JnlpInfo jnlpInfo = new JnlpInfo();
 		jnlpInfo.codeBase = "jnlpcontext";
-		jnlpInfo.resources.add(new JNLPResourceInfo("localjar.jar", "", ResourceType.Jar));
-		jnlpInfo.resources.add(new JNLPResourceInfo("http://remote/remotejar.jar", "", ResourceType.Jar));
-		jnlpInfo.resources.add(new JNLPResourceInfo("http://someplace.net/extension1.jnlp", "", ResourceType.Extension));
+		jnlpInfo.resources.add(new JnlpResourceInfo("localjar.jar", "", ResourceType.Jar));
+		jnlpInfo.resources.add(new JnlpResourceInfo("http://remote/remotejar.jar", "", ResourceType.Jar));
+		jnlpInfo.resources.add(new JnlpResourceInfo("http://someplace.net/extension1.jnlp", "", ResourceType.Extension));
 
-		final JNLPInfo extensionJnlpInfo = new JNLPInfo();
+		final JnlpInfo extensionJnlpInfo = new JnlpInfo();
 		extensionJnlpInfo.codeBase = "http://someplace.net/";
-		extensionJnlpInfo.resources.add(new JNLPResourceInfo("lwjgl.jar", "", ResourceType.Jar));
-		extensionJnlpInfo.resources.add(new JNLPResourceInfo("http://remote/remotejar2.jar", "", ResourceType.Jar));
+		extensionJnlpInfo.resources.add(new JnlpResourceInfo("lwjgl.jar", "", ResourceType.Jar));
+		extensionJnlpInfo.resources.add(new JnlpResourceInfo("http://remote/remotejar2.jar", "", ResourceType.Jar));
 
 		mockery.checking(new Expectations() {
 			{

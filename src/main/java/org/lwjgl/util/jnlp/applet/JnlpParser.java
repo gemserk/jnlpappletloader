@@ -8,15 +8,15 @@ import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPAppletDescInfo;
-import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo;
-import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo.ResourceType;
+import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpAppletDescInfo;
+import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
+import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class JNLPParser {
+public class JnlpParser {
 
 	private URLBuilder urlBuilder;
 
@@ -24,15 +24,15 @@ public class JNLPParser {
 		this.urlBuilder = urlBuilder;
 	}
 	
-	public JNLPParser(URLBuilder urlBuilder) {
+	public JnlpParser(URLBuilder urlBuilder) {
 		this.urlBuilder = urlBuilder;
 	}
 
-	public JNLPInfo parseJnlp(URL url) {
+	public JnlpInfo parseJnlp(URL url) {
 		return parseJnlp(urlBuilder.open(url));
 	}
 
-	public JNLPInfo parseJnlp(InputStream is) {
+	public JnlpInfo parseJnlp(InputStream is) {
 		try {
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -52,8 +52,8 @@ public class JNLPParser {
 	 * 
 	 * @return a JnlpInfo with the JNLP information.
 	 */
-	protected JNLPInfo parse(Document jnlpDocument) {
-		JNLPInfo jnlpInfo = new JNLPInfo();
+	protected JnlpInfo parse(Document jnlpDocument) {
+		JnlpInfo jnlpInfo = new JnlpInfo();
 
 		NodeList jnlpElements = jnlpDocument.getElementsByTagName("jnlp");
 
@@ -92,15 +92,15 @@ public class JNLPParser {
 		}
 	}
 
-	private JNLPAppletDescInfo getAppletDescInfo(Node appletDescElement) {
+	private JnlpAppletDescInfo getAppletDescInfo(Node appletDescElement) {
 		NamedNodeMap attributes = appletDescElement.getAttributes();
 
 		String name = attributes.getNamedItem("name").getNodeValue();
 		String mainClass = attributes.getNamedItem("main-class").getNodeValue();
 
-		JNLPInfo.JNLPAppletDescInfo jNLPAppletDescInfo = new JNLPInfo.JNLPAppletDescInfo();
-		jNLPAppletDescInfo.mainClassName = mainClass;
-		jNLPAppletDescInfo.name = name;
+		JnlpInfo.JnlpAppletDescInfo jnlpAppletDescInfo = new JnlpInfo.JnlpAppletDescInfo();
+		jnlpAppletDescInfo.mainClassName = mainClass;
+		jnlpAppletDescInfo.name = name;
 
 		NodeList childNodes = appletDescElement.getChildNodes();
 
@@ -109,21 +109,21 @@ public class JNLPParser {
 			Node childNode = childNodes.item(i);
 
 			if ("param".equals(childNode.getNodeName()))
-				getParamInfo(jNLPAppletDescInfo, childNode);
+				getParamInfo(jnlpAppletDescInfo, childNode);
 
 		}
 
-		return jNLPAppletDescInfo;
+		return jnlpAppletDescInfo;
 	}
 
-	private void getParamInfo(JNLPInfo.JNLPAppletDescInfo jNLPAppletDescInfo, Node childNode) {
+	private void getParamInfo(JnlpInfo.JnlpAppletDescInfo jnlpAppletDescInfo, Node childNode) {
 		NamedNodeMap attributes = childNode.getAttributes();
 		String nameAttribute = attributes.getNamedItem("name").getNodeValue();
 		String valueAttribute = attributes.getNamedItem("value").getNodeValue();
-		jNLPAppletDescInfo.parameters.put(nameAttribute, valueAttribute);
+		jnlpAppletDescInfo.parameters.put(nameAttribute, valueAttribute);
 	}
 	
-	private void getResourcesInfo(JNLPInfo jnlpInfo, Node resourcesNode) {
+	private void getResourcesInfo(JnlpInfo jnlpInfo, Node resourcesNode) {
 
 		NamedNodeMap attributes = resourcesNode.getAttributes();
 
@@ -152,10 +152,10 @@ public class JNLPParser {
 
 	}
 
-	private void getExtensionInfo(JNLPInfo jnlpInfo, Node childNode, String os) {
+	private void getExtensionInfo(JnlpInfo jnlpInfo, Node childNode, String os) {
 		NamedNodeMap attributes = childNode.getAttributes();
 		Node hrefAttribute = attributes.getNamedItem("href");
-		jnlpInfo.resources.add(new JNLPResourceInfo(hrefAttribute.getNodeValue(), os, ResourceType.Extension));
+		jnlpInfo.resources.add(new JnlpResourceInfo(hrefAttribute.getNodeValue(), os, ResourceType.Extension));
 
 		// NamedNodeMap attributes = childNode.getAttributes();
 		// Node hrefAttribute = attributes.getNamedItem("href");
@@ -169,16 +169,16 @@ public class JNLPParser {
 		// jnlpInfo.extensions.add(extensionJnlpInfo);
 	}
 
-	private void getNativeLibInfo(JNLPInfo jnlpInfo, Node childNode, String os) {
+	private void getNativeLibInfo(JnlpInfo jnlpInfo, Node childNode, String os) {
 		NamedNodeMap attributes = childNode.getAttributes();
 		Node hrefAttribute = attributes.getNamedItem("href");
-		jnlpInfo.resources.add(new JNLPResourceInfo(hrefAttribute.getNodeValue(), os, ResourceType.NativeLib));
+		jnlpInfo.resources.add(new JnlpResourceInfo(hrefAttribute.getNodeValue(), os, ResourceType.NativeLib));
 	}
 
-	private void getJarInfo(JNLPInfo jNLPInfo, Node childNode, String os) {
+	private void getJarInfo(JnlpInfo jnlpInfo, Node childNode, String os) {
 		NamedNodeMap attributes = childNode.getAttributes();
 		Node hrefAttribute = attributes.getNamedItem("href");
-		jNLPInfo.resources.add(new JNLPResourceInfo(hrefAttribute.getNodeValue(), os, ResourceType.Jar));
+		jnlpInfo.resources.add(new JnlpResourceInfo(hrefAttribute.getNodeValue(), os, ResourceType.Jar));
 	}
 
 }

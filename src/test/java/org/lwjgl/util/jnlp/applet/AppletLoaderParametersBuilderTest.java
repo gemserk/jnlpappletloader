@@ -12,8 +12,8 @@ import org.jmock.integration.junit4.JMock;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo;
-import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo.ResourceType;
+import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
+import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
 
 @SuppressWarnings("serial")
 @RunWith(JMock.class)
@@ -27,13 +27,13 @@ public class AppletLoaderParametersBuilderTest {
 
 	@Test
 	public void shouldGetOnlyNativesForOnePlatform() throws MalformedURLException {
-		JNLPInfo jnlpInfo = new JNLPInfo();
-		jnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
+		JnlpInfo jnlpInfo = new JnlpInfo();
+		jnlpInfo.resources = new ArrayList<JnlpResourceInfo>() {
 			{
-				add(new JNLPResourceInfo("lwjgl.jar", "Windows", ResourceType.Jar));
-				add(new JNLPResourceInfo("lwjgl-win.jar", "Windows", ResourceType.NativeLib));
-				add(new JNLPResourceInfo("lwjgl-linux.jar", "Linux", ResourceType.NativeLib));
-				add(new JNLPResourceInfo("lwjgl-mac.jar", "Mac OS", ResourceType.NativeLib));
+				add(new JnlpResourceInfo("lwjgl.jar", "Windows", ResourceType.Jar));
+				add(new JnlpResourceInfo("lwjgl-win.jar", "Windows", ResourceType.NativeLib));
+				add(new JnlpResourceInfo("lwjgl-linux.jar", "Linux", ResourceType.NativeLib));
+				add(new JnlpResourceInfo("lwjgl-mac.jar", "Mac OS", ResourceType.NativeLib));
 			}
 		};
 		AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
@@ -42,14 +42,14 @@ public class AppletLoaderParametersBuilderTest {
 
 	@Test
 	public void shouldGetOnlyAllNotNativeDependencies() throws MalformedURLException {
-		JNLPInfo jnlpInfo = new JNLPInfo();
-		jnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
+		JnlpInfo jnlpInfo = new JnlpInfo();
+		jnlpInfo.resources = new ArrayList<JnlpResourceInfo>() {
 			{
-				add(new JNLPResourceInfo("lwjgl.jar", "", ResourceType.Jar));
-				add(new JNLPResourceInfo("jinput.jar", "", ResourceType.Jar));
-				add(new JNLPResourceInfo("lwjgl-win.jar", "Windows", ResourceType.NativeLib));
-				add(new JNLPResourceInfo("lwjgl-linux.jar", "Linux", ResourceType.NativeLib));
-				add(new JNLPResourceInfo("lwjgl-mac.jar", "Mac OS", ResourceType.NativeLib));
+				add(new JnlpResourceInfo("lwjgl.jar", "", ResourceType.Jar));
+				add(new JnlpResourceInfo("jinput.jar", "", ResourceType.Jar));
+				add(new JnlpResourceInfo("lwjgl-win.jar", "Windows", ResourceType.NativeLib));
+				add(new JnlpResourceInfo("lwjgl-linux.jar", "Linux", ResourceType.NativeLib));
+				add(new JnlpResourceInfo("lwjgl-mac.jar", "Mac OS", ResourceType.NativeLib));
 			}
 		};
 		AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
@@ -58,12 +58,12 @@ public class AppletLoaderParametersBuilderTest {
 
 	@Test
 	public void shouldGetAllResourcesForAGivenOS() throws MalformedURLException {
-		JNLPInfo jnlpInfo = new JNLPInfo();
-		jnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
+		JnlpInfo jnlpInfo = new JnlpInfo();
+		jnlpInfo.resources = new ArrayList<JnlpResourceInfo>() {
 			{
-				add(new JNLPResourceInfo("lwjgl-win95.jar", "Windows 95", ResourceType.Jar));
-				add(new JNLPResourceInfo("lwjgl-win98.jar", "Windows 98", ResourceType.Jar));
-				add(new JNLPResourceInfo("lwjgl-win2000.jar", "Windows 2000", ResourceType.Jar));
+				add(new JnlpResourceInfo("lwjgl-win95.jar", "Windows 95", ResourceType.Jar));
+				add(new JnlpResourceInfo("lwjgl-win98.jar", "Windows 98", ResourceType.Jar));
+				add(new JnlpResourceInfo("lwjgl-win2000.jar", "Windows 2000", ResourceType.Jar));
 			}
 		};
 		AppletLoaderParametersBuilder appletLoaderParametersBuilder = new AppletLoaderParametersBuilder(jnlpInfo);
@@ -72,7 +72,7 @@ public class AppletLoaderParametersBuilderTest {
 
 	@Test
 	public void shouldNotAddParameterIfNoNativesFound() {
-		JNLPInfo jnlpInfo = new JNLPInfo();
+		JnlpInfo jnlpInfo = new JnlpInfo();
 		HashMap<String, String> appletParameters = new HashMap<String, String>();
 		new AppletLoaderParametersBuilder(jnlpInfo).addNativesFor(appletParameters, "Windows", "al_windows");
 		assertNull(appletParameters.get("al_windows"));
@@ -80,10 +80,10 @@ public class AppletLoaderParametersBuilderTest {
 
 	@Test
 	public void shouldAddParameterIfNoNativesFound() {
-		JNLPInfo jnlpInfo = new JNLPInfo();
-		jnlpInfo.resources = new ArrayList<JNLPResourceInfo>() {
+		JnlpInfo jnlpInfo = new JnlpInfo();
+		jnlpInfo.resources = new ArrayList<JnlpResourceInfo>() {
 			{
-				add(new JNLPResourceInfo("lwjgl.jar", "Windows", ResourceType.NativeLib));
+				add(new JnlpResourceInfo("lwjgl.jar", "Windows", ResourceType.NativeLib));
 			}
 		};
 		HashMap<String, String> appletParameters = new HashMap<String, String>();

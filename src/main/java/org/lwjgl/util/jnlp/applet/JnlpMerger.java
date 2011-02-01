@@ -2,16 +2,16 @@ package org.lwjgl.util.jnlp.applet;
 
 import java.net.URL;
 
-import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo;
-import org.lwjgl.util.jnlp.applet.JNLPInfo.JNLPResourceInfo.ResourceType;
+import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
+import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
 
 public class JnlpMerger {
 
 	URLBuilder urlBuilder;
 
-	JNLPParser jnlpParser;
+	JnlpParser jnlpParser;
 
-	public void setJnlpParser(JNLPParser jnlpParser) {
+	public void setJnlpParser(JnlpParser jnlpParser) {
 		this.jnlpParser = jnlpParser;
 	}
 
@@ -19,21 +19,21 @@ public class JnlpMerger {
 		this.urlBuilder = urlBuilder;
 	}
 
-	public void mergeWithExtensions(JNLPInfo jnlpInfo, URL codeBase) {
+	public void mergeWithExtensions(JnlpInfo jnlpInfo, URL codeBase) {
 
 		while (jnlpInfo.hasExtensions()) {
-			JNLPResourceInfo extensionResourceInfo = jnlpInfo.getFirstResource(ResourceType.Extension);
+			JnlpResourceInfo extensionResourceInfo = jnlpInfo.getFirstResource(ResourceType.Extension);
 			jnlpInfo.removeResourceInfo(extensionResourceInfo);
 
 			URL extensionUrl = urlBuilder.build(codeBase, extensionResourceInfo.href);
-			JNLPInfo extensionJnlpInfo = jnlpParser.parseJnlp(extensionUrl);
+			JnlpInfo extensionJnlpInfo = jnlpParser.parseJnlp(extensionUrl);
 			mergeWithExtensions(extensionJnlpInfo, extensionUrl);
 
 			URL extensionCodeBase = urlBuilder.build(extensionJnlpInfo.codeBase);
 			for (int i = 0; i < extensionJnlpInfo.resources.size(); i++) {
-				JNLPResourceInfo resourceInfo = extensionJnlpInfo.resources.get(i);
+				JnlpResourceInfo resourceInfo = extensionJnlpInfo.resources.get(i);
 				URL resourceUrl = urlBuilder.build(extensionCodeBase, resourceInfo.href);
-				jnlpInfo.resources.add(new JNLPResourceInfo(resourceUrl.toString(), resourceInfo.os, resourceInfo.type));
+				jnlpInfo.resources.add(new JnlpResourceInfo(resourceUrl.toString(), resourceInfo.os, resourceInfo.type));
 			}
 		}
 

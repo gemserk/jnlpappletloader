@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 import org.w3c.dom.Document;
 
 @RunWith(JMock.class)
-public class JNLPParserTest {
+public class JnlpParserTest {
 
 	Mockery mockery = new Mockery() {
 		{
@@ -39,7 +39,7 @@ public class JNLPParserTest {
 
 		Document document = documentBuilder.parse(jnlpInputStream);
 
-		JNLPInfo jnlpInfo = new JNLPParser(new URLBuilder()).parse(document);
+		JnlpInfo jnlpInfo = new JnlpParser(new URLBuilder()).parse(document);
 
 		new JnlpPrinter().printJnlpInfo(jnlpInfo);
 
@@ -52,7 +52,7 @@ public class JNLPParserTest {
 
 		final URLBuilder urlBuilder = mockery.mock(URLBuilder.class);
 
-		JNLPParser jnlpParser = new JNLPParser(urlBuilder);
+		JnlpParser jnlpParser = new JnlpParser(urlBuilder);
 		jnlpParser.setUrlBuilder(urlBuilder);
 
 		mockery.checking(new Expectations() {
@@ -77,7 +77,7 @@ public class JNLPParserTest {
 			}
 		});
 
-		JNLPInfo jnlpInfo = jnlpParser.parseJnlp(url);
+		JnlpInfo jnlpInfo = jnlpParser.parseJnlp(url);
 
 		assertThat(jnlpInfo, IsNull.notNullValue());
 		assertThat(jnlpInfo.hasExtensions(), IsEqual.equalTo(true));

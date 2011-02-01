@@ -12,7 +12,7 @@ import javax.swing.JEditorPane;
 
 import org.lwjgl.util.applet.AppletLoader;
 
-public class JNLPAppletLoader extends Applet implements AppletStub {
+public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	private static final long serialVersionUID = -2459790398016588477L;
 
@@ -22,11 +22,11 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 
 	static String jnlpParameterName = "al_jnlp";
 
-	private JNLPParser jnlpParser;
+	private JnlpParser jnlpParser;
 
 	private URLBuilder urlBuilder;
 
-	public void setJnlpParser(JNLPParser jnlpParser) {
+	public void setJnlpParser(JnlpParser jnlpParser) {
 		this.jnlpParser = jnlpParser;
 	}
 
@@ -34,9 +34,9 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 		this.urlBuilder = urlBuilder;
 	}
 
-	public JNLPAppletLoader() {
+	public JnlpAppletLoader() {
 		urlBuilder = new URLBuilder();
-		jnlpParser = new JNLPParser(urlBuilder);
+		jnlpParser = new JnlpParser(urlBuilder);
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 
 			URL jnlpUrl = urlBuilder.build(codeBase, jnlpHref);
 
-			JNLPInfo jnlpInfo = getMergedJnlp(jnlpUrl);
+			JnlpInfo jnlpInfo = getMergedJnlp(jnlpUrl);
 			
 			new JnlpPrinter().printJnlpInfo(jnlpInfo);
 
@@ -91,8 +91,8 @@ public class JNLPAppletLoader extends Applet implements AppletStub {
 
 	}
 
-	public JNLPInfo getMergedJnlp(URL jnlpUrl) {
-		JNLPInfo jnlpInfo = jnlpParser.parseJnlp(jnlpUrl);
+	public JnlpInfo getMergedJnlp(URL jnlpUrl) {
+		JnlpInfo jnlpInfo = jnlpParser.parseJnlp(jnlpUrl);
 		
 		codeBase = urlBuilder.build(codeBase, jnlpInfo.codeBase);
 		
