@@ -46,7 +46,7 @@ public class CacheFilterTest {
 
 		CacheFilter cacheFilter = new CacheFilter(cache);
 
-		List<FileInfo> notCachedFiles = cacheFilter.filterCachedFiles(files);
+		List<FileInfo> notCachedFiles = cacheFilter.removeCachedFiles(files);
 
 		assertThat(notCachedFiles, IsCollectionContaining.hasItem(notCachedFile));
 		assertThat(notCachedFiles, IsNot.not(IsCollectionContaining.hasItem(cachedFile)));
