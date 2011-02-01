@@ -11,7 +11,7 @@ public class Cache {
 	}
 
 	public boolean isAlreadyDownloaded(FileInfo file) {
-		FileInfo cachedEntry = cachedFiles.get(file.fileName);
+		FileInfo cachedEntry = cachedFiles.get(file.getFileName());
 		if (cachedEntry == null)
 			return false;
 		return file.lastModified == cachedEntry.lastModified;

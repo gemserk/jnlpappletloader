@@ -52,7 +52,7 @@ public class FileInfoProviderRemoteImplTest {
 		assertThat(info, IsNull.notNullValue());
 		assertThat(info.contentLength, IsEqual.equalTo(100));
 		assertThat(info.lastModified, IsEqual.equalTo(1000L));
-		assertThat(info.fileName, IsEqual.equalTo("lwjgl.jar"));
+		assertThat(info.getFileName(), IsEqual.equalTo("lwjgl.jar"));
 	}
 	
 	@Test
@@ -85,7 +85,7 @@ public class FileInfoProviderRemoteImplTest {
 		assertThat(info, IsNull.notNullValue());
 		assertThat(info.contentLength, IsEqual.equalTo(100));
 		assertThat(info.lastModified, IsEqual.equalTo(1000L));
-		assertThat(info.fileName, IsEqual.equalTo("lwjgl.jar"));
+		assertThat(info.getFileName(), IsEqual.equalTo("lwjgl.jar"));
 	}
 
 }
