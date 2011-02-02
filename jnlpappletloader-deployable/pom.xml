@@ -12,12 +12,108 @@
 	<name>JNLP Applet Loader deployable</name>
 	<description>Project to be deployed in a server</description>
 
+	<properties>
+		<webstartName>${project.name}</webstartName>
+		<webstartCodebase>http://www.gemserk.com/prototipos/${project.parent.artifactId}-latest/</webstartCodebase>
+
+		<!--  finalName>${project.artifactId}-${project.version}</finalName -->
+		<finalName>${project.artifactId}-${project.version}</finalName>
+
+		<jnlp.applet.mainClass>org.lwjgl.util.jnlp.applet.StatusApplet</jnlp.applet.mainClass>
+		<mainClass>${appletGameParameter}</mainClass>
+
+		<!-- Properties for keystore generation  -->
+		<gemserk.keystore>/tmp/keystore-gemserk</gemserk.keystore>
+		<gemserk.keypass>m2m2m2</gemserk.keypass>
+		<gemserk.storepass>m2m2m2</gemserk.storepass>
+
+		<gemserk.alias>gemserk.com</gemserk.alias>
+
+		<gemserk.keystore.delete>true</gemserk.keystore.delete>
+		<gemserk.keystore.gen>true</gemserk.keystore.gen>
+	</properties>
+
 	<dependencies>
+		<dependency>
+			<groupId>org.lwjgl.lwjgl</groupId>
+			<artifactId>jnlpappletloader-applet</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>org.lwjgl.lwjgl</groupId>
 			<artifactId>lwjgl_util_applet</artifactId>
 			<version>2.6.0-GEMSERK-fix3</version>
 		</dependency>
 	</dependencies>
+	
+	<profiles>
+		<profile>
+			<id>webstart</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo.webstart</groupId>
+						<artifactId>webstart-maven-plugin</artifactId>
+						<version>1.0-alpha-2-gemserk-2</version>
+
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jnlp-inline</goal>
+								</goals>
+							</execution>
+						</executions>
+
+						<configuration>
+							<artifactWithMainClass>${finalName}</artifactWithMainClass>
+
+							<pack200>true</pack200>
+							<gzip>true</gzip>
+
+							<jnlp>
+								<j2seVersion>${compiler.version}+</j2seVersion>
+								<inputTemplateResourcePath>${project.basedir}/src/main/jnlp</inputTemplateResourcePath>
+								<inputTemplate>jnlptemplate.vm</inputTemplate>
+								<outputFile>launch.jnlp</outputFile>
+								<mainClass>${jnlp.applet.mainClass}</mainClass>
+							</jnlp>
+
+							<!-- SIGNING -->
+							<!--
+								defining this will automatically sign the jar and its
+								dependencies
+							-->
+							<sign>
+
+								<keystore>${gemserk.keystore}</keystore>
+								<keypass>${gemserk.keypass}</keypass>
+								<storepass>${gemserk.storepass}</storepass>
+								<alias>${gemserk.alias}</alias>
+
+								<validity>3560</validity>
+								<dnameCn>Gemserk</dnameCn>
+								<dnameOu>Gemserk</dnameOu>
+								<dnameO>Gemserk</dnameO>
+								<dnameL>Montevideo</dnameL>
+								<dnameSt>Montevideo</dnameSt>
+								<dnameC>UY</dnameC>
+
+								<verify>true</verify>
+
+								<keystoreConfig>
+									<delete>${gemserk.keystore.delete}</delete>
+									<gen>${gemserk.keystore.gen}</gen>
+								</keystoreConfig>
+							</sign>
+
+							<verbose>false</verbose>
+
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
