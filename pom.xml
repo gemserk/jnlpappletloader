@@ -2,16 +2,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.lwjgl.lwjgl</groupId>
 	<artifactId>jnlpappletloader</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>Custom applet loader for jnlp applets</name>
 	<description>Custom applet loader for jnlp applets</description>
 
 	<url>https://trac.gemserk.com/jnlpappletloader</url>
 
 	<scm>
-		<url>https://svn.gemserk.com/jnlpappletloader/tags/jnlpappletloader-0.0.2</url>
-		<connection>scm:https://svn.gemserk.com/jnlpappletloader/tags/jnlpappletloader-0.0.2</connection>
-		<developerConnection>scm:svn:https://svn.gemserk.com/jnlpappletloader/tags/jnlpappletloader-0.0.2</developerConnection>
+		<url>https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader/</url>
+		<connection>scm:https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader/</connection>
+		<developerConnection>scm:svn:https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader/</developerConnection>
 	</scm>
 
 	<distributionManagement>
