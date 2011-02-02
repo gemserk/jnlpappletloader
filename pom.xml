@@ -44,6 +44,10 @@
 		<module>jnlpappletloader-deployable</module>
 	</modules>
 
+	<properties>
+		<compiler.version>1.6</compiler.version>
+	</properties>
+	
 	<build>
 		<plugins>
 			<plugin>
