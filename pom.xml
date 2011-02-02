@@ -3,15 +3,26 @@
 	<groupId>org.lwjgl.lwjgl</groupId>
 	<artifactId>jnlpappletloader</artifactId>
 	<version>0.0.3-SNAPSHOT</version>
-	<name>Custom applet loader for jnlp applets</name>
+	<packaging>pom</packaging>
+	<name>JNLP Applet Loader</name>
 	<description>Custom applet loader for jnlp applets</description>
+
+	<organization>
+		<name>Gemserk</name>
+		<url>http://www.gemserk.com</url>
+	</organization>
 
 	<url>https://trac.gemserk.com/jnlpappletloader</url>
 
+	<issueManagement>
+		<system>Trac</system>
+		<url>https://trac.gemserk.com/jnlpappletloader</url>
+	</issueManagement>
+
 	<scm>
-		<url>https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader/</url>
-		<connection>scm:https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader/</connection>
-		<developerConnection>scm:svn:https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader/</developerConnection>
+		<url>https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader</url>
+		<connection>scm:https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader</connection>
+		<developerConnection>scm:svn:https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader</developerConnection>
 	</scm>
 
 	<distributionManagement>
@@ -26,6 +37,11 @@
 			<url>https://maven.gemserk.com/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
+
+
+	<modules>
+		<module>jnlpappletloader-applet</module>
+	</modules>
 
 	<build>
 		<plugins>
@@ -49,7 +65,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<!--				<version>2.1.1</version>-->
+				<!-- <version>2.1.1</version> -->
 				<configuration>
 
 				</configuration>
@@ -84,37 +100,5 @@
 
 		</plugins>
 	</build>
-
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.7</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jmock</groupId>
-			<artifactId>jmock</artifactId>
-			<version>2.5.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jmock</groupId>
-			<artifactId>jmock-legacy</artifactId>
-			<version>2.5.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jmock</groupId>
-			<artifactId>jmock-junit4</artifactId>
-			<version>2.5.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl.lwjgl</groupId>
-			<artifactId>lwjgl_util_applet</artifactId>
-			<version>2.6.0-GEMSERK-fix3</version>
-		</dependency>
-	</dependencies>
 
 </project>
