@@ -27,6 +27,30 @@
 			#end
 		#end
 	</resources>
+	
+		<resources os="Windows">
+		#foreach( $dependency in $fulldependencies )
+			#if ( $dependency.classifier == 'natives-win' )
+				<nativelib href="${dependency.artifactId}-${dependency.version}-${dependency.classifier}.jar" />
+			#end
+		#end
+	</resources>
+
+	<resources os="Linux">
+		#foreach( $dependency in $fulldependencies )
+			#if ( $dependency.classifier == 'natives-linux' )
+				<nativelib href="${dependency.artifactId}-${dependency.version}-${dependency.classifier}.jar" />
+			#end
+		#end
+	</resources>
+
+	<resources os="Mac OS">
+		#foreach( $dependency in $fulldependencies )
+			#if ( $dependency.classifier == 'natives-mac' )
+				<nativelib href="${dependency.artifactId}-${dependency.version}-${dependency.classifier}.jar" />
+			#end
+		#end
+	</resources>
   
     <applet-desc name="$project.Description" main-class="$mainClass" width="640" height="480" />
   	

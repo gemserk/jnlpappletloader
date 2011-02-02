@@ -1,13 +1,14 @@
 package org.lwjgl.util.jnlp.applet;
 
-import java.applet.Applet;
-import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics;
 
+import javax.swing.JApplet;
 import javax.swing.JEditorPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-public class StatusApplet extends Applet {
+public class StatusApplet extends JApplet {
 
 	private static final long serialVersionUID = -4497910610619789813L;
 	
@@ -15,14 +16,16 @@ public class StatusApplet extends Applet {
 	public void init() {
 		super.init();
 		
-		String html = "<div>This applet shows that JNLP Applet Loader works correctly</div>";
+		System.out.println("StatusApplet init() started!");
 		
-		setLayout(new BorderLayout());
+		String html = "<div align=\"center\">This applet shows that JNLP Applet Loader works correctly</div>";
 		
 		add(new JEditorPane("text/html", html) {
 			private static final long serialVersionUID = -2344915756882112715L;
 			{
 				setEditable(false);
+				
+				setBackground(Color.GREEN);
 
 				addHyperlinkListener(new HyperlinkListener() {
 
@@ -37,6 +40,21 @@ public class StatusApplet extends Applet {
 			}
 
 		});
+		
+		System.out.println("StatusApplet loaded correctly!");
 	}
+	
+	public void stop() {
+		super.stop();
+	}
+
+	public void start() {
+		super.start();
+	}
+
+	public void paint(Graphics g) {
+		super.paint(g);
+	}
+	
 
 }
