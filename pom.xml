@@ -1,18 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.lwjgl.lwjgl</groupId>
 	<artifactId>jnlpappletloader</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.2</version>
 	<name>Custom applet loader for jnlp applets</name>
 	<description>Custom applet loader for jnlp applets</description>
 
 	<url>https://trac.gemserk.com/jnlpappletloader</url>
 
 	<scm>
-		<url>https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader/</url>
-		<connection>scm:https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader/</connection>
-		<developerConnection>scm:svn:https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader/</developerConnection>
+		<url>https://svn.gemserk.com/jnlpappletloader/tags/jnlpappletloader-0.0.2</url>
+		<connection>scm:https://svn.gemserk.com/jnlpappletloader/tags/jnlpappletloader-0.0.2</connection>
+		<developerConnection>scm:svn:https://svn.gemserk.com/jnlpappletloader/tags/jnlpappletloader-0.0.2</developerConnection>
 	</scm>
 
 	<distributionManagement>
