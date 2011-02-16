@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.lwjgl.lwjgl</groupId>
 	<artifactId>jnlpappletloader</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>JNLP Applet Loader</name>
 	<description>Custom applet loader for jnlp applets</description>
@@ -20,9 +20,9 @@
 	</issueManagement>
 
 	<scm>
-		<url>https://svn.gemserk.com/jnlpappletloader/tags/jnlpappletloader-0.0.3</url>
-		<connection>scm:https://svn.gemserk.com/jnlpappletloader/tags/jnlpappletloader-0.0.3</connection>
-		<developerConnection>scm:svn:https://svn.gemserk.com/jnlpappletloader/tags/jnlpappletloader-0.0.3</developerConnection>
+		<url>https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader</url>
+		<connection>scm:https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader</connection>
+		<developerConnection>scm:svn:https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader</developerConnection>
 	</scm>
 
 	<distributionManagement>

@@ -3,11 +3,11 @@
 	<parent>
 		<groupId>org.lwjgl.lwjgl</groupId>
 		<artifactId>jnlpappletloader</artifactId>
-		<version>0.0.3</version>
+		<version>0.0.4-SNAPSHOT</version>
 	</parent>
 	<groupId>org.lwjgl.lwjgl</groupId>
 	<artifactId>jnlpappletloader-deployable</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<name>JNLP Applet Loader deployable</name>
 	<description>Project to be deployed in a server</description>
 
@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>org.lwjgl.lwjgl</groupId>
 			<artifactId>jnlpappletloader-applet</artifactId>
-			<version>0.0.3</version>
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.lwjgl.lwjgl</groupId>
