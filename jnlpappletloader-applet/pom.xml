@@ -7,9 +7,15 @@
 	</parent>
 	<groupId>org.lwjgl.lwjgl</groupId>
 	<artifactId>jnlpappletloader-applet</artifactId>
+<<<<<<< HEAD
 	<version>0.0.4-SNAPSHOT</version>
 	<name>Main Applet of JNLP Applet Loader</name>
 	<description>Custom applet loader for jnlp applets</description>
+=======
+	<version>0.0.3-SNAPSHOT</version>
+	<name>JNLP Applet Loader</name>
+	<description>Starts a Java Applet using the LWJGL Applet Loader with parameters parsed from JNLP file.</description>
+>>>>>>> changed name and description
 
 	<dependencies>
 		<dependency>
