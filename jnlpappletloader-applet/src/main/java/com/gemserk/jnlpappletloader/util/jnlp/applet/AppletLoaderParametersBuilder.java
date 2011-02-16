@@ -1,10 +1,10 @@
-package org.lwjgl.util.jnlp.applet;
+package com.gemserk.jnlpappletloader.util.jnlp.applet;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
-import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
+import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
+import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
 
 /**
  * Helper class to build LWJGL AppletLoader needed parameters from a JNLPInfo.

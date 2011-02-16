@@ -1,4 +1,4 @@
-package org.lwjgl.util.jnlp.applet;
+package com.gemserk.jnlpappletloader.util.jnlp.applet;
 
 import java.applet.Applet;
 import java.applet.AppletStub;

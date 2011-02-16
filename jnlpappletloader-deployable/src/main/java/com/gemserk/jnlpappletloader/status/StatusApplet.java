@@ -1,4 +1,4 @@
-package org.lwjgl.util.jnlp.applet;
+package com.gemserk.jnlpappletloader.status;
 
 import java.awt.Color;
 import java.awt.Graphics;

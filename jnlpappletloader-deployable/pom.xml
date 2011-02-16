@@ -18,7 +18,7 @@
 		<!-- finalName>${project.artifactId}-${project.version}</finalName -->
 		<finalName>${project.artifactId}-${project.version}</finalName>
 
-		<jnlp.applet.mainClass>org.lwjgl.util.jnlp.applet.StatusApplet</jnlp.applet.mainClass>
+		<jnlp.applet.mainClass>com.gemserk.jnlpappletloader.status.StatusApplet</jnlp.applet.mainClass>
 		<mainClass>${appletGameParameter}</mainClass>
 
 		<!-- Properties for keystore generation -->

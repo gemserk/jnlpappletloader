@@ -1,11 +1,11 @@
-package org.lwjgl.util.jnlp.applet;
+package com.gemserk.jnlpappletloader.util.jnlp.applet;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
+import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
 
 
 /**

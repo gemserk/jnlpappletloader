@@ -1,8 +1,8 @@
-package org.lwjgl.util.jnlp.applet;
+package com.gemserk.jnlpappletloader.util.jnlp.applet;
 
 import java.text.MessageFormat;
 
-import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
+import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
 
 public class JnlpPrinter {
 	

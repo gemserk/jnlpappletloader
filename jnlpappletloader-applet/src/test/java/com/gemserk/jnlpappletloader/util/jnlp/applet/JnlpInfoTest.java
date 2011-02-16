@@ -1,12 +1,14 @@
-package org.lwjgl.util.jnlp.applet;
+package com.gemserk.jnlpappletloader.util.jnlp.applet;
 
 import static org.junit.Assert.assertThat;
 
 import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsSame;
 import org.junit.Test;
-import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
-import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
+
+import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo;
+import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
+import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
 
 public class JnlpInfoTest {
 

@@ -1,4 +1,4 @@
-package org.lwjgl.util.jnlp.applet;
+package com.gemserk.jnlpappletloader.util.jnlp.applet;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -7,13 +7,14 @@ import java.io.InputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpAppletDescInfo;
-import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
-import org.lwjgl.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpAppletDescInfo;
+import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
+import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
 
 /**
  * Parses a Jnlp document.
