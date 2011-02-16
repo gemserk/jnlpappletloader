@@ -15,13 +15,13 @@
 		<webstartName>${project.name}</webstartName>
 		<webstartCodebase>http://www.gemserk.com/prototipos/${project.parent.artifactId}-latest/</webstartCodebase>
 
-		<!--  finalName>${project.artifactId}-${project.version}</finalName -->
+		<!-- finalName>${project.artifactId}-${project.version}</finalName -->
 		<finalName>${project.artifactId}-${project.version}</finalName>
 
 		<jnlp.applet.mainClass>org.lwjgl.util.jnlp.applet.StatusApplet</jnlp.applet.mainClass>
 		<mainClass>${appletGameParameter}</mainClass>
 
-		<!-- Properties for keystore generation  -->
+		<!-- Properties for keystore generation -->
 		<gemserk.keystore>/tmp/keystore-gemserk</gemserk.keystore>
 		<gemserk.keypass>m2m2m2</gemserk.keypass>
 		<gemserk.storepass>m2m2m2</gemserk.storepass>
@@ -36,22 +36,17 @@
 		<dependency>
 			<groupId>org.lwjgl.lwjgl</groupId>
 			<artifactId>jnlpappletloader-applet</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.lwjgl.lwjgl</groupId>
 			<artifactId>lwjgl_util_applet</artifactId>
-			<version>2.6.0-GEMSERK-fix5</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.lwjgl.lwjgl</groupId>
 			<artifactId>lwjgl</artifactId>
-			<version>2.6.0-GEMSERK-fix5</version>
 		</dependency>
-		
 	</dependencies>
-	
+
 	<profiles>
 		<profile>
 			<id>webstart</id>
@@ -86,10 +81,7 @@
 							</jnlp>
 
 							<!-- SIGNING -->
-							<!--
-								defining this will automatically sign the jar and its
-								dependencies
-							-->
+							<!-- defining this will automatically sign the jar and its dependencies -->
 							<sign>
 
 								<keystore>${gemserk.keystore}</keystore>
