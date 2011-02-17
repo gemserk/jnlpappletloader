@@ -28,7 +28,7 @@
 		</developer>
 	</developers>
 
-	<url>https://trac.gemserk.com/jnlpappletloader</url>
+	<url>https://github.com/gemserk/jnlpappletloader</url>
 
 	<issueManagement>
 		<system>Trac</system>
@@ -36,9 +36,9 @@
 	</issueManagement>
 
 	<scm>
-		<url>https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader</url>
-		<connection>scm:https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader</connection>
-		<developerConnection>scm:svn:https://svn.gemserk.com/jnlpappletloader/trunk/jnlpappletloader</developerConnection>
+		<url>https://github.com/gemserk/jnlpappletloader</url>
+		<connection>scm:git://github.com/gemserk/jnlpappletloader.git</connection>
+		<developerConnection>scm:git:git@github.com:gemserk/jnlpappletloader.git</developerConnection>
 	</scm>
 
 	<distributionManagement>
