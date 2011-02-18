@@ -23,14 +23,14 @@
 		<mainClass>${appletGameParameter}</mainClass>
 
 		<!-- Properties for keystore generation -->
-		<generated.keystore>/tmp/keystore-generated</generated.keystore>
-		<generated.keypass>m2m2m2</generated.keypass>
-		<generated.storepass>m2m2m2</generated.storepass>
+		<gemserk.keystore>/tmp/keystore-gemserk</gemserk.keystore>
+		<gemserk.keypass>m2m2m2</gemserk.keypass>
+		<gemserk.storepass>m2m2m2</gemserk.storepass>
 
-		<generated.alias>someplace.com</generated.alias>
+		<gemserk.alias>gemserk.com</gemserk.alias>
 
-		<generated.keystore.delete>true</generated.keystore.delete>
-		<generated.keystore.gen>true</generated.keystore.gen>
+		<gemserk.keystore.delete>true</gemserk.keystore.delete>
+		<gemserk.keystore.gen>true</gemserk.keystore.gen>
 	</properties>
 
 	<dependencies>
@@ -90,10 +90,10 @@
 							<!-- defining this will automatically sign the jar and its dependencies -->
 							<sign>
 
-								<keystore>${generated.keystore}</keystore>
-								<keypass>${generated.keypass}</keypass>
-								<storepass>${generated.storepass}</storepass>
-								<alias>${generated.alias}</alias>
+								<keystore>${gemserk.keystore}</keystore>
+								<keypass>${gemserk.keypass}</keypass>
+								<storepass>${gemserk.storepass}</storepass>
+								<alias>${gemserk.alias}</alias>
 
 								<validity>3560</validity>
 								<dnameCn>CertificateName</dnameCn>
@@ -106,8 +106,8 @@
 								<verify>true</verify>
 
 								<keystoreConfig>
-									<delete>${generated.keystore.delete}</delete>
-									<gen>${generated.keystore.gen}</gen>
+									<delete>${gemserk.keystore.delete}</delete>
+									<gen>${gemserk.keystore.gen}</gen>
 								</keystoreConfig>
 							</sign>
 
