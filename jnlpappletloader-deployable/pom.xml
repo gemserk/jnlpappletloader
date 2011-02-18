@@ -8,6 +8,7 @@
 	<groupId>com.gemserk.jnlpappletloader</groupId>
 	<artifactId>jnlpappletloader-deployable</artifactId>
 	<version>0.0.4-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>JNLP Applet Loader deployable</name>
 	<description>Project to be deployed in a server</description>
 
