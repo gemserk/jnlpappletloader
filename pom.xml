@@ -58,6 +58,7 @@
 	<modules>
 		<module>jnlpappletloader-applet</module>
 		<module>jnlpappletloader-deployable</module>
+		<module>jnlpappletloader-full</module>
 	</modules>
 
 	<properties>

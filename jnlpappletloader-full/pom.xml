@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.gemserk.jnlpappletloader</groupId>
+		<artifactId>jnlpappletloader</artifactId>
+		<version>0.0.4-SNAPSHOT</version>
+	</parent>
+	<groupId>com.gemserk.jnlpappletloader</groupId>
+	<artifactId>jnlpappletloader-full</artifactId>
+	<version>0.0.4-SNAPSHOT</version>
+	<name>Jar with all dependencies included</name>
+	<description>Provides a jar with all dependencies included for fast loading</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.gemserk.jnlpappletloader</groupId>
+			<artifactId>jnlpappletloader-applet</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl.lwjgl</groupId>
+			<artifactId>lwjgl_util_applet</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>
