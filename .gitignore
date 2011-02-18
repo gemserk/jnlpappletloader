@@ -10,3 +10,7 @@ jnlpappletloader-deployable/target
 jnlpappletloader-deployable/.classpath
 jnlpappletloader-deployable/.project
 jnlpappletloader-deployable/.settings
+jnlpappletloader-full/target
+jnlpappletloader-full/.classpath
+jnlpappletloader-full/.project
+jnlpappletloader-full/.settings
