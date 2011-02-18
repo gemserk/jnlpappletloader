@@ -12,6 +12,11 @@ It is a maven project and it is based on two modules:
 		This module provides a deployable project to deploy on a server in order to check the first module
 		works right.
 
+	jnlpappletloader-full
+
+		This module provides a generated jar with all dependencies (the LWJGL Applet loader and the JNLP Applet
+		Loader) for fast loading when starting an applet.
+
 In jnlpappletloader-status.html you can see how the applet should be configured.
 
 It is mainly a Wrapper for the LWJGL Applet Loader, so it couldn't be used for any Applet.
