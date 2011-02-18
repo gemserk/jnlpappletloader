@@ -40,8 +40,8 @@ public class StatusApplet extends JApplet {
 			}
 
 		});
-		
 		System.out.println("StatusApplet loaded correctly!");
+		repaint();
 	}
 	
 	public void stop() {
@@ -50,6 +50,7 @@ public class StatusApplet extends JApplet {
 
 	public void start() {
 		super.start();
+		repaint();
 	}
 
 	public void paint(Graphics g) {
