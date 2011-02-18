@@ -19,15 +19,14 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<finalName>${project.parent.artifactId}-${project.version}</finalName>
+					<descriptors>
+						<descriptor>src/main/assembly/jar-with-dependencies.xml</descriptor>
+					</descriptors>
 				</configuration>
 				<executions>
 					<execution>
-						<id>make-assembly</id> 
-						<phase>package</phase> 
+						<id>make-assembly</id>
+						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
@@ -41,10 +40,12 @@
 		<dependency>
 			<groupId>com.gemserk.jnlpappletloader</groupId>
 			<artifactId>jnlpappletloader-applet</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.lwjgl.lwjgl</groupId>
 			<artifactId>lwjgl_util_applet</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 

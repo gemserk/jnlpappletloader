@@ -165,6 +165,12 @@
 				<artifactId>jnlpappletloader-applet</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.gemserk.jnlpappletloader</groupId>
+				<artifactId>jnlpappletloader-full</artifactId>
+				<classifier>jar-with-dependencies</classifier>
+				<version>${project.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

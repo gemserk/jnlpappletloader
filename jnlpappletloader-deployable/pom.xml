@@ -10,7 +10,7 @@
 	<version>0.0.4-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>JNLP Applet Loader deployable</name>
-	<description>Project to be deployed in a server</description>
+	<description>Project to be deployed in a server to test JNLP Applet Loader status</description>
 
 	<properties>
 		<webstartName>${project.name}</webstartName>
@@ -34,6 +34,11 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.gemserk.jnlpappletloader</groupId>
+			<artifactId>jnlpappletloader-full</artifactId>
+			<classifier>jar-with-dependencies</classifier>
+		</dependency>
 		<dependency>
 			<groupId>com.gemserk.jnlpappletloader</groupId>
 			<artifactId>jnlpappletloader-applet</artifactId>
@@ -91,12 +96,12 @@
 								<alias>${gemserk.alias}</alias>
 
 								<validity>3560</validity>
-								<dnameCn>Gemserk</dnameCn>
-								<dnameOu>Gemserk</dnameOu>
-								<dnameO>Gemserk</dnameO>
-								<dnameL>Montevideo</dnameL>
-								<dnameSt>Montevideo</dnameSt>
-								<dnameC>UY</dnameC>
+								<dnameCn>CertificateName</dnameCn>
+								<dnameOu>Owner</dnameOu>
+								<dnameO>Owner</dnameO>
+								<dnameL>Someplace</dnameL>
+								<dnameSt>Someplace</dnameSt>
+								<dnameC>NY</dnameC>
 
 								<verify>true</verify>
 
