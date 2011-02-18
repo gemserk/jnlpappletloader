@@ -2,3 +2,11 @@ target
 .classpath
 .project
 .settings
+jnlpappletloader-applet/target
+jnlpappletloader-applet/.classpath
+jnlpappletloader-applet/.project
+jnlpappletloader-applet/.settings
+jnlpappletloader-deployable/target
+jnlpappletloader-deployable/.classpath
+jnlpappletloader-deployable/.project
+jnlpappletloader-deployable/.settings
