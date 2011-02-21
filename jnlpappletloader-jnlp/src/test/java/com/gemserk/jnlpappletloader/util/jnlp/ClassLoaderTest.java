@@ -1,4 +1,4 @@
-package com.gemserk.jnlpappletloader.util.jnlp.applet;
+package com.gemserk.jnlpappletloader.util.jnlp;
 
 import static org.junit.Assert.assertThat;
 

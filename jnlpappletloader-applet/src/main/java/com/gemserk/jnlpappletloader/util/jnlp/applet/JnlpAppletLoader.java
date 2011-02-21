@@ -16,6 +16,7 @@ import com.gemserk.jnlpappletloader.util.jnlp.JnlpInfo;
 import com.gemserk.jnlpappletloader.util.jnlp.JnlpMerger;
 import com.gemserk.jnlpappletloader.util.jnlp.JnlpParser;
 import com.gemserk.jnlpappletloader.util.jnlp.JnlpPrinter;
+import com.gemserk.jnlpappletloader.util.jnlp.UrlBuilder;
 
 public class JnlpAppletLoader extends Applet implements AppletStub {
 

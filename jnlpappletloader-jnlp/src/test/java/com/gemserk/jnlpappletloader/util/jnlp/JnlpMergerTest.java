@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.gemserk.jnlpappletloader.util.jnlp.JnlpResourceInfo.ResourceType;
-import com.gemserk.jnlpappletloader.util.jnlp.applet.UrlBuilder;
 
 @RunWith(JMock.class)
 public class JnlpMergerTest {

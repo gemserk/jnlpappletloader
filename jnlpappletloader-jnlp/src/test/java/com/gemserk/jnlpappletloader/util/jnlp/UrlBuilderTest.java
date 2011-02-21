@@ -1,4 +1,4 @@
-package com.gemserk.jnlpappletloader.util.jnlp.applet;
+package com.gemserk.jnlpappletloader.util.jnlp;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -15,7 +15,7 @@ import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.gemserk.jnlpappletloader.util.jnlp.applet.UrlBuilder;
+import com.gemserk.jnlpappletloader.util.jnlp.UrlBuilder;
 
 @RunWith(JMock.class)
 public class UrlBuilderTest {
