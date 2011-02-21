@@ -14,3 +14,7 @@ jnlpappletloader-full/target
 jnlpappletloader-full/.classpath
 jnlpappletloader-full/.project
 jnlpappletloader-full/.settings
+jnlpappletloader-jnlp/target
+jnlpappletloader-jnlp/.classpath
+jnlpappletloader-jnlp/.project
+jnlpappletloader-jnlp/.settings
