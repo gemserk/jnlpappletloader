@@ -3,11 +3,11 @@
 	<parent>
 		<groupId>com.gemserk.jnlpappletloader</groupId>
 		<artifactId>jnlpappletloader</artifactId>
-		<version>0.0.4</version>
+		<version>0.0.5-SNAPSHOT</version>
 	</parent>
 	<groupId>com.gemserk.jnlpappletloader</groupId>
 	<artifactId>jnlpappletloader-applet</artifactId>
-	<version>0.0.4</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Main Applet of JNLP Applet Loader</name>
 	<description>Custom applet loader for jnlp applets</description>

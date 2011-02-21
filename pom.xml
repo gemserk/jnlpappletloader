@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.gemserk.jnlpappletloader</groupId>
 	<artifactId>jnlpappletloader</artifactId>
-	<version>0.0.4</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>JNLP Applet Loader</name>
 	<description>Custom applet loader for jnlp applets</description>
