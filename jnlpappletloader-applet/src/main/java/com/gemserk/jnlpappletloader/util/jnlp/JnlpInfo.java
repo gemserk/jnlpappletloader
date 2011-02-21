@@ -8,11 +8,19 @@ import com.gemserk.jnlpappletloader.util.jnlp.JnlpResourceInfo.ResourceType;
 
 
 /**
- * Has the info of the JNLP file.
+ * Has the info of the JNLP file based on the <a href="http://download.oracle.com/javase/6/docs/technotes/guides/javaws/developersguide/syntax.html">JNLP file syntax</a>.
  */
 public class JnlpInfo {
+	
+	// public String spec;
 
 	public String codeBase;
+	
+	// public String href;
+	
+	// public String version;
+	
+	// public JnlpInformation information;
 
 	public JnlpAppletDescInfo jnlpAppletDescInfo;
 
