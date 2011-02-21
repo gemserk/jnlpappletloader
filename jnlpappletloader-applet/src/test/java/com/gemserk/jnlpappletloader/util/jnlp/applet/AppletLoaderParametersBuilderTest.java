@@ -13,10 +13,9 @@ import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.gemserk.jnlpappletloader.util.jnlp.applet.AppletLoaderParametersBuilder;
-import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo;
-import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
-import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
+import com.gemserk.jnlpappletloader.util.jnlp.JnlpInfo;
+import com.gemserk.jnlpappletloader.util.jnlp.JnlpResourceInfo;
+import com.gemserk.jnlpappletloader.util.jnlp.JnlpResourceInfo.ResourceType;
 
 @SuppressWarnings("serial")
 @RunWith(JMock.class)

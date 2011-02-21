@@ -1,9 +1,9 @@
-package com.gemserk.jnlpappletloader.util.jnlp.applet;
+package com.gemserk.jnlpappletloader.util.jnlp;
 
 import java.net.URL;
 
-import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
-import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
+import com.gemserk.jnlpappletloader.util.jnlp.JnlpResourceInfo.ResourceType;
+import com.gemserk.jnlpappletloader.util.jnlp.applet.UrlBuilder;
 
 public class JnlpMerger {
 

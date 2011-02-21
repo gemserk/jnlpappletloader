@@ -12,6 +12,11 @@ import javax.swing.JEditorPane;
 
 import org.lwjgl.util.applet.AppletLoader;
 
+import com.gemserk.jnlpappletloader.util.jnlp.JnlpInfo;
+import com.gemserk.jnlpappletloader.util.jnlp.JnlpMerger;
+import com.gemserk.jnlpappletloader.util.jnlp.JnlpParser;
+import com.gemserk.jnlpappletloader.util.jnlp.JnlpPrinter;
+
 public class JnlpAppletLoader extends Applet implements AppletStub {
 
 	private static final long serialVersionUID = -2459790398016588477L;

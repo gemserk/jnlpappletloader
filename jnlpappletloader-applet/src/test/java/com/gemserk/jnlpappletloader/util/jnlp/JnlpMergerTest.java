@@ -1,4 +1,4 @@
-package com.gemserk.jnlpappletloader.util.jnlp.applet;
+package com.gemserk.jnlpappletloader.util.jnlp;
 
 import static org.junit.Assert.assertThat;
 
@@ -15,13 +15,8 @@ import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo;
-import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpMerger;
-import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpParser;
-import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpPrinter;
+import com.gemserk.jnlpappletloader.util.jnlp.JnlpResourceInfo.ResourceType;
 import com.gemserk.jnlpappletloader.util.jnlp.applet.UrlBuilder;
-import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
-import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
 
 @RunWith(JMock.class)
 public class JnlpMergerTest {

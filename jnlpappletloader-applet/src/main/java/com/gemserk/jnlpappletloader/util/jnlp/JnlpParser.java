@@ -1,4 +1,4 @@
-package com.gemserk.jnlpappletloader.util.jnlp.applet;
+package com.gemserk.jnlpappletloader.util.jnlp;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -12,9 +12,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpAppletDescInfo;
-import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpResourceInfo;
-import com.gemserk.jnlpappletloader.util.jnlp.applet.JnlpInfo.JnlpResourceInfo.ResourceType;
+import com.gemserk.jnlpappletloader.util.jnlp.JnlpResourceInfo.ResourceType;
+
 
 /**
  * Parses a Jnlp document.
