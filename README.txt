@@ -2,10 +2,15 @@ JNLP Applet Loader provides a way to create a LWJGL Applet Loader based on a JNL
 
 It is a maven project and it is based on two modules: 
 
+	jnlpappletloader-jnlp 
+
+		This module contains all JNLP core classes and utilities in order to interact with JNLP files in an
+		easy way.
+
 	jnlpappletloader-applet
 
-		This module is where the main Applet is, it has JNLP utilities in order to let the Applet parse a JNLP
-		file in an easy way.
+		This module is where the main Applet is, which loads the JNLP file using jnlp module classes and then
+		launch the LWJGL Applet Loader with built parameters from JNLP file.
 
 	jnlpappletloader-deployable
 
