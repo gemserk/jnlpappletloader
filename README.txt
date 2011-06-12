@@ -1,6 +1,6 @@
 JNLP Applet Loader provides a way to create a LWJGL Applet Loader based on a JNLP file.
 
-It is a maven project and it is based on two modules: 
+It is a maven project and it is based on the next modules: 
 
 	jnlpappletloader-jnlp 
 
