@@ -31,8 +31,8 @@
 	<url>https://github.com/gemserk/jnlpappletloader</url>
 
 	<issueManagement>
-		<system>Trac</system>
-		<url>https://trac.gemserk.com/jnlpappletloader</url>
+		<system>Github</system>
+		<url>https://github.com/gemserk/jnlpappletloader/issues</url>
 	</issueManagement>
 
 	<scm>
