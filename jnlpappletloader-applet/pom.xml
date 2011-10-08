@@ -41,7 +41,9 @@
 		<dependency>
 			<groupId>org.lwjgl.lwjgl</groupId>
 			<artifactId>lwjgl_util_applet</artifactId>
-			<scope>provided</scope>
+			<version>2.8.0-GEMSERK</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/libs/lwjgl_util_applet-2.8.0-GEMSERK.jar</systemPath>
 		</dependency>
 	</dependencies>
 
