@@ -13,7 +13,6 @@
 	<description>Provides a jar with all dependencies included for fast loading</description>
 
 	<build>
-		<finalName>${artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
