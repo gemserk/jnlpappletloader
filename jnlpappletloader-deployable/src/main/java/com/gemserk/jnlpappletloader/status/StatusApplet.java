@@ -41,6 +41,7 @@ public class StatusApplet extends JApplet {
 
 		});
 		System.out.println("StatusApplet loaded correctly!");
+		validate();
 		repaint();
 	}
 	
