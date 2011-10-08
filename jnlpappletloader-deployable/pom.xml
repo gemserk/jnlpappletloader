@@ -40,14 +40,6 @@
 			<classifier>jar-with-dependencies</classifier>
 		</dependency>
 		<dependency>
-			<groupId>com.gemserk.jnlpappletloader</groupId>
-			<artifactId>jnlpappletloader-applet</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl.lwjgl</groupId>
-			<artifactId>lwjgl_util_applet</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.lwjgl.lwjgl</groupId>
 			<artifactId>lwjgl</artifactId>
 		</dependency>

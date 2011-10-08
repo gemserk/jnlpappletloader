@@ -44,6 +44,7 @@
 		<dependency>
 			<groupId>org.lwjgl.lwjgl</groupId>
 			<artifactId>lwjgl_util_applet</artifactId>
+			<version>${lwjgl.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

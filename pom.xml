@@ -64,6 +64,7 @@
 
 	<properties>
 		<compiler.version>1.6</compiler.version>
+		<lwjgl.version>2.8.0-GEMSERK-2</lwjgl.version>
 	</properties>
 
 	<build>
@@ -153,13 +154,8 @@
 			</dependency>
 			<dependency>
 				<groupId>org.lwjgl.lwjgl</groupId>
-				<artifactId>lwjgl_util_applet</artifactId>
-				<version>2.7.1-GEMSERK</version>
-			</dependency>
-			<dependency>
-				<groupId>org.lwjgl.lwjgl</groupId>
 				<artifactId>lwjgl</artifactId>
-				<version>2.7.1-GEMSERK</version>
+				<version>${lwjgl.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.gemserk.jnlpappletloader</groupId>
