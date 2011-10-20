@@ -41,10 +41,6 @@
 		<dependency>
 			<groupId>org.lwjgl.lwjgl</groupId>
 			<artifactId>lwjgl_util_applet</artifactId>
-			<version>${lwjgl.version}</version>
-			<scope>system</scope>
-			<!-- should be removed after the latest version was deployed -->
-			<systemPath>${basedir}/libs/lwjgl_util_applet-2.8.0-GEMSERK.jar</systemPath>
 		</dependency>
 	</dependencies>
 
